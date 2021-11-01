@@ -82,6 +82,7 @@ export const sensorMixin = {
         uvIndex: 'palevioletred',
         visibility: 'gainsboro',
         ozone: 'silver',
+        alarm_state: 'silver',
       },
       WEATHER: [
         'icon',
@@ -122,6 +123,7 @@ export const sensorMixin = {
         't_7',
         't_8',
         't_9',
+        'alarm_state',
       ], // not actuators
       SOUND: [
         's_fan_4',
@@ -163,6 +165,7 @@ export const sensorMixin = {
         's_bin_1807_2008',
       ], // all sound releated sensors
       DEBUG: ['bv', 'rssi', 'snr'], // all debugging info sensors
+      // Thing that gets translated
       SENSOR_NAMES: {
         t: 't',
         h: 'h',
@@ -241,6 +244,7 @@ export const sensorMixin = {
         uvIndex: 'uvIndex',
         visibility: 'visibility',
         ozone: 'ozone',
+        alarm_state: 'alarm_state',
       },
       SENSOR_MIN: {
         t: -10,
@@ -274,6 +278,7 @@ export const sensorMixin = {
         snr: -20,
         lat: 0,
         lon: 0,
+        alarm_state: -0.1,
       },
       SENSOR_LOW: {
         t: 0,
@@ -307,6 +312,7 @@ export const sensorMixin = {
         snr: -10,
         lat: 0,
         lon: 0,
+        alarm_state: 0.25,
       },
       SENSOR_HIGH: {
         t: 30,
@@ -340,6 +346,7 @@ export const sensorMixin = {
         snr: 15,
         lat: 180,
         lon: 180,
+        alarm_state: 1,
       },
       SENSOR_MAX: {
         t: 50,
@@ -373,6 +380,7 @@ export const sensorMixin = {
         snr: 20,
         lat: 180,
         lon: 180,
+        alarm_state: 1,
       },
       SENSOR_UNITS: {
         t: '°C',
@@ -452,6 +460,7 @@ export const sensorMixin = {
         uvIndex: '',
         visibility: 'km',
         ozone: 'DU',
+        alarm_state: '',
       },
     }
   },

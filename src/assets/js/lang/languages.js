@@ -9,6 +9,7 @@ const languages = {
     { lang: 'ro', title: 'Română' },
     { lang: 'es', title: 'Spanish' },
     { lang: 'fi', title: 'Suomi' },
+    { lang: 'lv', title: 'Latviešu'},
     // { lang: 'en-US', title: 'English US' },
   ],
   checkBrowserLanguage() {
