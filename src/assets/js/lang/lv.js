@@ -209,8 +209,8 @@ const translations = {
   /* Hive check items */
   Date_of_inspection: 'Pārbaudes datums',
   action: 'Darbība',
-  reminder: 'Atcerēties',
-  remind_date: 'paziņojuma datums',
+  reminder: 'Atgādinājumi',
+  remind_date: 'Atgādinājuma datums',
 
   overall: 'Kopumā',
   positive_impression: 'Kopējais iespaids',
@@ -624,7 +624,7 @@ const translations = {
   no_apiaries_yet: "Jums vēl nav izveidota neviena drava",
   need_help: 'nepieciešama palīdzība?',
   Apiary_color: 'Dravas krāsa',
-  Set_notification_date: 'Iestatīt paziņujuma datumu',
+  Set_notification_date: 'Iestatīt atgādinājuma datumu',
   remove_image: 'Noņemt bildi',
   Total_colony_size: 'Kopējais bišu saimes izmērs',
   bee: 'bite | bites',
@@ -805,7 +805,7 @@ const translations = {
   password_recovery_resend_mail: 'Nosūtīt jaunu apstiprinājuma kodu',
   alert_rule_created: 'Jauns brīdinājuma filtrs ir izveidots',
   select_all: 'Atzīmēt visus',
-  During: 'Kamēr',
+  During: 'Laika periods',
   Calculation_minutes:
     'Cik bieži Jūs vēlētos, lai notiek aprēķins?',
   Every: 'Katru ', // context: how often would you like the alert rule calculation to be performed? -> every 15 min, ..., every 24 hours etc.
