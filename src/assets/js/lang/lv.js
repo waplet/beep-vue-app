@@ -383,6 +383,7 @@ const translations = {
   visibility: 'Redzamība',
   ozone: 'Ozons',
   alarm_state: 'Signalizācijas stāvoklis',
+  button_state: 'Pogas stāvoklis',
 
   /* Measurements */
   Hour: 'Stunda',

@@ -199,7 +199,9 @@
                           }}</span></div
                         >
                         <div class="gauge-label">{{
-                          $t(SENSOR_NAMES[sensorData.name])
+                          (SENSOR_NAMES[sensorData.name])
+                            ? $t(SENSOR_NAMES[sensorData.name])
+                            : sensorData.name
                         }}</div>
                       </template>
                     </vue-ellipse-progress>

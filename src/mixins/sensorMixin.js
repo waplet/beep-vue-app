@@ -83,6 +83,7 @@ export const sensorMixin = {
         visibility: 'gainsboro',
         ozone: 'silver',
         alarm_state: 'silver',
+        button_state: 'silver',
       },
       WEATHER: [
         'icon',
@@ -124,6 +125,7 @@ export const sensorMixin = {
         't_8',
         't_9',
         'alarm_state',
+        'button_state',
       ], // not actuators
       SOUND: [
         's_fan_4',
@@ -245,6 +247,7 @@ export const sensorMixin = {
         visibility: 'visibility',
         ozone: 'ozone',
         alarm_state: 'alarm_state',
+        button_state: 'button_state',
       },
       SENSOR_MIN: {
         t: -10,
@@ -279,6 +282,7 @@ export const sensorMixin = {
         lat: 0,
         lon: 0,
         alarm_state: -0.1,
+        button_state: -0.1,
       },
       SENSOR_LOW: {
         t: 0,
@@ -313,6 +317,7 @@ export const sensorMixin = {
         lat: 0,
         lon: 0,
         alarm_state: 0.25,
+        button_state: 0.25,
       },
       SENSOR_HIGH: {
         t: 30,
@@ -347,6 +352,7 @@ export const sensorMixin = {
         lat: 180,
         lon: 180,
         alarm_state: 1,
+        button_state: 1,
       },
       SENSOR_MAX: {
         t: 50,
@@ -381,6 +387,7 @@ export const sensorMixin = {
         lat: 180,
         lon: 180,
         alarm_state: 1,
+        button_state: 1,
       },
       SENSOR_UNITS: {
         t: '°C',
@@ -461,6 +468,7 @@ export const sensorMixin = {
         visibility: 'km',
         ozone: 'DU',
         alarm_state: '',
+        button_state: '',
       },
     }
   },

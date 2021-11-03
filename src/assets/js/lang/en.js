@@ -353,6 +353,7 @@ const translations = {
   visibility: 'Visibility',
   ozone: 'Ozone',
   alarm_state: 'Alarm state',
+  button_state: 'Button state',
 
   /* Measurements */
   Hour: 'Hour',
