@@ -165,7 +165,7 @@
                           sensorData.value
                         )
                       "
-                      :legend-value="sensorData.value"
+                      :legend-value="sensorData.value.toString()"
                       :color="
                         sensorData.value < SENSOR_LOW[sensorData.name]
                           ? '#ffcc66'

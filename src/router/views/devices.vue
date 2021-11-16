@@ -47,6 +47,13 @@
     </v-toolbar>
 
     <v-container class="content-container">
+      <v-row v-if="successMessage">
+        <v-col cols="12">
+          <v-alert text prominent dense type="success" color="success">
+            {{ successMessage }}
+          </v-alert>
+        </v-col>
+      </v-row>
       <v-row v-if="errorMessage">
         <v-col cols="12">
           <v-alert text prominent dense type="error" color="red">
@@ -168,6 +175,32 @@
                   md="9"
                   class="d-flex flex-wrap justify-flex-start align-center"
                 >
+                  <template v-if="ownedDevice.id">
+                    <v-tooltip bottom max-width="60%">
+                      <template v-slot:activator="{ on }">
+                        <div class="mr-3" v-on="on">
+                          <a @click.prevent="toggleAlarm(ownedDevice)">
+                            <v-icon small color="accent">
+                              mdi-shield-lock
+                            </v-icon>
+                          </a>
+                        </div>
+                      </template>
+                      <span v-text="$t('toggle_alarm_state')"></span>
+                    </v-tooltip>
+                    <v-tooltip bottom max-width="60%">
+                      <template v-slot:activator="{ on }">
+                        <div class="mr-3" v-on="on">
+                          <a @click.prevent="toggleLed(ownedDevice)">
+                            <v-icon small color="accent">
+                              mdi-alarm-light
+                            </v-icon>
+                          </a>
+                        </div>
+                      </template>
+                      <span v-text="$t('toggle_led_state')"></span>
+                    </v-tooltip>
+                  </template>
                   <div v-if="ownedDevice.id" class="mr-3">
                     <router-link
                       :to="{
@@ -684,6 +717,7 @@ export default {
     return {
       devices: [],
       errorMessage: null,
+      successMessage: null,
       normalizerHives(node) {
         return {
           id: node.type === 'apiary' ? node.name + ' ' + node.id : node.id,
@@ -838,10 +872,72 @@ export default {
         this.showLoadingIcon = false
         if (error.response) {
           console.log('Error: ', error.response)
-          const msg = error.response.data.message
+          const msg = error.response.data
           this.errorMessage = this.$i18n.t(msg)
         } else {
           this.errorMessage = this.$i18n.t('Error')
+        }
+      }
+    },
+    async toggleAlarm(ownedDevice) {
+      this.errorMessage = null;
+      this.showLoadingIcon = true
+
+      try {
+        const response = await Api.postRequest(
+            '/devices/ttn/' + ownedDevice.id + '/toggle_alarm'
+        );
+        this.showLoadingIcon = false;
+        if (!response) {
+          // TODO change translation
+          this.errorMessage = this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error');
+        } else {
+          this.successMessage = this.$i18n.t(response.data || 'Success');
+          setTimeout(() => {
+            this.successMessage = null
+          }, 3000);
+        }
+
+        return true;
+      } catch (error) {
+        this.showLoadingIcon = false;
+        if (error.response) {
+          console.log('Error: ', error.response);
+          const msg = error.response.data;
+          this.errorMessage = this.$i18n.t(msg);
+        } else {
+          this.errorMessage = this.$i18n.t('Error');
+        }
+      }
+    },
+    async toggleLed(ownedDevice) {
+      this.errorMessage = null;
+      this.showLoadingIcon = true
+
+      try {
+        const response = await Api.postRequest(
+            '/devices/ttn/' + ownedDevice.id + '/toggle_led'
+        );
+        this.showLoadingIcon = false;
+        if (!response) {
+          // TODO change translation
+          this.errorMessage = this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error');
+        } else {
+          this.successMessage = this.$i18n.t(response.data || 'Success');
+          setTimeout(() => {
+            this.successMessage = null
+          }, 3000);
+        }
+
+        return true;
+      } catch (error) {
+        this.showLoadingIcon = false;
+        if (error.response) {
+          console.log('Error: ', error.response);
+          const msg = error.response.data;
+          this.errorMessage = this.$i18n.t(msg);
+        } else {
+          this.errorMessage = this.$i18n.t('Error');
         }
       }
     },

@@ -895,6 +895,13 @@ const translations = {
   alerts_url_text: 'Iepazīstiesties ar rakstu par Brīdinājumu filtriem',
   alerts_support_url:
     'https://beepsupport.freshdesk.com/nl/support/solutions/articles/60000706484-alerts',
+  pollihub_downlink_unsupported_for_device: 'Lejupsaite nav atbalstīta šim ierīces tipam.',
+  pollihub_sensortype_missing: 'Nav atrasts ierīces tips - Pollihub',
+  pollihub_downlink_error: 'Lepujsaite nosūtīšanas kļūda',
+  pollihub_alarm_toggled: 'Signalizācijas stāvoklis izmainīts',
+  pollihub_led_toggled: 'LED stāvoklis izmainīts',
+  toggle_led_state: 'Izmainīt LED stāvokli',
+  toggle_alarm_state: 'Izmainīt Signalizācijas stāvokli',
 }
 
 export default translations
