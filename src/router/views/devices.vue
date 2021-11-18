@@ -218,6 +218,27 @@
                     <template v-slot:activator="{ on }">
                       <span v-on="on">
                         <div
+                            v-if="ownedDevice.alarm_state !== undefined"
+                            class="mr-3"
+                        >
+                          <v-icon small>
+                            mdi-shield-lock
+                          </v-icon>
+                          <span class="beep-label">{{
+                              ownedDevice.alarm_state === 1
+                                  ? $t('on')
+                                  : $t('off')
+                            }}</span>
+                        </div>
+                      </span>
+                    </template>
+                    <span v-text="$t('alarm_state')"> </span>
+                  </v-tooltip>
+
+                  <v-tooltip bottom max-width="60%">
+                    <template v-slot:activator="{ on }">
+                      <span v-on="on">
+                        <div
                           v-if="ownedDevice.battery_voltage !== undefined"
                           class="mr-3"
                         >
