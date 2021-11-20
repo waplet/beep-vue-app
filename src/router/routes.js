@@ -256,6 +256,22 @@ export default [
     meta: {
       authRequired: true,
     },
+    path: '/measurements-apiary',
+    name: 'measurements-apiary',
+    component: () => import('@views/measurements-apiary.vue'), // no lazyLoadView in order to be able to use beforeDestroy hook to clearInterval for lastSensorValues API call when navigating away
+  },
+  {
+    meta: {
+      authRequired: true,
+    },
+    path: '/measurements-apiary/:id',
+    name: 'measurements-apiary-id',
+    component: () => import('@views/measurements-apiary.vue'), // no lazyLoadView in order to be able to use beforeDestroy hook to clearInterval for lastSensorValues API call when navigating away
+  },
+  {
+    meta: {
+      authRequired: true,
+    },
     path: '/new',
     name: 'new',
     component: () => lazyLoadView(import('@views/new.vue')),

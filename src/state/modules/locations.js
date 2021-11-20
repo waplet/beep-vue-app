@@ -15,6 +15,7 @@ export const state = {
   hiveFilterByGroup: 'off',
   hiveFilterByImpression: [],
   hiveFilterByReminder: false,
+  selectedLocationId: null,
 }
 export const getters = {
   ...resource.getters,
@@ -48,6 +49,9 @@ export const getters = {
   hiveSearch: (state) => {
     return state.hiveSearch
   },
+  selectedLocationId: (state) => {
+    return state.selectedLocationId;
+  }
 }
 export const mutations = {
   ...resource.mutations,
@@ -93,6 +97,9 @@ export const mutations = {
     state.hiveFilterByImpression = []
     state.hiveFilterByReminder = false
   },
+  setSelectedLocationId: function (state, id) {
+    state.selectedLocationId = id;
+  }
 }
 export const actions = {
   ...resource.actions,

@@ -119,6 +119,11 @@ export default {
           route: 'devices',
         },
         {
+          icon: 'mdi-chart-line',
+          title: this.$i18n.t('overview'),
+          route: 'measurements-apiary',
+        },
+        {
           icon: 'mdi-bell',
           title: this.$i18n.t('alertrule_pagetitle'),
           route: 'alertrules',
