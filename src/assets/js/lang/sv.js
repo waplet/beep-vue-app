@@ -1,4 +1,4 @@
-/*
+ /*
  * BEEP - Translations - VUE app v3 (Q4 2021)
  * Author: Julia Buysing Damsté (julia@beep.nl)
  *
@@ -352,8 +352,6 @@ const translations = {
   uvIndex: 'UV index',
   visibility: 'Visibility',
   ozone: 'Ozone',
-  alarm_state: 'Alarm state',
-  button_state: 'Button state',
 
   /* Measurements */
   Hour: 'Hour',
@@ -832,13 +830,6 @@ const translations = {
   alerts_url_text: 'Read the support article about alerts',
   alerts_support_url:
     'https://beepsupport.freshdesk.com/nl/support/solutions/articles/60000706484-alerts',
-  pollihub_downlink_unsupported_for_device: 'Downlink is not supported for this type of device',
-  pollihub_sensortype_missing: 'Device sensortype missing - Pollihub',
-  pollihub_downlink_error: 'Error executing donwlink',
-  pollihub_alarm_toggled: 'Alarm state changed',
-  pollihub_led_toggled: 'LED state changed',
-  toggle_led_state: 'Toggle LED state',
-  toggle_alarm_state: 'Toggle Alarm state',
 }
 
 export default translations
