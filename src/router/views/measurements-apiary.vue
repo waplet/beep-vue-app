@@ -513,7 +513,7 @@ export default {
       this.currentSensors.forEach((sensorName) => {
         this.formattedData.sensors[sensorName] = {};
         Object.keys(measurementData.devicesKeyMapping).forEach((deviceKey) => {
-          this.formattedData.sensors[sensorName][deviceKey] = [];
+          this.formattedData.sensors[sensorName][deviceKey.toLowerCase()] = [];
         });
       });
 
@@ -524,7 +524,7 @@ export default {
           }
 
           this.currentSensors.forEach((sensorName) => {
-            this.formattedData.sensors[sensorName][measurement.key].push(measurement);
+            this.formattedData.sensors[sensorName][measurement.key.toLowerCase()].push(measurement);
           });
       });
 
@@ -551,7 +551,7 @@ export default {
             data: []
           };
 
-          sensorDeviceValues[deviceKey].forEach((measurement) => {
+          sensorDeviceValues[deviceKey.toLowerCase()].forEach((measurement) => {
             series.data.push({
               meta: this.momentAll(measurement.time)
                 + '<br/>'
@@ -664,7 +664,7 @@ export default {
     },
 
     getDeviceByKey(deviceKey) {
-      return this.devices.filter((device) => device.key === deviceKey).pop();
+      return this.devices.filter((device) => device.key.toLowerCase() === deviceKey.toLowerCase()).pop();
     }
   },
 }
