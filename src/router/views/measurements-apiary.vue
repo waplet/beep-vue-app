@@ -507,7 +507,7 @@ export default {
         sensors: {},
         labels: [],
       };
-      const firstDevice = Object.keys(measurementData.devicesKeyMapping).pop();
+      const firstDeviceKey = Object.keys(measurementData.devicesKeyMapping).pop();
 
       // Setup array
       this.currentSensors.forEach((sensorName) => {
@@ -519,7 +519,7 @@ export default {
 
       this.measurementData.measurements.map((measurement) => {
           // Labels are first measurement all times
-          if (measurement.key === firstDevice) {
+          if (measurement.key.toLowerCase() === firstDeviceKey.toLowerCase()) {
             this.formattedData.labels.push(measurement.time);
           }
 
