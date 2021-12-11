@@ -354,6 +354,10 @@ const translations = {
   ozone: 'Ozone',
   alarm_state: 'Alarm state',
   button_state: 'Button state',
+  reed_switch_state: 'Cover state',
+  bee_power_state: 'Bee power state',
+  food_state: 'Food state',
+  led3_state: 'LED3 state',
   
   /* Pollihub */
   pollihub_downlink_unsupported_for_device: 'Downlink is not supported for this type of device',

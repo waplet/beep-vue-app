@@ -84,6 +84,10 @@ export const sensorMixin = {
         ozone: 'silver',
         alarm_state: 'silver',
         button_state: 'silver',
+        reed_switch_state: 'silver',
+        bee_power_state: 'silver',
+        food_state: 'silver',
+        led3_state: 'silver',
       },
       WEATHER: [
         'icon',
@@ -126,6 +130,10 @@ export const sensorMixin = {
         't_9',
         'alarm_state',
         'button_state',
+        'reed_switch_state',
+        'led3_state',
+        'bee_power_state',
+        'food_state',
       ], // not actuators
       SOUND: [
         's_fan_4',
@@ -248,6 +256,10 @@ export const sensorMixin = {
         ozone: 'ozone',
         alarm_state: 'alarm_state',
         button_state: 'button_state',
+        reed_switch_state: 'reed_switch_state',
+        bee_power_state: 'bee_power_state',
+        food_state: 'food_state',
+        led3_state: 'led3_state',
       },
       SENSOR_MIN: {
         t: -10,
@@ -283,6 +295,10 @@ export const sensorMixin = {
         lon: 0,
         alarm_state: -0.1,
         button_state: -0.1,
+        reed_switch_state: -0.1,
+        bee_power_state: -0.1,
+        food_state: -0.1,
+        led3_state: -0.1,
       },
       SENSOR_LOW: {
         t: 0,
@@ -318,6 +334,10 @@ export const sensorMixin = {
         lon: 0,
         alarm_state: 0.25,
         button_state: 0.25,
+        reed_switch_state: 3,
+        bee_power_state: 3,
+        food_state: 3,
+        led3_state: 3,
       },
       SENSOR_HIGH: {
         t: 30,
@@ -353,6 +373,10 @@ export const sensorMixin = {
         lon: 180,
         alarm_state: 1,
         button_state: 1,
+        reed_switch_state: 8,
+        bee_power_state: 8,
+        food_state: 8,
+        led3_state: 8,
       },
       SENSOR_MAX: {
         t: 50,
@@ -388,6 +412,10 @@ export const sensorMixin = {
         lon: 180,
         alarm_state: 1,
         button_state: 1,
+        reed_switch_state: 7,
+        bee_power_state: 7,
+        food_state: 7,
+        led3_state: 7,
       },
       SENSOR_UNITS: {
         t: '°C',
@@ -469,6 +497,10 @@ export const sensorMixin = {
         ozone: 'DU',
         alarm_state: '',
         button_state: '',
+        reed_switch_state: '',
+        bee_power_state: '',
+        food_state: '',
+        led3_state: '',
       },
     }
   },

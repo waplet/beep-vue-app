@@ -384,6 +384,10 @@ const translations = {
   ozone: 'Ozons',
   alarm_state: 'Signalizācijas stāvoklis',
   button_state: 'Pogas stāvoklis',
+  reed_switch_state: 'Vāka stāvoklis',
+  bee_power_state: 'Bišu saimes spēka stāvoklis',
+  food_state: 'Ēdiena stāvoklis',
+  led3_state: 'LED3 stāvoklis',
 
   /* Measurements */
   Hour: 'Stunda',
