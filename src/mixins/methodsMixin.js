@@ -302,12 +302,12 @@ export const readDevices = {
           console.log(error.response)
           if (error.response.data === 'no_devices_found') {
             this.$store.commit('devices/setData', {
-              prop: 'devicesPresent',
-              value: false,
-            })
-            this.$store.commit('devices/setData', {
               prop: 'devices',
               value: [],
+            })
+            this.$store.commit('devices/setData', {
+              prop: 'devicesPresent',
+              value: false,
             })
           }
         } else {
@@ -342,12 +342,12 @@ export const readDevicesIfNotPresent = {
             console.log(error.response)
             if (error.response.data === 'no_devices_found') {
               this.$store.commit('devices/setData', {
-                prop: 'devicesPresent',
-                value: false,
-              })
-              this.$store.commit('devices/setData', {
                 prop: 'devices',
                 value: [],
+              })
+              this.$store.commit('devices/setData', {
+                prop: 'devicesPresent',
+                value: false,
               })
             }
           } else {

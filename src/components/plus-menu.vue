@@ -33,7 +33,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters('devices', ['devices']),
+    ...mapGetters('devices', ['devices', 'devicesPresent']),
     plusItems() {
       if (this.devices.length > 0) {
         return [

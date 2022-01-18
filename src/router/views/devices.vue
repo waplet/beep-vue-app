@@ -108,7 +108,7 @@
           <div>{{ $t('beep_base_explanation') }}</div>
         </v-col>
         <v-col
-          v-for="ownedDevice in ownedDevices"
+          v-for="(ownedDevice, index) in ownedDevices"
           :key="ownedDevice.key"
           sm="auto"
           class="device-item"
@@ -125,9 +125,7 @@
             <div
               :class="
                 `device-title-row d-flex flex-no-wrap justify-flex-start align-center ${
-                  showDevicesByKey.includes(ownedDevice.key)
-                    ? 'device-title-row--border-bottom'
-                    : ''
+                  deviceExpanded(index) ? 'device-title-row--border-bottom' : ''
                 }`
               "
               style="width: 100%;"
@@ -314,19 +312,17 @@
                 <v-icon
                   :class="
                     `color-grey-light py-2 px-3 mdi ${
-                      showDevicesByKey.includes(ownedDevice.key)
-                        ? 'mdi-minus'
-                        : 'mdi-cog'
+                      deviceExpanded(index) ? 'mdi-minus' : 'mdi-cog'
                     }`
                   "
-                  @click="toggleDevice(ownedDevice.key)"
+                  @click="toggleDevice(index)"
                 >
                 </v-icon>
               </div>
             </div>
 
-            <SlideYUpTransition :duration="150">
-              <v-card-text v-if="showDevicesByKey.includes(ownedDevice.key)">
+            <SlideYUpTransition v-if="deviceExpanded(index)" :duration="150">
+              <v-card-text>
                 <v-row>
                   <v-col cols="12" md="6" class="pt-1 pb-0 py-sm-3">
                     <v-text-field
@@ -356,6 +352,7 @@
                         'Hardware ID' + (ownedDevice.type === 'beep' ? '*' : '')
                       "
                       :disabled="ownedDevice.type === 'beep'"
+                      @input="updateDevice(ownedDevice, 'hardware_id', $event)"
                     />
                   </v-col>
                   <v-col cols="12" md="6" class="pb-0 pb-sm-3">
@@ -371,6 +368,7 @@
                           (ownedDevice.type === 'beep' ? ' BEEP base*' : '')
                       "
                       :disabled="ownedDevice.type === 'beep'"
+                      @input="updateDevice(ownedDevice, 'firmware_id', $event)"
                     />
                   </v-col>
                   <v-col cols="12" md="6">
@@ -677,7 +675,7 @@
                       outlined
                       color="red"
                       class="save-button-mobile-wide"
-                      @click="deleteDevice(ownedDevice)"
+                      @click="deleteDevice(ownedDevice, index)"
                     >
                       <v-icon left>{{
                         ownedDevice.delete ? 'mdi-refresh' : 'mdi-delete'
@@ -753,7 +751,7 @@ export default {
         }
       },
       ready: false,
-      showDevicesByKey: [],
+      showDevicesByIndex: [],
       showLoadingIcon: false,
       showLoadingIconById: [],
       showDescription: false,
@@ -854,6 +852,7 @@ export default {
         })
 
         this.devices = devices
+        this.showDevicesByIndex = []
         // NB don't commit these devices to store as they contain extra delete property which will yield vuex mutation errors later
         return true
       } catch (error) {
@@ -1022,7 +1021,13 @@ export default {
         owner: true,
         sensor_definitions: [],
       })
-      this.toggleDevice(key)
+      if (this.showDevicesByIndex.length > 0) {
+        var updatedIndexes = this.showDevicesByIndex.map(function(index) {
+          return index + 1
+        })
+        this.showDevicesByIndex = updatedIndexes
+      }
+      this.toggleDevice(0)
     },
     addHiveName(event, device) {
       device.hive_name = event.name
@@ -1064,9 +1069,9 @@ export default {
         this.saveDevices()
       }
     },
-    deleteDevice(device) {
+    deleteDevice(device, index) {
       if (typeof device.id === 'undefined') {
-        return this.removeDevice(device.key)
+        return this.removeDevice(device.key, index)
       }
       device.delete = !device.delete
     },
@@ -1092,6 +1097,11 @@ export default {
           })
       }
     },
+    deviceExpanded(index) {
+      return this.showDevicesByIndex.length > 0
+        ? this.showDevicesByIndex.indexOf(index) > -1
+        : false
+    },
     randomString(length) {
       var text = ''
       var possible =
@@ -1103,7 +1113,7 @@ export default {
 
       return text
     },
-    removeDevice(key) {
+    removeDevice(key, showIndex) {
       var deviceIndex = null
       this.devices.map((device, index) => {
         if (device.key === key) {
@@ -1111,6 +1121,13 @@ export default {
         }
       })
       this.devices.splice(deviceIndex, 1)
+      this.toggleDevice(showIndex)
+      if (this.showDevicesByIndex.length > 0) {
+        var updatedIndexes = this.showDevicesByIndex.map(function(index) {
+          return index > showIndex ? index - 1 : index
+        })
+        this.showDevicesByIndex = updatedIndexes
+      }
     },
     removeSensorDef(device, sensorDefinition) {
       this.sensorDefEdited = false
@@ -1168,11 +1185,14 @@ export default {
       })
       return sortedSensorDefs
     },
-    toggleDevice(key) {
-      if (this.showDevicesByKey.includes(key)) {
-        this.showDevicesByKey.splice(this.showDevicesByKey.indexOf(key), 1)
+    toggleDevice(index) {
+      if (this.deviceExpanded(index)) {
+        this.showDevicesByIndex.splice(
+          this.showDevicesByIndex.indexOf(index),
+          1
+        )
       } else {
-        this.showDevicesByKey.push(key)
+        this.showDevicesByIndex.push(index)
       }
     },
     transmissionText(device) {
@@ -1182,6 +1202,9 @@ export default {
             ' * ' +
             device.measurement_transmission_ratio +
             ' min'
+    },
+    updateDevice(device, prop, value) {
+      device[prop] = value
     },
   },
 }

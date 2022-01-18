@@ -1,6 +1,6 @@
 /*
  * BEEP - Translations - VUE app v3 (Q4 2021)
- * Author: Julia Buysing Damsté (julia@beep.nl)
+ * Author: Julia BD (julia@beep.nl)
  *
  */
 const translations = {
@@ -33,36 +33,19 @@ const translations = {
     'nov',
     'dec',
   ],
-  Today: 'Vandaag',
-  Clear: 'Verwijderen',
   Close: 'Sluiten',
-  firstDay: 1,
-  format: 'dddd d mmmm yyyy',
 
   /* main */
   Website: 'Website',
-  Feedback: 'Feedback',
-  Feedback_mail_header: 'BEEP app feedback',
-  Feedback_mail_body:
-    'Beste Stichting BEEP,%0D%0A%0D%0AHierbij mijn feedback over de BEEP app.%0D%0A%0D%0AIk kwam het volgende tegen:%0D%0A%0D%0AVoordat dit gebeurde deed ik het volgende:%0D%0A%0D%0AHet beeld zag er zo uit (graag screenshot meesturen):%0D%0A%0D%0A%0D%0A%0D%0A',
-  Diagnostic_info:
-    'Diagnostische informatie (voor het traceren van evt. problemen):%0D%0A',
-  back: 'Terug',
   menu: 'Menu',
   lighting: 'Sfeerverlichting',
   camera: 'Camera',
   weather: 'Weer',
   sensors: 'Sensoren',
-
-  no_valid_authentication: 'Geen geldige login ontvangen',
-  succesfully_saved: 'Succesvol opgeslagen',
-
-  switch_language: 'Andere taal',
   Delete: 'Verwijderen',
   Search: 'Zoeken...',
 
   /* user error messages */
-  User: 'Gebruiker',
   User_data: 'Gebruikersgegevens',
   user_data: 'gebruikersgegevens',
   updated: 'aangepast',
@@ -89,55 +72,37 @@ const translations = {
   succesfully_registered: 'Je bent succesvol geregistreerd.',
   authentication_failed: 'Inloggen niet gelukt',
 
-  no_valid_input_received:
-    'Data kon niet worden opgeslagen, geen geldige gegevens.',
-
-  remove_all_settings: 'Verwijder app data',
   remove_apiary: 'Verwijder bijenstand',
   remove_hive: 'Verwijder kast',
   remove_inspection: 'Verwijder inspectie',
 
   Error: 'Fout',
-  Warning: 'Let op',
   first_remove_hives:
     'Let op: er zijn nog kasten op deze bijenstand aanwezig. U kunt specifieke kasten (en hun inspecties) bewaren door ze eerst te verplaatsen naar een andere bijenstand. Als u doorgaat met verwijderen, verwijdert u ALLE kasten en inspecties die op deze locatie aanwezig zijn.',
 
   Date: 'Datum',
   ok: 'Ok',
-  previous: 'Vorige',
-  prev: 'vorige',
-  next: 'Volgende',
   add: 'Toevoegen',
   create_new: 'Maak een nieuwe',
-  New: 'Nieuwe',
 
-  warning: 'Let op',
-
-  apply: 'Toepassen',
   Cancel: 'Annuleren',
   automatic: 'Automatisch',
-  manually: 'Handmatig',
-  on: 'Aan',
-  off: 'Uit',
 
   /* login */
   login_title: 'Inloggen',
   login: 'Aanmelden',
-  back_to_login: 'Terug naar inloggen',
   forgot_password: 'Wachtwoord vergeten?',
 
   username: 'Gebruikersnaam',
   password: 'Wachtwoord',
   confirm_password: 'Bevestig wachtwoord',
   email: 'E-mail',
-  token: 'Code',
 
   create_login_question:
     'Nog geen account? Registreer als een nieuwe gebruiker',
   create_login: 'Registreer als een nieuwe gebruiker',
   create_login_summary: 'Creëer een nieuw account',
   save: 'Opslaan',
-  save_and_return: 'Opslaan en terug',
 
   logout: 'Uitloggen',
   logout_title: 'Uitloggen als ',
@@ -147,19 +112,13 @@ const translations = {
   /* password recovery */
   password_recovery_title: 'Wachtwoord vergeten?',
   password_recovery_remembered: 'Oh wacht, ik weet mijn wachtwoord weer!',
-  password_recovery_user: 'Gebruikersinformatie',
   password_recovery_send_mail: 'Verstuur code',
   password_recovery_code_not_received: 'Code niet ontvangen binnen 5 minuten?',
   password_recovery_enter_code: 'Voer de ontvangen code in',
-  password_recovery_reset_title: 'Stel een nieuw wachtwoord in',
   password_recovery_reset_password: 'Verander wachtwoord',
   password_recovery_reminder_success:
     'Er is een e-mail verstuurd, klik op de link in de e-mail om uw wachtwoord opnieuw in te stellen.',
-  password_recovery_reminder_summary:
-    'Vul je e-mailadres in. Je ontvangt vervolgens een link waarmee je een nieuw wachtwoord kunt instellen in de volgende stap.',
 
-  password_recovery_reset_summary:
-    'Gebruik de ontvangen code om een nieuw wachtwoord voor je account in te stellen',
   password_recovery_reset_success:
     'Je wachtwoord is succesvol aangepast, je bent nu ingelogd.',
 
@@ -188,11 +147,6 @@ const translations = {
   name: 'naam',
   Type: 'Type',
   type: 'type',
-  Layer: 'Laag',
-  layer: 'laag',
-  brood: 'Broed',
-  honey: 'Honing',
-  inspect: 'Inspecteren',
   inspection: 'inspectie | inspecties',
   Inspection: 'Inspectie | Inspecties',
   New_inspection: 'Nieuwe inspectie',
@@ -200,12 +154,8 @@ const translations = {
   Actions: 'Acties',
   Conditions: 'Bevindingen (geïnspecteerd)',
   edit: 'Aanpassen',
-  // Hive_brood_layers: 'Broedkamers',
-  // Hive_honey_layers: 'Honingkamers',
-  Hive_layer_amount: 'Aantal kamers',
   Bee_race: 'Bijenras',
   Birth_date: 'Geboortedatum',
-  Color: 'Kleur',
   Queen_colored: 'Moer gemerkt',
   Queen_clipped: 'Moer geknipt',
   Queen_fertilized: 'Moer bevrucht',
@@ -216,7 +166,6 @@ const translations = {
   Date_of_inspection: 'Inspectiedatum',
   reminder: 'Herinnering',
   remind_date: 'Herinneringsdatum',
-
   condition: 'Inspectie',
   overall: 'Algemeen',
   positive_impression: 'Totaalindruk',
@@ -228,11 +177,7 @@ const translations = {
   save_input_first: 'Wil je je ingevoerde gegevens eerst opslaan?',
 
   /* dashboard */
-  dashboard_title: 'Dashboard',
-  dashboard: 'Dashboard',
-  measurementsError: 'Kan geen metingen laden, controleer de netwerkverbinding',
   last_measurement: 'Laatste meetwaarde',
-  at: 'op',
   measurement_system: 'BEEP meetsysteem',
   no_data: 'Geen data beschikbaar',
   no_chart_data: 'Geen sensordata beschikbaar voor de geselecteerde periode',
@@ -249,7 +194,6 @@ const translations = {
   Number: 'Nr.',
   Postal_code: 'Postcode',
   Description: 'Beschrijving',
-  Hive_settings: 'Kastinstellingen',
   Hive_amount: 'Aantal kasten',
   Hive_prefix: 'Kastnaam voorvoegsel (vòòr nummer)',
   Hive_number_offset: 'Startnummer kasten',
@@ -261,14 +205,8 @@ const translations = {
   queen: 'moer',
 
   settings_title: 'Instellingen overzicht',
-  settings_description: 'Overzicht van de account instellingen',
   Settings: 'Instellingen',
   settings: 'instellingen',
-
-  sensors_title: 'Meetsysteem instellingen',
-  sensors_description: 'Meetsysteem status en registratie',
-  //   sensors: 'Meetsystemen',
-  sensor: 'Sensor',
 
   Select: 'Selecteer',
   Not_selected: 'Niet geselecteerd',
@@ -398,48 +336,30 @@ const translations = {
   year: 'Jaar',
 
   /* settings */
-  could_not_load_settings: 'De instellingen konden niet worden geladen',
   offline: 'Geen verbinding',
-  remote: 'Op afstand',
-  connected: 'Direct',
-
   yes: 'Ja',
   no: 'Nee',
-
-  footer_text: 'Open source bijenmonitor',
-  beep_foundation: 'Stichting BEEP',
 
   Checklist: 'Kastkaart | Kastkaarten',
   checklist: 'kastkaart | kastkaarten',
   Checklist_items: 'Kastkaartelementen',
-  edit_hive_checklist:
-    'Vink items in de onderstaande lijst van beschikbare kastkaartitems aan/uit om ze aan je eigen kastkaart toe te voegen/te verwijderen. Voor meer overzicht, kun je de categorieën in- en uitklappen. Ook kun je ze naar boven/beneden slepen om de volgorde van jouw kastkaart te bepalen.',
 
   /* user */
   Data_export: 'Data exporteren',
   Export_your_data:
     'Exporteer alle data die is opgeslagen in je BEEP account en verstuur deze in een e-mail met als bijlage een Excel (.xslx) bestand. Het bestand heeft meerdere tabbladen met daarop je persoonlijke-, bijenstand-, kast- en inspectiegegevens.',
 
-  Terms_of_use: 'Servicevoorwaarden',
   accept_policy:
     'Ik accepteer de BEEP servicevoorwaarden, die in lijn zijn met de nieuwe Europese privacywetgeving',
   policy_url: 'https://beep.nl/servicevoorwaarden',
   policy_version: 'beep_terms_2018_05_25_avg_v1',
-  approve_policy:
-    'Je hebt nog geen akkoord gegeven op de aangepaste gebruikersvoorwaarden.',
 
   /* General items */
   server_down:
     'De app is tijdelijk niet beschikbaar door onderhoud, probeer het later opnieuw',
   add_to_calendar: 'Zet in agenda',
-  sort_on: 'Sorteer op',
   Whats_new: 'Nieuw!',
-  Manual: 'Handleiding',
-
   Site_title: 'BEEP | Bijenmonitor',
-
-  could_not_create_user:
-    'Gebruiker kan op dit moment niet aangemaakt worden, probeer het a.u.b. later opnieuw.',
   email_verified: 'Je e-mail adres is gevalideerd.',
   email_not_verified: 'Je e-mail adres is nog niet gevalideerd.',
   email_new_verification:
@@ -456,18 +376,14 @@ const translations = {
   the_field: 'Het veld',
   is_required: 'is verplicht',
 
-  No_groups: 'Geen groepen beschikbaar',
   not_available_yet:
     'nog niet beschikbaar. Maak de eerste aan door op de knop in de rechter bovenhoek te drukken.',
-  Users: 'Gebruikers',
   member: 'groepslid | groepsleden',
   Member: 'Groepslid | Groepsleden',
-  Invite: 'Uitnodigen',
   Invited: 'Uitgenodigd',
   Invitation: 'Uitnodiging | Uitnodigingen',
   Admin: 'Beheerder',
   Creator: 'Groep eigenaar',
-  Collaborate: 'Samenwerken',
   Group: 'Samenwerkingsgroep | Samenwerkingsgroepen',
   group: 'samenwerkingsgroep | samenwerkingsgroepen',
   group_short: 'groep | groepen',
@@ -499,7 +415,6 @@ const translations = {
   roofed: 'Heeft de bijenstand een dak?',
   start_date: 'Startdatum',
   end_date: 'Einddatum',
-  purpose: 'Onderzoeksdoel',
   institution: 'Onderzoeksinstituut',
   type_of_data_used: 'Gebruik data',
   link: 'Link',
@@ -535,7 +450,6 @@ const translations = {
   Hive_short: 'Kast | Kasten',
 
   Image: 'Afbeelding | Afbeeldingen',
-  Size: 'Grootte',
   preview: 'voorbeeld',
 
   Inside: 'Meet binnen',
@@ -548,7 +462,6 @@ const translations = {
   Export_sensor_data:
     "Exporteer alle sensordata in de hoogst beschikbare resolutie per meetapparaat in een .csv bestand dat je in Excel of SPSS kunt openen. Let op dat de datum/tijdaanduiding in de 'time' kolom altijd in GMT tijd is, opgemaakt volgens de RFC 3339 standaard.",
   CSV_export_separator: 'CSV data kolomscheidingsteken',
-  Selected_date: 'Geselecteerde tijdspanne',
   Sensor_measurements: 'Sensormetingen',
   too_much_data:
     'Te veel data om te exporteren. Selecteer minder Sensormetingen en/of beperk de tijdspanne tussen start en einddatum.',
@@ -565,24 +478,17 @@ const translations = {
   from_weather_service: 'van nabij weerstation',
 
   /* New translations v3 */
-  click_hives_to_filter: 'Klik op bijenkasten om te filteren',
-  for: 'voor',
   last_visit: 'Laatste bezoek',
-  apiary_details: 'Bijenstand details',
-  group_details: 'Groep details',
   diary: 'Logboek',
   data: 'Data',
   photo: "foto | foto's",
   add_checklist: 'Voeg kastkaart toe',
   add_hive: 'Voeg kast toe',
-  delete_apiary: 'Wis bijenstand',
-  edit_apiary: 'Bewerk bijenstand',
+  edit_apiary: 'Aanpassen bijenstand',
   new_apiary: 'Nieuwe bijenstand',
-  delete_group: 'Wis groep',
-  edit_group: 'Bewerk groep',
+  edit_group: 'Aanpassen samenwerkingsgroep',
   new_group: 'Nieuwe samenwerkingsgroep',
   verification_code: 'verificatiecode',
-  limit_exceeded: 'Limiet is bereikt, probeer later opnieuw',
   confirm_email_title: 'Bevestig e-mailadres',
   confirm_email_summary:
     'U heeft een e-mail met een verificatiecode ontvangen. Vul deze hieronder in om uw e-mailadres te verifiëren',
@@ -590,7 +496,6 @@ const translations = {
   Profile: 'Profiel',
   Checklist_template: 'Kastkaart template | Kastkaart templates',
   Help: 'Help',
-  Privacy: 'Privacy',
   FAQ: 'Veelgestelde vragen',
   Support: 'Support',
   no_inspections: 'Voer eerste inspectie in',
@@ -599,7 +504,6 @@ const translations = {
   Hive_honey_layer: 'Honingkamer | Honingkamers',
   Hive_queen_excluder_layer: 'Koninginnenrooster | Koninginnenroosters',
   Hive_feeding_box_layer: 'Voederbak | Voederbakken',
-  overrides_layer_colors: 'overschrijft kamerkleur',
   drag_layers: 'Versleep kamers om bijenkast te configureren',
   page: "pagina | pagina's",
   not_found: 'niet gevonden',
@@ -618,12 +522,9 @@ const translations = {
   remove_image: 'Verwijder afbeelding',
   Total_colony_size: 'Totale grootte bijenvolk',
   bee: 'bij | bijen',
-  with_bees: 'met bijen',
   change_checklist_confirm:
     'Weet je zeker dat je een andere kastkaart wilt selecteren? Waardes van reeds ingevulde velden zullen behouden blijven.',
   view: 'Bekijk',
-  share: 'Deel',
-  edit_details: 'Aanpassen details',
   remove_queen: 'Verwijder koningin',
   remove_group_short: 'Verwijder samenwerkingsgroep',
   device: 'Meetsysteem | Meetsystemen',
@@ -661,8 +562,6 @@ const translations = {
   user_not_edited:
     'Gebruikersgegevens zijn niet aangepast. Wellicht zijn de gebruikersgegevens identiek aan de gegevens die al in de database aanwezig zijn, of één of meer velden zijn niet correct ingevuld. Controleer uw gegevens en probeer opnieuw.',
   user_not_deleted: 'Er is iets misgegaan, de gebruiker is niet verwijderd.',
-  research_consent: 'Toestemming voor onderzoek',
-  checklist_types: 'Persoonlijk, gedeeld, onderzoek',
   edit_hive_checklist_no_touch:
     'Vink items in de onderstaande lijst van beschikbare kastkaartitems aan/uit om ze aan je eigen kastkaart toe te voegen/te verwijderen. Voor meer overzicht, kun je de categorieën in- en uitklappen. Ook kun je ze naar boven/beneden slepen om de volgorde van jouw kastkaart te bepalen (N.B. dit is alleen mogelijk m.b.v. een muis).',
   edit_hive_checklist_touch:
@@ -679,9 +578,6 @@ const translations = {
   Measurement: 'Meting | Metingen',
   Calculation: 'Berekening',
   calculation: 'berekening',
-  Alert_on_occurences: 'Wanneer wil je deze notificatie ontvangen?',
-  Alert_on_occurences_hint:
-    'Direct, of pas nadat deze een x aantal keer is opgetreden?',
   Direct: 'Direct',
   After: 'Na ',
   times: ' keer',
@@ -712,7 +608,6 @@ const translations = {
   delete_alertrule: 'Verwijder notificatie-instelling',
   Active: 'Actief',
   Alert_via_email: 'Notificatie via email',
-  Webhook_url: 'Webhook url',
   this_field: 'Dit veld',
   alertrule_default:
     'Standaard notificatie-instelling | Standaard notificatie-instellingen',
@@ -728,8 +623,6 @@ const translations = {
     ', en ik ontvang een notificatie email. Daarnaast zie ik de notificaties in de BEEP app.',
   alertrule_occurences_direct_sentence:
     ', en ik ontvang hier direct een notificatie van. ',
-  alertrule_occurences_indirect_sentence:
-    ', maar ik ontvang pas een notificatie wanneer dit [alert_on_occurences] keer achter elkaar is opgetreden. ',
   alertrule_exclude_months_sentence:
     'Deze notificatie is uitgeschakeld in de maanden: [exclude_months]. ',
   alertrule_exclude_hours_sentence:
@@ -788,7 +681,6 @@ const translations = {
   Add_apiary: 'Toevoegen bijenstand',
   Add_sensor_definition: 'Toevoegen sensordefinitie',
   Add_member: 'Toevoegen groepslid',
-  alert_rule_deleted: 'Notificatie-instelling verwijderd',
 
   new_or_edited_but_not_saved_sensor_defs_warning:
     'Let op: sensor definities worden pas opgeslagen of definitief toegevoegd wanneer je op het groene vink icoon klikt, aan het einde van de sensor definitie rij in de tabel.',
@@ -801,12 +693,12 @@ const translations = {
   already_verified: 'Ik heb mijn e-mailadres gevalideerd en wil graag inloggen',
   password_recovery_resend_mail: 'Verstuur code opnieuw',
   alert_rule_created: 'Nieuwe notificatie ingesteld',
+  alert_rule_deleted: 'Notificatie-instelling verwijderd',
+  deactivate_for_all_hives: 'Deactiveer notificatie voor alle bijenkasten',
   select_all: 'Selecteer alle',
   During: 'Gedurende',
-  Calculation_minutes: 'Hoe vaak wil je de berekening uit laten voeren?',
   Every: 'Elke ', // context: how often would you like the alert rule calculation to be performed? -> every 15 min, ..., every 24 hours etc.
-  every: 'elke ',
-  Alert_on_occurences_short: 'Wanneer ontvang je de notificatie?', // for alert rule overview table header
+  Calculation_minutes: 'Hoe vaak wil je de berekening uit laten voeren?',
   Calculation_minutes_short: 'Hoe vaak berekend?', // for alert rule overview table header
   Disable_alert_for_this_hive: 'Deactiveer notificatie voor deze kast',
   Alert_disabled_for_this_hive: 'Notificatie gedeactiveerd voor deze kast',
@@ -814,20 +706,20 @@ const translations = {
   Alert_disabled: 'Notificatie gedeactiveerd',
 
   Log_data_import: 'Log data importeren',
-  Flashlogs: 'Logbestanden',
+  Log_files: 'Logbestanden',
   Upload_date: 'Upload datum',
   Messages: 'Berichten',
   Log_time: 'Tijd gelogd',
   File_size: 'Bestandsgrootte',
-  check_flashlog: 'Check log data',
-  delete_flashlog: 'Verwijder logbestand',
-  commit_flashlog_short: 'Importeer log data',
-  commit_flashlog: 'Importeer data van dit logbestand naar de BEEP app: ',
-  flashlog_explanation:
+  check_log_data: 'Check log data',
+  delete_log_file: 'Verwijder logbestand',
+  commit_log_data_short: 'Importeer log data',
+  commit_log_data: 'Importeer data van dit logbestand naar de BEEP app: ',
+  import_log_data_explanation:
     "In de BEEP base app kan je log data downloaden van het interne geheugen van de BEEP base. Steeds als je log data downloadt, wordt het interne geheugen gewist en de data geüpload naar de BEEP app. Hieronder vind je de lijst met jouw gedownloade log data. Je kan de data in de database vervangen door de data uit de gedownloade logbestanden door op de knop 'Check log data' te klikken. Er zal dan eerst gecheckt worden hoeveel data in de database vervangen zal worden, en of de tijd van de data uit het logbestand klopt. Je ziet dan een pop-up waarin het resultaat van de check vermeld staat, waarbij je kan kiezen om het vervangen van de data toe te passen ('Ok') of te annuleren.",
-  flashlog_url_text:
+  import_log_data_url_text:
     'Lees hier het support artikel over het downloaden van log data m.b.v. de BEEP base app.',
-  flashlog_support_url:
+  import_log_data_support_url:
     'https://beepsupport.freshdesk.com/nl/support/solutions/articles/60000697129-beep-base-data-downloaden-met-bluetooth',
 
   Immediately: 'Direct',
@@ -884,9 +776,19 @@ const translations = {
   alerts_support_url:
     'https://beepsupport.freshdesk.com/nl/support/solutions/articles/60000706484-notificaties',
 
+  /* New translations v3.0.74 */
   Decline: 'Afwijzen',
   Decline_invitation: 'Uitnodiging afwijzen',
   Decline_invitation_sure: 'Weet je zeker dat je de uitnodiging wilt afwijzen?',
+  selection: 'Selectie',
+  selection_placeholder: 'Selecteer een periode',
+  data_zoom: 'Data inzoomen',
+  data_zoom_ok: 'Wil je inzoomen op de data van ',
+  data_zoom_out_ok: 'Wil je uitzoomen naar de data van ',
+  show_all: 'Toon alle',
+  only_active_if_measurement_present:
+    '*N.B. Notificaties worden alleen geactiveerd wanneer de geselecteerde meting door je BEEP base / meetsysteem gemeten wordt',
+  Relative_startpoint: 'Relatief',
 }
 
 export default translations

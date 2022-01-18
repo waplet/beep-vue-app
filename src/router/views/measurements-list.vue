@@ -3,7 +3,8 @@
     <div v-if="devices.length > 0 && ready" class="period-bar-wrapper">
       <v-container class="period-container">
         <v-row
-          class="period-bar d-flex flex-row justify-space-between align-center"
+          v-if="!smAndDown"
+          class="period-bar d-flex flex-wrap justify-space-between align-center"
         >
           <div v-for="period in periods" :key="period.interval">
             <v-btn
@@ -12,14 +13,73 @@
                   period.interval === interval ? 'accent--text' : ''
                 }`
               "
-              :small="mobile"
               text
               @click="setPeriodInterval(period.interval)"
             >
               {{ period.name }}
             </v-btn>
           </div>
+          <v-switch
+            v-model="relativeInterval"
+            :label="`${$t('Relative_startpoint')}`"
+            class="pt-0 mt-0"
+            :disabled="interval === 'selection'"
+            dense
+            hide-details
+          ></v-switch>
         </v-row>
+        <div v-if="smAndDown" class="period-bar">
+          <v-row class="d-flex flex-row justify-space-between align-center">
+            <div v-for="period in periods.slice(0, -2)" :key="period.interval">
+              <v-btn
+                :class="
+                  `grey--text ${
+                    period.interval === interval ? 'accent--text' : ''
+                  }`
+                "
+                small
+                text
+                @click="setPeriodInterval(period.interval)"
+              >
+                {{ period.name }}
+              </v-btn>
+            </div>
+          </v-row>
+          <v-row class="d-flex flex-row justify-space-around align-center">
+            <v-col
+              v-for="period in periods.slice(-2)"
+              :key="period.interval"
+              cols="3"
+              sm="4"
+              class="pa-0 d-flex justify-center"
+            >
+              <v-btn
+                :class="
+                  `grey--text ${
+                    period.interval === interval ? 'accent--text' : ''
+                  }`
+                "
+                small
+                text
+                @click="setPeriodInterval(period.interval)"
+              >
+                {{ period.name }}
+              </v-btn>
+            </v-col>
+            <v-col cols="5" sm="4" class="pa-0">
+              <div class="d-flex justify-center">
+                <v-switch
+                  v-model="relativeInterval"
+                  :label="`${$t('Relative_startpoint')}`"
+                  class="pt-0 mt-0"
+                  :disabled="interval === 'selection'"
+                  dense
+                  hide-details
+                ></v-switch>
+              </div>
+            </v-col>
+          </v-row>
+        </div>
       </v-container>
     </div>
 
@@ -28,7 +88,7 @@
       :class="devices.length > 0 ? 'measurements-content' : ''"
     >
       <v-row>
-        <v-col v-if="devices.length > 0" cols="12">
+        <v-col v-if="devices.length > 0 && interval !== 'selection'" cols="12">
           <div class="d-flex align-center justify-center">
             <v-icon class="color-grey-dark" @click="setTimeIndex(1)">
               mdi-chevron-left
@@ -80,6 +140,62 @@
             </v-icon>
           </div>
         </v-col>
+
+        <v-col
+          v-if="interval === 'selection'"
+          cols="12"
+          sm="4"
+          md="3"
+          :class="mobile ? 'py-0' : 'mx-auto'"
+        >
+          <div class="d-flex align-center justify-center mr-3 mr-sm-0">
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="dates"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="dateRangeText"
+                  :rules="requiredRules"
+                  :label="$t('period')"
+                  prepend-icon="mdi-calendar"
+                  class="date-picker"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="dates"
+                :first-day-of-week="1"
+                :locale="locale"
+                range
+                no-title
+                scrollable
+                @change="checkDateOrder($event)"
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="secondary" @click="menu = false">
+                  {{ $t('Cancel') }}
+                </v-btn>
+                <v-btn
+                  :disabled="invalidDates(dates)"
+                  text
+                  color="secondary"
+                  @click="$refs.menu.save(dates), loadData()"
+                >
+                  {{ $t('ok') }}
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+          </div>
+        </v-col>
+
         <v-col class="d-flex justify-space-between" cols="12">
           <Treeselect
             v-if="devices.length > 0"
@@ -128,10 +244,10 @@
                 <span
                   v-text="
                     mobile
-                      ? $t('Last') + ': ' + momentAll(lastSensorDate)
+                      ? $t('Last') + ': ' + momentFormat(lastSensorDate, 'llll')
                       : $t('last_measurement') +
                         ': ' +
-                        momentAll(lastSensorDate)
+                        momentFormat(lastSensorDate, 'llll')
                   "
                 ></span>
                 <div class="float-right">
@@ -153,58 +269,59 @@
               <v-row>
                 <v-col v-if="currentLastSensorValues.length > 0" cols="12">
                   <div class="d-flex flex-wrap justify-center mt-5 mt-sm-7">
-                    <vue-ellipse-progress
-                      v-for="(sensorData, index) in currentLastSensorValues"
-                      :key="sensorData.name + index"
-                      class="mr-2"
-                      :progress="
-                        calculateProgress(
-                          SENSOR_MIN[sensorData.name],
-                          SENSOR_MAX[sensorData.name],
-                          // eslint-disable-next-line vue/comma-dangle
-                          sensorData.value
-                        )
-                      "
-                      :legend-value="sensorData.value.toString()"
-                      :color="
-                        sensorData.value < SENSOR_LOW[sensorData.name]
-                          ? '#ffcc66'
-                          : sensorData.value > SENSOR_HIGH[sensorData.name]
-                          ? '#f00'
-                          : '#417505'
-                      "
-                      :size="mobile ? 75 : 100"
-                      empty-color="#eee"
-                      :thickness="4"
-                      :empty-thickness="3"
-                      half
-                      :angle="0"
-                    >
-                      <template v-slot="{ counterTick }">
-                        <v-sheet
-                          :class="
-                            `beep-icon beep-icon-${sensorData.name} mt-3 mb-n1 mt-sm-1 mb-sm-n1`
-                          "
-                        ></v-sheet>
-                        <div
-                          :style="
-                            `color: #242424;
+                    <template v-for="sensorData in currentLastSensorValues">
+                      <vue-ellipse-progress
+                        :key="sensorData.name + sensorData.value"
+                        class="mr-2"
+                        :progress="
+                          calculateProgress(
+                            SENSOR_MIN[sensorData.name],
+                            SENSOR_MAX[sensorData.name],
+                            // eslint-disable-next-line vue/comma-dangle
+                            sensorData.value
+                          )
+                        "
+                        :legend-value="sensorData.value.toString()"
+                        :color="
+                          sensorData.value < SENSOR_LOW[sensorData.name]
+                            ? '#ffcc66'
+                            : sensorData.value > SENSOR_HIGH[sensorData.name]
+                            ? '#f00'
+                            : '#417505'
+                        "
+                        :size="mobile ? 75 : 100"
+                        empty-color="#eee"
+                        :thickness="4"
+                        :empty-thickness="3"
+                        half
+                        :angle="0"
+                      >
+                        <template v-slot="{ counterTick }">
+                          <v-sheet
+                            :class="
+                              `beep-icon beep-icon-${sensorData.name} mt-3 mb-n1 mt-sm-1 mb-sm-n1`
+                            "
+                          ></v-sheet>
+                          <div
+                            :style="
+                              `color: #242424;
                   font-size: ${mobile ? '14px' : '16px'}
                   ;`
-                          "
-                        >
-                          {{ counterTick.currentValue
-                          }}<span style="font-size: 0.75rem;">{{
-                            SENSOR_UNITS[sensorData.name]
-                          }}</span></div
-                        >
-                        <div class="gauge-label">{{
-                          (SENSOR_NAMES[sensorData.name])
+                            "
+                          >
+                            {{ counterTick.currentValue
+                            }}<span style="font-size: 0.75rem;">{{
+                              SENSOR_UNITS[sensorData.name]
+                            }}</span></div
+                          >
+                          <div class="gauge-label">{{
+                            (SENSOR_NAMES[sensorData.name])
                             ? $t(SENSOR_NAMES[sensorData.name])
                             : sensorData.name
-                        }}</div>
-                      </template>
-                    </vue-ellipse-progress>
+                          }}</div>
+                        </template>
+                      </vue-ellipse-progress>
+                    </template>
                   </div>
                 </v-col>
               </v-row>
@@ -407,13 +524,17 @@
             </v-card-text>
           </SlideYUpTransition>
         </v-card>
-        <v-row>
+        <v-row class="text-row">
           <v-col
-            v-if="ready && !lastSensorDate"
+            v-if="
+              ready &&
+                (measurementData === null || noPeriodData) &&
+                !lastSensorDate
+            "
             cols="12"
             class="text-center my-10"
           >
-            {{ $t('no_data') }}
+            {{ noPeriodData ? $t('selection_placeholder') : $t('no_data') }}
           </v-col>
         </v-row>
       </div>
@@ -431,11 +552,14 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <Confirm ref="confirm"></Confirm>
   </Layout>
 </template>
 
 <script>
 import Api from '@api/Api'
+import Confirm from '@components/confirm.vue'
 import Layout from '@layouts/main.vue'
 import { mapGetters } from 'vuex'
 import MeasurementsChartHeatmap from '@components/measurements-chart-heatmap.vue'
@@ -446,6 +570,7 @@ import {
   readDevicesIfNotPresent,
   readTaxonomy,
 } from '@mixins/methodsMixin'
+import { momentFormat } from '@mixins/momentMixin'
 import { sensorMixin } from '@mixins/sensorMixin'
 import { SlideYUpTransition } from 'vue2-transitions'
 import '@plugins/chartist-plugin-beep.js'
@@ -456,16 +581,24 @@ import 'chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.css'
 
 export default {
   components: {
+    Confirm,
     Layout,
     MeasurementsChartHeatmap,
     SlideYUpTransition,
     Treeselect,
   },
-  mixins: [checkAlerts, readDevicesIfNotPresent, readTaxonomy, sensorMixin],
+  mixins: [
+    checkAlerts,
+    momentFormat,
+    readDevicesIfNotPresent,
+    readTaxonomy,
+    sensorMixin,
+  ],
   data() {
     return {
       lastSensorDate: null,
       measurementData: {},
+      noPeriodData: false,
       interval: 'day',
       timeIndex: 0,
       timeFormat: 'ddd D MMM YYYY',
@@ -497,11 +630,29 @@ export default {
       assetsUrl:
         process.env.VUE_APP_ASSETS_URL ||
         process.env.VUE_APP_ASSETS_URL_FALLBACK,
+      menu: false,
+      dates: [],
+      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+      periodStart: null,
+      periodEnd: null,
     }
   },
   computed: {
     ...mapGetters('devices', ['devices']),
     ...mapGetters('taxonomy', ['sensorMeasurementsList']),
+    dateRangeText() {
+      if (this.dates.length > 0) {
+        var momentDates = [
+          this.momentFormat(this.dates[0], 'll'),
+          this.dates[1] !== undefined
+            ? this.momentFormat(this.dates[1], 'll')
+            : '',
+        ]
+        return momentDates.join(' - ')
+      } else {
+        return this.$i18n.t('selection_placeholder')
+      }
+    },
     timeZone() {
       return this.$moment.tz.guess()
     },
@@ -511,7 +662,10 @@ export default {
     measurementsForHeatmap() {
       // remove first value for month and year interval (belongs to previous month/year) (can't be skipped in v-for loop as v-if is not possible there)
       var data = this.measurementData.measurements
-      if (this.interval === 'month' || this.interval === 'year') {
+      if (
+        (this.interval === 'month' || this.interval === 'year') &&
+        !this.relativeInterval
+      ) {
         data = data.slice(1)
         return data
       } else {
@@ -546,7 +700,11 @@ export default {
     moduloNr() {
       switch (this.interval) {
         case 'hour':
-          return 1 * this.moduloFactor
+          if (this.resolutionUnit === 'm' && this.resolutionNr === 1) {
+            return 2 * this.moduloFactor
+          } else {
+            return 1 * this.moduloFactor
+          }
         case 'week':
           if (this.resolutionUnit === 'm' && this.resolutionNr !== null) {
             if (this.resolutionNr < 720) {
@@ -594,38 +752,36 @@ export default {
         { name: this.$i18n.t('week'), interval: 'week' },
         { name: this.$i18n.t('month'), interval: 'month' },
         { name: this.$i18n.t('year'), interval: 'year' },
+        { name: this.$i18n.t('selection'), interval: 'selection' },
       ]
     },
-    // periodTitle() {
-    //   var p = this.interval
-    //   var d = p + 's'
-    //   var i = this.timeIndex
-    //   var startTimeFormat = this.timeFormat
-    //   var endTimeFormat = this.timeFormat
-
-    //   if (p === 'hour') {
-    //     endTimeFormat = 'HH:mm'
-    //     startTimeFormat += ' ' + endTimeFormat
-    //   } else if (p === 'day') {
-    //     endTimeFormat = null
-    //   } else if (p === 'week') {
-    //     p = 'isoweek'
-    //   }
-
-    //   var ep = p
-
-    //   var pStaTime = this.$moment()
-    //     .subtract(i, d)
-    //     .startOf(p)
-    //   var pEndTime = this.$moment()
-    //     .subtract(i, d)
-    //     .endOf(ep)
-
-    //   var s = pStaTime.locale(this.locale).format(startTimeFormat)
-    //   var e = pEndTime.locale(this.locale).format(endTimeFormat)
-
-    //   return s + '' + (endTimeFormat !== null ? ' - ' + e : '')
-    // },
+    relativeInterval: {
+      get() {
+        if (localStorage.beepRelativeInterval) {
+          return localStorage.beepRelativeInterval === 'true'
+        } else {
+          return true
+        }
+      },
+      set(value) {
+        localStorage.beepRelativeInterval = value
+      },
+    },
+    requiredRules() {
+      var laterEndDate = true
+      this.dates.length === 2 && this.dates[0] > this.dates[1]
+        ? (laterEndDate = false)
+        : (laterEndDate = true)
+      return [
+        (v) => laterEndDate || this.$i18n.t('later_end_start'), // don't allow start date later than end date
+        (v) =>
+          this.dates[0] !== this.dates[1] ||
+          this.$i18n.t('different_end_start'), // don't allow end date identical to start date
+        (v) =>
+          this.dates.length > 1 ||
+          this.$i18n.t('end_date') + ' ' + this.$i18n.t('not_filled'), // don't allow start date only
+      ]
+    },
     resolutionNr() {
       return this.measurementData !== null
         ? parseInt(this.measurementData.resolution.slice(0, -1))
@@ -657,6 +813,9 @@ export default {
       set(value) {
         this.$store.commit('devices/setSelectedDeviceId', value)
       },
+    },
+    smAndDown() {
+      return this.$vuetify.breakpoint.smAndDown
     },
     mdScreen() {
       return this.$vuetify.breakpoint.width < 960
@@ -751,6 +910,9 @@ export default {
         this.formatMeasurementData(temp)
       }, 10)
     },
+    relativeInterval() {
+      this.loadData()
+    },
   },
   created() {
     this.readTaxonomy()
@@ -844,8 +1006,12 @@ export default {
       }
     },
     async sensorMeasurementRequest(interval) {
-      var timeGroup = interval === 'hour' ? null : interval
+      var start = interval === 'selection' ? this.dates[0] : null
+      var end = interval === 'selection' ? this.dates[1] : null
+      var timeGroup =
+        interval === 'hour' || interval === 'selection' ? null : interval
       this.noChartData = false
+      this.noPeriodData = false
       this.measurementData = null // needed to let chartist redraw charts after interval switch, otherwise there's a bug in chartist-plugin-legend where old data is loaded after legend click see https://github.com/CodeYellowBV/chartist-plugin-legend/issues/48
       try {
         const response = await Api.readRequest(
@@ -858,7 +1024,11 @@ export default {
             '&timeGroup=' +
             timeGroup +
             '&timezone=' +
-            this.timeZone
+            this.timeZone +
+            (start !== null ? '&start=' + start + ' 00:00' : '') +
+            (end !== null ? '&end=' + end + ' 23:59' : '') +
+            '&relative_interval=' +
+            (this.relativeInterval ? '1' : '0')
         )
         this.formatMeasurementData(response.data)
         return true
@@ -884,6 +1054,15 @@ export default {
         return ((value - min) / (max - min)) * 100
       }
     },
+    calculateTimeIndex(previousPeriod, period, date = null) {
+      var newPeriodIndex = 0
+      var todayEnd = this.$moment().endOf(period)
+      var endOfPeriod = this.$moment.parseZone(date, this.photoParseFormat)
+      var periodDiff = todayEnd.diff(endOfPeriod, period + 's')
+      if (!isNaN(periodDiff)) newPeriodIndex = periodDiff
+
+      return !isNaN(newPeriodIndex) && newPeriodIndex > 0 ? newPeriodIndex : 0
+    },
     chartDataSingleSeries(quantity, unit) {
       var data = {
         labels: [],
@@ -905,16 +1084,17 @@ export default {
       if (typeof this.measurementData.measurements !== 'undefined') {
         this.measurementData.measurements.map((measurement, index) => {
           if (
-            ((this.interval === 'month' || this.interval === 'year') &&
-              index !== 0) || // skip first value for month and year interval (belongs to previous month/year)
             this.interval === 'hour' ||
             this.interval === 'day' ||
-            this.interval === 'week'
+            this.interval === 'week' ||
+            // skip first value for month and year interval (belongs to previous month/year) except when it's a relative interval
+            index !== 0 ||
+            this.relativeInterval
           ) {
             data.labels.push(measurement.time)
             data.series[0].data.push({
               meta:
-                this.momentAll(measurement.time) +
+                this.momentFormat(measurement.time, 'llll') +
                 '<br>' +
                 this.$i18n.t(quantity) +
                 ': ' +
@@ -946,18 +1126,19 @@ export default {
       if (typeof this.measurementData.measurements !== 'undefined') {
         this.measurementData.measurements.map((measurement, index) => {
           if (
-            ((this.interval === 'month' || this.interval === 'year') &&
-              index !== 0) || // skip first value for month and year interval (belongs to previous month/year)
             this.interval === 'hour' ||
             this.interval === 'day' ||
-            this.interval === 'week'
+            this.interval === 'week' ||
+            // skip first value for month and year interval (belongs to previous month/year) except when it's a relative interval
+            index !== 0 ||
+            this.relativeInterval
           ) {
             data.labels.push(measurement.time)
             data.series.map((serie, index) => {
               var currentSensor = sensorObject[serie.name]
               serie.data.push({
                 meta:
-                  this.momentAll(measurement.time) +
+                  this.momentFormat(measurement.time, 'llll') +
                   '<br>' +
                   (weather ? this.$i18n.t(currentSensor) : serie.name) +
                   ': ' +
@@ -986,9 +1167,13 @@ export default {
             class: 'beep-tooltip',
             metaIsHTML: true,
           }),
-          this.$chartist.plugins.beep(),
-          this.$chartist.plugins.legendBeep(),
-          this.$chartist.plugins.ctPointLabels({
+          self.$chartist.plugins.beep({
+            onClick: function(date) {
+              self.setPeriodToDate(date)
+            },
+          }),
+          self.$chartist.plugins.legendBeep(),
+          self.$chartist.plugins.ctPointLabels({
             labelOffset: {
               x: 7,
               y: 0,
@@ -1009,7 +1194,7 @@ export default {
           }),
         ],
         showPoint: true,
-        lineSmooth: this.$chartist.Interpolation.simple({
+        lineSmooth: self.$chartist.Interpolation.simple({
           divisor: 10,
           fillHoles: true,
         }),
@@ -1023,6 +1208,11 @@ export default {
             }
           },
         },
+      }
+    },
+    checkDateOrder(dates) {
+      if (dates[1] < dates[0]) {
+        this.dates = [dates[1], dates[0]]
       }
     },
     formatMeasurementData(measurementData) {
@@ -1068,6 +1258,13 @@ export default {
         this.noChartData = true
       }
     },
+    invalidDates(dates) {
+      return (
+        (dates.length === 2 && dates[0] > dates[1]) ||
+        dates[0] === dates[1] ||
+        dates.length === 1
+      )
+    },
     loadData() {
       this.loadLastSensorValuesTimer()
       this.sensorMeasurementRequest(this.interval)
@@ -1084,12 +1281,6 @@ export default {
         this.stopTimer()
         this.loadLastSensorValuesFunc()
       }
-    },
-    momentAll(date) {
-      // automagically converted from utc time to users timezone because moment guesses (and then sets its) timezone in this view
-      return this.$moment(date)
-        .locale(this.locale)
-        .format('llll')
     },
     momentFromISO8601(date) {
       // automagically converted from utc time to users timezone because moment guesses (and then sets its) timezone in this view
@@ -1154,29 +1345,73 @@ export default {
       var startTimeFormat = this.timeFormat
       var endTimeFormat = this.timeFormat
 
-      if (p === 'hour') {
-        endTimeFormat = 'HH:mm'
-        startTimeFormat += ' ' + endTimeFormat
-      } else if (p === 'day') {
-        endTimeFormat = null
-      } else if (p === 'week') {
-        p = 'isoweek'
+      if (p === 'selection') {
+        this.periodTitle = this.dateRangeText
+        this.periodStart = this.$moment.utc(this.dates[0]) // FIXME: results in previous day if time = 00:00
+        this.periodEnd = this.$moment.utc(this.dates[1]) // FIXME: results in previous day if time = 00:00
+      } else {
+        if (p === 'hour') {
+          endTimeFormat = 'HH:mm'
+          startTimeFormat += ' ' + endTimeFormat
+        } else if (p === 'day') {
+          !this.relativeInterval
+            ? (endTimeFormat = null)
+            : (endTimeFormat = this.timeFormat)
+        } else if (p === 'week') {
+          !this.relativeInterval ? (p = 'isoweek') : (p = 'week')
+        }
+
+        var ep = p
+
+        if (!this.relativeInterval) {
+          this.periodStart = this.$moment()
+            .subtract(i, d)
+            .startOf(p)
+          this.periodEnd = this.$moment()
+            .subtract(i, d)
+            .endOf(ep)
+        } else {
+          this.periodStart = this.$moment().subtract(i + 1, d)
+          this.periodEnd = this.$moment().subtract(i, d)
+        }
+
+        var formatStart = this.momentFormat(this.periodStart, startTimeFormat)
+        var formatEnd = this.momentFormat(this.periodEnd, endTimeFormat)
+
+        this.periodTitle =
+          formatStart + '' + (endTimeFormat !== null ? ' - ' + formatEnd : '')
+        this.selectedDate = this.periodStart.format('YYYY-MM-DD')
       }
+    },
+    setPeriodToDate(date, period = null) {
+      if (period === null) {
+        if (this.interval === 'day')
+          // switch period zoom levels
+          period = 'hour'
+        else period = 'day'
+      }
+      var format = period === 'hour' ? 'lll' : 'll'
 
-      var ep = p
-
-      var pStaTime = this.$moment()
-        .subtract(i, d)
-        .startOf(p)
-      var pEndTime = this.$moment()
-        .subtract(i, d)
-        .endOf(ep)
-
-      var s = pStaTime.locale(this.locale).format(startTimeFormat)
-      var e = pEndTime.locale(this.locale).format(endTimeFormat)
-
-      this.periodTitle = s + '' + (endTimeFormat !== null ? ' - ' + e : '')
-      this.selectedDate = pStaTime.format('YYYY-MM-DD')
+      this.$refs.confirm
+        .open(
+          this.$i18n.t('data_zoom'),
+          (this.interval !== 'hour'
+            ? this.$i18n.t('data_zoom_ok')
+            : this.$i18n.t('data_zoom_out_ok')) +
+            this.momentFormat(date, format) +
+            '?',
+          {
+            color: 'primary',
+          }
+        )
+        .then((confirm) => {
+          this.timeIndex = this.calculateTimeIndex(this.interval, period, date)
+          this.interval = period
+          this.loadData()
+        })
+        .catch((reject) => {
+          return true
+        })
     },
     setInitialDeviceIdAndLoadData() {
       if (this.$route.name === 'measurements-id') {
@@ -1188,9 +1423,13 @@ export default {
       return true
     },
     setPeriodInterval(interval, modulonr) {
-      this.timeIndex = 0
       this.interval = interval
-      this.loadData()
+      if (interval === 'selection' && this.dates.length === 0) {
+        this.noPeriodData = true
+      } else {
+        this.timeIndex = 0
+        this.loadData()
+      }
     },
     setTimeIndex(offset) {
       this.timeIndex += offset
@@ -1273,9 +1512,9 @@ export default {
 }
 
 .measurements-content {
-  margin-top: 40px;
-  @media (max-width: 374px) {
-    margin-top: 65px;
+  margin-top: 58px;
+  @include for-tablet-landscape-up {
+    margin-top: 40px;
   }
 }
 .ep-legend--value {
@@ -1370,6 +1609,7 @@ export default {
 
   .ct-series {
     .ct-point {
+      cursor: pointer;
       stroke-width: 6px !important;
       @include for-phone-only {
         stroke-width: 4px !important;
@@ -1457,5 +1697,9 @@ export default {
 
 .header-filler {
   height: 32px;
+}
+
+.date-picker {
+  max-width: 300px;
 }
 </style>

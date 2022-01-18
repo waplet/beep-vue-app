@@ -1,6 +1,6 @@
 /*
  * BEEP - Translations - VUE app v3 (Q4 2021)
- * Author: Julia Buysing Damsté (julia@beep.nl)
+ * Author: Julia BD (julia@beep.nl)
  *
  */
 const translations = {
@@ -780,7 +780,6 @@ const translations = {
   During: 'Während',
   Calculation_minutes: 'Wie oft soll die Berechnung durchgeführt werden?',
   Every: 'Alle ',
-  every: 'alle ',
   Calculation_minutes_short: 'Wie oft wird berechnet?',
   Alert_on_occurences_short: 'Wann erhälst Du Alarmmeldungen?',
   Disable_alert_for_this_hive: 'Alarm für diese Beute deaktivieren',
@@ -839,7 +838,7 @@ const translations = {
   No_measurement_data_received_in_a_set_time_period:
     'Keine Messdaten während eines bestimmten Zeitraums empfangen',
   Sudden_weight_drop_triggers_alert_immediately:
-    'Ein plötzlicher Gewichtsverlust des Bienenstocks löst sofort einen Alarm aus. N.B.: Dies basiert auf einem Datenübertragungsintervall von 15 Minuten. Falls Ihr Gerät ein anderes Datenübertragungsintervall hat, sollten Sie den Schwellenwert entsprechend anpassen.',
+    'Ein plötzlicher Gewichtsverlust des Bienenstocks löst sofort einen Alarm aus. N.B. Dies basiert auf einem Datenübertragungsintervall von 15 Minuten. Falls Ihr Gerät ein anderes Datenübertragungsintervall hat, sollten Sie den Schwellenwert entsprechend anpassen.',
   The_hive_weight_is_below_a_set_value:
     'Das Beutengewicht liegt unter einem bestimmten Wert',
 
@@ -866,10 +865,20 @@ const translations = {
   alerts_support_url:
     'https://beepsupport.freshdesk.com/de/support/solutions/articles/60000706484-benachrichtigungen',
 
+  /* New translations v3.0.74 */
   Decline: 'Ablehnen',
   Decline_invitation: 'Einladung ablehnen',
   Decline_invitation_sure:
     'Möchten Sie die Gruppeneinladung wirklich ablehnen?',
+  selection: 'selection',
+  selection_placeholder: 'Select a period',
+  data_zoom: 'Data zoom',
+  data_zoom_ok: 'Would you like to zoom in on the data of ',
+  data_zoom_out_ok: 'Would you like to zoom out to the data of ',
+  show_all: 'Show all',
+  only_active_if_measurement_present:
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+  Relative_startpoint: 'Relative',
 }
 
 export default translations

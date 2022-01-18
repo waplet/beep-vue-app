@@ -43,7 +43,11 @@
 
             <template v-for="(item, i) in settingItems">
               <v-list-item
-                v-if="item.title"
+                v-if="
+                  item.title &&
+                    ((item.beepBaseRequired && hasBeepBase) ||
+                      !item.beepBaseRequired)
+                "
                 :key="i"
                 exact
                 :to="!item.external ? { name: item.route } : ''"
@@ -82,7 +86,7 @@
 
         <div class="version-number">
           <v-spacer></v-spacer>
-          v3.0.73
+          v3.0.74
         </div>
       </div>
     </v-navigation-drawer>
@@ -90,7 +94,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { readDevicesIfNotPresent } from '@mixins/methodsMixin'
+
 export default {
+  mixins: [readDevicesIfNotPresent],
   props: {
     menuItems: {
       type: Array,
@@ -103,6 +111,16 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('devices', ['devices', 'devicesPresent']),
+    hasBeepBase() {
+      if (this.devices.length > 0) {
+        return (
+          this.devices.filter((device) => device.type === 'beep').length > 0
+        )
+      } else {
+        return false
+      }
+    },
     currentRoute() {
       return this.$route.name
     },
@@ -112,11 +130,13 @@ export default {
           icon: 'mdi-account',
           title: this.$i18n.t('Profile'),
           route: 'profile',
+          beepBaseRequired: false,
         },
         {
           icon: 'icon-sensors--no-outline',
           title: this.$i18n.tc('device', 2),
           route: 'devices',
+          beepBaseRequired: false,
         },
         {
           icon: 'mdi-chart-line',
@@ -127,21 +147,31 @@ export default {
           icon: 'mdi-bell',
           title: this.$i18n.t('alertrule_pagetitle'),
           route: 'alertrules',
+          beepBaseRequired: false,
         },
         {
           icon: 'mdi-cloud-download',
           title: this.$i18n.t('Data_export'),
           route: 'export',
+          beepBaseRequired: false,
         },
+        // {
+        //   icon: 'icon-beep-base',
+        //   title: this.$i18n.t('Log_data_import'),
+        //   route: 'import',
+        //   beepBaseRequired: true,
+        // },
         {
           icon: 'mdi-format-list-checks',
           title: this.$i18n.tc('Checklist_template', 2),
           route: 'checklists',
+          beepBaseRequired: false,
         },
         {
           icon: 'mdi-school',
           title: this.$i18n.t('research'),
           route: 'research',
+          beepBaseRequired: false,
         },
         {
           divider: true,
@@ -150,11 +180,13 @@ export default {
           icon: 'mdi-comment-question-outline',
           title: this.$i18n.t('Support'),
           route: 'support',
+          beepBaseRequired: false,
         },
         {
           icon: 'mdi-new-box',
           title: this.$i18n.t('Whats_new'),
           route: 'new',
+          beepBaseRequired: false,
         },
         {
           icon: 'mdi-information-outline',
@@ -164,6 +196,7 @@ export default {
             this.locale === 'nl'
               ? 'https://beep.nl'
               : 'https://beep.nl/home-english',
+          beepBaseRequired: false,
         },
         {
           divider: true,
@@ -182,6 +215,9 @@ export default {
     locale() {
       return this.$i18n.locale
     },
+  },
+  created() {
+    this.readDevicesIfNotPresent()
   },
   methods: {
     checkRoute(routeName) {
