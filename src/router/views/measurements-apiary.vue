@@ -13,13 +13,21 @@
               {{ period.name }}
             </v-btn>
           </div>
+          <v-switch
+              v-model="setRelativeInterval"
+              :label="`${$t('Relative_startpoint')}`"
+              class="pt-0 mt-0"
+              :disabled="interval === 'selection'"
+              dense
+              hide-details
+          ></v-switch>
         </v-row>
       </v-container>
     </div>
 
     <v-container v-if="ready" :class="{ 'measurements-content': apiaries.length }">
       <v-row>
-        <v-col v-if="apiaries.length" cols="12">
+        <v-col v-if="apiaries.length && interval !== 'selection'" cols="12">
           <div class="d-flex align-center justify-center">
             <v-icon class="color-grey-dark" @click="setTimeIndex(1)">
               mdi-chevron-left
@@ -66,6 +74,59 @@
             >
               mdi-chevron-right
             </v-icon>
+          </div>
+        </v-col>
+        <v-col
+          v-if="interval === 'selection'"
+          cols="12"
+          sm="4"
+          md="3"
+          :class="mobile ? 'py-0' : 'mx-auto'">
+          <div class="d-flex align-center justify-center mr-3 mr-sm-0">
+            <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="dates"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="dateRangeText"
+                    :rules="requiredRules"
+                    :label="$t('period')"
+                    prepend-icon="mdi-calendar"
+                    class="date-picker"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                  v-model="dates"
+                  :first-day-of-week="1"
+                  :locale="locale"
+                  range
+                  no-title
+                  scrollable
+                  @change="checkDateOrder($event)"
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="secondary" @click="menu = false">
+                  {{ $t('Cancel') }}
+                </v-btn>
+                <v-btn
+                    :disabled="invalidDates(dates)"
+                    text
+                    color="secondary"
+                    @click="$refs.menu.save(dates), loadData()"
+                >
+                  {{ $t('ok') }}
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
           </div>
         </v-col>
         <v-col class="d-flex justify-space-between" cols="12">
@@ -180,6 +241,7 @@ import {
   readDevicesIfNotPresent,
   readTaxonomy,
 } from '@mixins/methodsMixin'
+import { momentFormat } from '@mixins/momentMixin'
 import { sensorMixin } from '@mixins/sensorMixin'
 import '@plugins/chartist-plugin-beep.js'
 import '@plugins/chartist-plugin-legend-beep.js'
@@ -200,6 +262,7 @@ export default {
     readTaxonomy,
     readApiariesAndGroupsIfNotPresent,
     readDevicesIfNotPresent,
+    momentFormat,
     sensorMixin
   ],
   data() {
@@ -225,6 +288,17 @@ export default {
         { value: 6, name: 'mdi-grid-large' },
         { value: 4, name: 'mdi-grid' },
       ],
+      menu: false,
+      dates: [],
+      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+      periodStart: null,
+      periodEnd: null,
+      relativeInterval: true,
+    }
+  },
+  watch: {
+    relativeInterval() {
+      this.loadData();
     }
   },
   computed: {
@@ -232,6 +306,19 @@ export default {
     ...mapGetters('locations', ['apiaries']),
     ...mapGetters('devices', ['devices']),
     ...mapGetters('taxonomy', ['sensorMeasurementsList']),
+    dateRangeText() {
+      if (this.dates.length > 0) {
+        var momentDates = [
+          this.momentFormat(this.dates[0], 'll'),
+          this.dates[1] !== undefined
+              ? this.momentFormat(this.dates[1], 'll')
+              : '',
+        ]
+        return momentDates.join(' - ')
+      } else {
+        return this.$i18n.t('selection_placeholder')
+      }
+    },
     timeZone() {
       return this.$moment.tz.guess()
     },
@@ -245,6 +332,35 @@ export default {
         { name: this.$i18n.t('week'), interval: 'week' },
         { name: this.$i18n.t('month'), interval: 'month' },
         { name: this.$i18n.t('year'), interval: 'year' },
+        { name: this.$i18n.t('selection'), interval: 'selection' },
+      ]
+    },
+    setRelativeInterval: {
+      get() {
+        if (localStorage.beepRelativeInterval) {
+          return localStorage.beepRelativeInterval === 'true';
+        } else {
+          return true;
+        }
+      },
+      set(value) {
+        localStorage.beepRelativeInterval = value;
+        this.relativeInterval = value;
+      }
+    },
+    requiredRules() {
+      var laterEndDate = true
+      this.dates.length === 2 && this.dates[0] > this.dates[1]
+          ? (laterEndDate = false)
+          : (laterEndDate = true)
+      return [
+        (v) => laterEndDate || this.$i18n.t('later_end_start'), // don't allow start date later than end date
+        (v) =>
+            this.dates[0] !== this.dates[1] ||
+            this.$i18n.t('different_end_start'), // don't allow end date identical to start date
+        (v) =>
+            this.dates.length > 1 ||
+            this.$i18n.t('end_date') + ' ' + this.$i18n.t('not_filled'), // don't allow start date only
       ]
     },
     selectedLocation() {
@@ -289,6 +405,9 @@ export default {
           : this.$vuetify.breakpoint.width > 1900
               ? 'xl'
               : 'lg'
+    },
+    mobile() {
+      return this.$vuetify.breakpoint.mobile
     },
     moduloFactor() {
       switch (this.screenSize) {
@@ -345,6 +464,11 @@ export default {
       }
       return 6 * this.moduloFactor
     },
+  },
+  mounted() {
+    if (localStorage.beepRelativeInterval) {
+      this.relativeInterval = localStorage.beepRelativeInterval === 'true'
+    }
   },
   created() {
     this.readTaxonomy();
@@ -425,38 +549,73 @@ export default {
       this.setPeriodTitle();
     },
     setPeriodTitle() {
-      let p = this.interval;
-      const d = p + 's';
-      const i = this.timeIndex;
-      let startTimeFormat = this.timeFormat;
-      let endTimeFormat = this.timeFormat;
+      var p = this.interval
+      var d = p + 's'
+      var i = this.timeIndex
+      var startTimeFormat = this.timeFormat
+      var endTimeFormat = this.timeFormat
 
-      if (p === 'hour') {
-        endTimeFormat = 'HH:mm'
-        startTimeFormat += ' ' + endTimeFormat
-      } else if (p === 'day') {
-        endTimeFormat = null
-      } else if (p === 'week') {
-        p = 'isoweek'
+      if (p === 'selection') {
+        this.periodTitle = this.dateRangeText
+        this.periodStart = this.$moment.utc(this.dates[0]) // FIXME: results in previous day if time = 00:00
+        this.periodEnd = this.$moment.utc(this.dates[1]) // FIXME: results in previous day if time = 00:00
+      } else {
+        if (p === 'hour') {
+          endTimeFormat = 'HH:mm'
+          startTimeFormat += ' ' + endTimeFormat
+        } else if (p === 'day') {
+          !this.relativeInterval
+              ? (endTimeFormat = null)
+              : (endTimeFormat = this.timeFormat)
+        } else if (p === 'week') {
+          !this.relativeInterval ? (p = 'isoweek') : (p = 'week')
+        }
+
+        var ep = p
+
+        if (!this.relativeInterval) {
+          this.periodStart = this.$moment()
+              .subtract(i, d)
+              .startOf(p)
+          this.periodEnd = this.$moment()
+              .subtract(i, d)
+              .endOf(ep)
+        } else {
+          this.periodStart = this.$moment().subtract(i + 1, d)
+          this.periodEnd = this.$moment().subtract(i, d)
+        }
+
+        var formatStart = this.momentFormat(this.periodStart, startTimeFormat)
+        var formatEnd = this.momentFormat(this.periodEnd, endTimeFormat)
+
+        this.periodTitle =
+            formatStart + '' + (endTimeFormat !== null ? ' - ' + formatEnd : '')
+        this.selectedDate = this.periodStart.format('YYYY-MM-DD')
       }
-
-      const ep = p;
-
-      const pStaTime = this.$moment()
-          .subtract(i, d)
-          .startOf(p);
-      const pEndTime = this.$moment()
-          .subtract(i, d)
-          .endOf(ep);
-
-      const s = pStaTime.locale(this.locale).format(startTimeFormat);
-      const e = pEndTime.locale(this.locale).format(endTimeFormat);
-
-      this.periodTitle = s + '' + (endTimeFormat !== null ? ' - ' + e : '')
-      this.selectedDate = pStaTime.format('YYYY-MM-DD')
     },
+    calculateTimeIndex(period, date, zoom = false, from = null) {
+      var newPeriodIndex = 0
+      var todayEnd = this.$moment().endOf(period)
+      var endOfPeriod = this.$moment.parseZone(date, this.photoParseFormat)
+      var periodDiff = todayEnd.diff(endOfPeriod, period + 's')
+      if (!isNaN(periodDiff)) newPeriodIndex = periodDiff
+      if (!zoom && period === 'hour') newPeriodIndex -= 12
+      if (!zoom && period === 'day')
+        from !== 'hour'
+            ? this.relativeInterval
+                ? (newPeriodIndex -= 4)
+                : (newPeriodIndex -= 3)
+            : this.relativeInterval
+                ? (newPeriodIndex -= 1)
+                : (newPeriodIndex -= 0)
+
+      return !isNaN(newPeriodIndex) && newPeriodIndex > 0 ? newPeriodIndex : 0
+    },
+    
     async multiSensorMeasurementRequest(interval) {
-      const timeGroup = interval === 'hour' ? null : interval;
+      var start = interval === 'selection' ? this.dates[0] : null
+      var end = interval === 'selection' ? this.dates[1] : null
+      var timeGroup = interval === 'hour' || interval === 'selection' ? null : interval
       this.noChartData = false;
       this.measurementData = null;
       try {
@@ -466,6 +625,9 @@ export default {
             + '&index=' + this.timeIndex
             + '&timeGroup=' + timeGroup
             + '&timezone=' + this.timeZone
+            + (start !== null ? '&start=' + start + ' 00:00' : '')
+            + (end !== null ? '&end=' + end + ' 23:59' : '')
+            + '&relative_interval=' + (this.relativeInterval ? '1' : '0')
         );
 
         this.formatMeasurementData(response.data);
@@ -665,7 +827,21 @@ export default {
 
     getDeviceByKey(deviceKey) {
       return this.devices.filter((device) => device.key.toLowerCase() === deviceKey.toLowerCase()).pop();
-    }
+    },
+
+    checkDateOrder(dates) {
+      if (dates[1] < dates[0]) {
+        this.dates = [dates[1], dates[0]]
+      }
+    },
+
+    invalidDates(dates) {
+      return (
+          (dates.length === 2 && dates[0] > dates[1]) ||
+          dates[0] === dates[1] ||
+          dates.length === 1
+      )
+    },
   },
 }
 </script>
