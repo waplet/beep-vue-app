@@ -241,7 +241,7 @@ import {
   readDevicesIfNotPresent,
   readTaxonomy,
 } from '@mixins/methodsMixin'
-import { momentFormat } from '@mixins/momentMixin'
+import {momentFormat, momentFullDateTime} from '@mixins/momentMixin'
 import { sensorMixin } from '@mixins/sensorMixin'
 import '@plugins/chartist-plugin-beep.js'
 import '@plugins/chartist-plugin-legend-beep.js'
@@ -263,13 +263,14 @@ export default {
     readApiariesAndGroupsIfNotPresent,
     readDevicesIfNotPresent,
     momentFormat,
+    momentFullDateTime,
     sensorMixin
   ],
   data() {
     return {
       ready: false,
       measurementData: {},
-      interval: 'day',
+      interval: 'month',
       timeIndex: 0,
       timeFormat: 'ddd D MMM YYYY',
       selectedDate: '',
@@ -653,7 +654,6 @@ export default {
      * @param measurementData
      */
     formatMeasurementData(measurementData) {
-      // return data;
       if (
           !measurementData
           || !measurementData.measurements
@@ -669,7 +669,7 @@ export default {
         sensors: {},
         labels: [],
       };
-      const firstDeviceKey = Object.keys(measurementData.devicesKeyMapping).pop();
+      let firstDeviceKey = null;
 
       // Setup array
       this.currentSensors.forEach((sensorName) => {
@@ -680,9 +680,13 @@ export default {
       });
 
       this.measurementData.measurements.map((measurement) => {
+          if (firstDeviceKey === null) {
+            firstDeviceKey = measurement.key.toLowerCase();
+          }
+        
           // Labels are first measurement all times
           if (measurement.key.toLowerCase() === firstDeviceKey.toLowerCase()) {
-            this.formattedData.labels.push(measurement.time);
+            this.formattedData.labels.push(this.momentFullDateTime(measurement.time));
           }
 
           this.currentSensors.forEach((sensorName) => {
@@ -743,7 +747,7 @@ export default {
             }),
             this.$chartist.plugins.beep(),
             this.$chartist.plugins.legendBeep({
-              simpleToggle: false,
+              simpleToggle: true,
               inactiveByDefault: false
             }),
             this.$chartist.plugins.ctPointLabels({
