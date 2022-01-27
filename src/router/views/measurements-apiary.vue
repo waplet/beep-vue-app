@@ -742,7 +742,10 @@ export default {
               metaIsHTML: true,
             }),
             this.$chartist.plugins.beep(),
-            this.$chartist.plugins.legendBeep(),
+            this.$chartist.plugins.legendBeep({
+              simpleToggle: false,
+              inactiveByDefault: false
+            }),
             this.$chartist.plugins.ctPointLabels({
               labelOffset: {
                 x: 7,
