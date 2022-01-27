@@ -20,7 +20,7 @@
             </v-btn>
           </div>
           <v-switch
-            v-model="relativeInterval"
+            v-model="setRelativeInterval"
             :label="`${$t('Relative_startpoint')}`"
             class="pt-0 mt-0"
             :disabled="interval === 'selection'"
@@ -69,7 +69,7 @@
             <v-col cols="5" sm="4" class="pa-0">
               <div class="d-flex justify-center">
                 <v-switch
-                  v-model="relativeInterval"
+                  v-model="setRelativeInterval"
                   :label="`${$t('Relative_startpoint')}`"
                   class="pt-0 mt-0"
                   :disabled="interval === 'selection'"
@@ -635,6 +635,7 @@ export default {
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       periodStart: null,
       periodEnd: null,
+      relativeInterval: true,
     }
   },
   computed: {
@@ -755,7 +756,7 @@ export default {
         { name: this.$i18n.t('selection'), interval: 'selection' },
       ]
     },
-    relativeInterval: {
+    setRelativeInterval: {
       get() {
         if (localStorage.beepRelativeInterval) {
           return localStorage.beepRelativeInterval === 'true'
@@ -765,6 +766,7 @@ export default {
       },
       set(value) {
         localStorage.beepRelativeInterval = value
+        this.relativeInterval = value
       },
     },
     requiredRules() {
@@ -914,6 +916,11 @@ export default {
       this.loadData()
     },
   },
+  mounted() {
+    if (localStorage.beepRelativeInterval) {
+      this.relativeInterval = localStorage.beepRelativeInterval === 'true'
+    }
+  },
   created() {
     this.readTaxonomy()
     if (localStorage.beepChartCols) {
@@ -1054,12 +1061,21 @@ export default {
         return ((value - min) / (max - min)) * 100
       }
     },
-    calculateTimeIndex(previousPeriod, period, date = null) {
+    calculateTimeIndex(period, date, zoom = false, from = null) {
       var newPeriodIndex = 0
       var todayEnd = this.$moment().endOf(period)
       var endOfPeriod = this.$moment.parseZone(date, this.photoParseFormat)
       var periodDiff = todayEnd.diff(endOfPeriod, period + 's')
       if (!isNaN(periodDiff)) newPeriodIndex = periodDiff
+      if (!zoom && period === 'hour') newPeriodIndex -= 12
+      if (!zoom && period === 'day')
+        from !== 'hour'
+          ? this.relativeInterval
+            ? (newPeriodIndex -= 4)
+            : (newPeriodIndex -= 3)
+          : this.relativeInterval
+          ? (newPeriodIndex -= 1)
+          : (newPeriodIndex -= 0)
 
       return !isNaN(newPeriodIndex) && newPeriodIndex > 0 ? newPeriodIndex : 0
     },
@@ -1172,7 +1188,10 @@ export default {
               self.setPeriodToDate(date)
             },
           }),
-          self.$chartist.plugins.legendBeep(),
+          self.$chartist.plugins.legendBeep({
+            simpleToggle: false,
+            inactiveByDefault: false,
+          }),
           self.$chartist.plugins.ctPointLabels({
             labelOffset: {
               x: 7,
@@ -1405,7 +1424,7 @@ export default {
           }
         )
         .then((confirm) => {
-          this.timeIndex = this.calculateTimeIndex(this.interval, period, date)
+          this.timeIndex = this.calculateTimeIndex(period, date, true)
           this.interval = period
           this.loadData()
         })
@@ -1423,11 +1442,19 @@ export default {
       return true
     },
     setPeriodInterval(interval, modulonr) {
+      var prevInterval = this.interval
       this.interval = interval
       if (interval === 'selection' && this.dates.length === 0) {
         this.noPeriodData = true
       } else {
-        this.timeIndex = 0
+        // change period around the same date instead of resetting to timeIndex 0
+        if (this.timeIndex !== 0)
+          this.timeIndex = this.calculateTimeIndex(
+            interval,
+            this.selectedDate,
+            false,
+            prevInterval
+          )
         this.loadData()
       }
     },
@@ -1525,174 +1552,6 @@ export default {
   font-size: 0.6rem !important;
   line-height: 1 !important;
   word-break: break-word;
-}
-
-.charts {
-  svg.ct-chart-bar,
-  svg.ct-chart-line {
-    overflow: visible;
-  }
-  .ct-grid.ct-horizontal:first-child,
-  .ct-grid.ct-horizontal + .ct-grid.ct-vertical {
-    stroke: $color-grey;
-  }
-  .ct-label {
-    color: $color-grey-dark;
-  }
-  text.ct-label {
-    fill: $color-grey-dark;
-  }
-  .ct-label.ct-label.ct-horizontal.ct-end {
-    position: relative;
-    justify-content: flex-end;
-    text-align: right;
-    white-space: nowrap;
-    transform: translate(-100%) rotate(-45deg);
-    transform-origin: 100% 0;
-  }
-  .ct-label.ct-vertical.ct-end {
-    margin-left: -5px;
-  }
-  .ct-chart {
-    &.modulo-2 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(2n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-3 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(3n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-4 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(4n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-6 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(6n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-8 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(8n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-9 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(9n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-11 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(11n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-12 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(12n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-16 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(16n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-18 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(18n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-22 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(22n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-24 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(24n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-33 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(33n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-36 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(36n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-60 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(60n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-120 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(120n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-180 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(180n + 1)) {
-      stroke: none !important;
-    }
-  }
-
-  .ct-series {
-    .ct-point {
-      cursor: pointer;
-      stroke-width: 6px !important;
-      @include for-phone-only {
-        stroke-width: 4px !important;
-      }
-    }
-    .ct-line {
-      @include for-phone-only {
-        stroke-width: 3px !important;
-      }
-    }
-    .ct-label:not(:last-child) {
-      display: none;
-    }
-  }
-  .ct-labels {
-    .ct-label.ct-horizontal.ct-end {
-      font-size: 0.7rem !important;
-      @include for-phone-only {
-        font-size: 0.6rem !important;
-      }
-    }
-  }
-  .ct-legend {
-    position: relative !important;
-    text-align: center;
-    list-style: none;
-
-    li {
-      position: relative !important;
-      display: inline-block;
-      padding-left: 23px !important;
-      margin-right: 10px;
-      margin-bottom: 3px;
-      cursor: pointer;
-      &.ct-legend--no-pointer {
-        cursor: auto;
-      }
-    }
-
-    li .ct-legend-square {
-      position: absolute !important;
-      top: 3px !important;
-      left: 0 !important;
-      width: 15px !important;
-      height: 15px !important;
-      content: '' !important;
-      border: 3px solid transparent;
-      border-radius: 2px !important;
-    }
-
-    li.inactive .ct-legend-square {
-      background: transparent !important;
-    }
-
-    &.ct-legend-inside {
-      position: absolute !important;
-      top: 0 !important;
-      right: 0 !important;
-    }
-
-    .ct-legend-inside li {
-      display: block;
-      margin: 0;
-    }
-  }
-}
-
-.beep-tooltip {
-  font-family: 'Roboto', sans-serif !important;
-  font-size: 0.8rem;
-  font-weight: 500 !important;
-  color: $color-grey-dark !important;
-  background-color: rgba(255, 160, 0, 0.87) !important;
-  border-radius: 4px;
-  &::before {
-    margin-left: -5px !important;
-    border: 5px solid transparent !important;
-    border-top-color: rgba(255, 160, 0, 0.87) !important;
-  }
-}
-
-.chartist-tooltip-value {
-  display: none !important;
 }
 
 .header-filler {

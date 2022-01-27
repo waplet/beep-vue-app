@@ -242,7 +242,7 @@ const translations = {
   l: 'Zonlicht',
   light: 'Zonlicht',
   water: 'Water',
-  w: 'Water',
+  w: 'Gewicht (oud)',
   humidity: 'Luchtvochtigheid',
   h: 'Luchtvochtigheid',
   air_pressure: 'Luchtdruk',
@@ -716,7 +716,7 @@ const translations = {
   commit_log_data_short: 'Importeer log data',
   commit_log_data: 'Importeer data van dit logbestand naar de BEEP app: ',
   import_log_data_explanation:
-    "In de BEEP base app kan je log data downloaden van het interne geheugen van de BEEP base. Steeds als je log data downloadt, wordt het interne geheugen gewist en de data geüpload naar de BEEP app. Hieronder vind je de lijst met jouw gedownloade log data. Je kan de data in de database vervangen door de data uit de gedownloade logbestanden door op de knop 'Check log data' te klikken. Er zal dan eerst gecheckt worden hoeveel data in de database vervangen zal worden, en of de tijd van de data uit het logbestand klopt. Je ziet dan een pop-up waarin het resultaat van de check vermeld staat, waarbij je kan kiezen om het vervangen van de data toe te passen ('Ok') of te annuleren.",
+    "In de BEEP base app kan je log data downloaden van het interne geheugen van de BEEP base. Steeds als je log data downloadt, wordt het interne geheugen gewist en de data geüpload naar de BEEP app. Hieronder vind je de lijst met jouw gedownloade log data. Je kan de log data bekijken door op de knop 'Check log data' te klikken. Als resultaat van de check zie je dan blokken data die al dan niet matches hebben opgeleverd met de data in de database. Per blok met matches kan je de log data en de database data onder elkaar in een grafiek bekijken, en ervoor kiezen om de data in de database aan te vullen met die uit het logbestand.",
   import_log_data_url_text:
     'Lees hier het support artikel over het downloaden van log data m.b.v. de BEEP base app.',
   import_log_data_support_url:
@@ -725,8 +725,8 @@ const translations = {
   Immediately: 'Direct',
   In_case_of_good_connection_warning:
     '*Direct nadat een meting ontvangen is. Dit is afhankelijk van het datatransmissie interval en de betrouwbaarheid van de dataconnectie.',
-  First_occurence: 'Eerste: ',
-  Last_occurence: 'Laatste: ',
+  First_occurence: 'Eerste',
+  Last_occurence: 'Laatste',
   // default alert rule names:
   Hive_stability_and_theft: 'Kast stabiliteit & diefstal',
   Temperature_sensor_defect: 'Temperatuursensor defect',
@@ -783,12 +783,45 @@ const translations = {
   selection: 'Selectie',
   selection_placeholder: 'Selecteer een periode',
   data_zoom: 'Data inzoomen',
-  data_zoom_ok: 'Wil je inzoomen op de data van ',
+  data_zoom_ok: 'Wil je inzoomen naar de data van ',
+  Length: 'Lengte: ',
+  match: 'match | matches',
+  Matches_found: 'Matches gevonden',
+  Firmware_version: 'Firmware versie',
+  Interval: 'Interval',
+  View_data: 'Bekijk data',
   data_zoom_out_ok: 'Wil je uitzoomen naar de data van ',
   show_all: 'Toon alle',
   only_active_if_measurement_present:
     '*N.B. Notificaties worden alleen geactiveerd wanneer de geselecteerde meting door je BEEP base / meetsysteem gemeten wordt',
   Relative_startpoint: 'Relatief',
+
+  Log_data: 'Log data',
+  Flashlog: 'Log',
+  Block: 'Blok',
+  Nr_of_match_props: 'Aantal gelijke waardes per match',
+  no_admin: 'Je moet beheerder zijn om deze pagina te kunnen bekijken',
+  next_week: 'Volgende week',
+  prev_week: 'Vorige week',
+  import_block_data_short: 'Importeer blok data',
+  no_flashlog_data: 'Geen log data',
+  no_flashlog_file: 'Geen logbestand',
+  no_device: 'Geen meetsysteem',
+  data_not_stored: 'Data niet opgeslagen',
+  no_flashlog_found: 'Geen logbestand gevonden',
+  Size: 'Grootte',
+  Match: 'Match | Matches',
+  Missing_data: 'Ontbrekende data',
+  not_yet_in_db: 'nog niet in DB',
+  From_cache: 'Gebruik cache',
+  Time_diff: 'ΔTijd',
+  seconds_short: 'sec',
+  commit_block_data:
+    'Vul data in de BEEP app aan met data uit dit blok van de log data: ',
+  persisted_measurements: 'Aangevulde metingen',
+  persisted_days: 'Aangevulde dagen',
+  no_data_stored: 'Geen data opgeslagen',
+  data_stored_for_log: 'Data opgeslagen voor Log ',
 }
 
 export default translations

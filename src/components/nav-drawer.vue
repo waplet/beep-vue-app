@@ -86,7 +86,7 @@
 
         <div class="version-number">
           <v-spacer></v-spacer>
-          v3.0.74
+          v3.0.80
         </div>
       </div>
     </v-navigation-drawer>
@@ -155,12 +155,12 @@ export default {
           route: 'export',
           beepBaseRequired: false,
         },
-        // {
-        //   icon: 'icon-beep-base',
-        //   title: this.$i18n.t('Log_data_import'),
-        //   route: 'import',
-        //   beepBaseRequired: true,
-        // },
+        {
+          icon: 'icon-beep-base',
+          title: this.$i18n.t('Log_data_import'),
+          route: 'import',
+          beepBaseRequired: true,
+        },
         {
           icon: 'mdi-format-list-checks',
           title: this.$i18n.tc('Checklist_template', 2),

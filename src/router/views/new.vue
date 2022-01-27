@@ -2,13 +2,29 @@
   <Layout :title="$t('Whats_new')">
     <v-container>
       <div class="overline mb-1"
-        ><span class="lowercase">v</span>3.0.74 (17-04-2020) - Current
+        ><span class="lowercase">v</span>3.0.80 (27-01-2022) - Current
         version</div
       >
       <div class="rounded-border mb-4">
         <ul>
           <li
-            >Measurements:
+            >Import:
+            <router-link :to="{ name: 'import' }">
+              supplement measurement data with log data downloaded from the
+              internal BEEP base memory.</router-link
+            >
+            Only for users with a BEEP base.</li
+          >
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.79 (27-01-2022)</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li
+            >Data:
             <router-link :to="{ name: 'measurements' }">
               option to select a custom period when viewing your
               data.</router-link
@@ -17,7 +33,7 @@
             button in the light yellow top bar.</li
           >
           <li
-            >Measurements:
+            >Data:
             <router-link :to="{ name: 'measurements' }">
               option to enable relative data period.</router-link
             >
@@ -30,7 +46,7 @@
             Sunday.</li
           >
           <li
-            >Measurements:
+            >Data:
             <router-link :to="{ name: 'measurements' }">
               ability to zoom in via data charts.</router-link
             >
@@ -45,8 +61,8 @@
               option to create alert rules for non-default
               measurements.</router-link
             >
-            At the 'measurements' input field you can now switch on 'Show all'
-            to view and select all (non-weather) measurements.</li
+            At the 'Measurement' input field you can now switch on 'Show all' to
+            view and select all (non-weather) measurements.</li
           >
           <li
             >Collaborate: option to decline a collaboration group invitation

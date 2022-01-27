@@ -301,7 +301,7 @@ const translations = {
   light: 'Auringonvalo',
   l: 'Auringonvalo',
   water: 'Vesi',
-  w: 'Vesi',
+  w: 'Paino (vanha)',
   humidity: 'Kosteus',
   h: 'Kosteus',
   air_pressure: 'Ilmanpaine',
@@ -818,8 +818,8 @@ const translations = {
   delete_log_file: 'Poista lokitiedosto',
   commit_log_data_short: 'Tuo lokitiedot',
   commit_log_data: 'Tuo tiedot tästä lokitiedostosta BEEP -sovellukseen:',
-  import_log_data_explanation:
-    'BEEP -alustan sovelluksessa voit ladata lokitietoja BEEP -vaaka-alustan sisäisestä muistista. Aina kun lataat lokitietoja, sisäinen muisti tyhjennetään ja tiedot ladataan BEEP -sovellukseen. Alla on luettelo ladatuista lokitiedoista. Voit korvata tietokannan tiedot ladatuissa lokitiedostoissa olevilla tiedoilla napsauttamalla painiketta Tarkista lokitiedot. Tämä tarkistaa ensin, kuinka paljon tietoja korvataan tietokannan sisällä ja onko lokitiedoston tietojen aika oikea. Saat vahvistusruudun tuloksena tiedoista ja mahdollisuuden vahvistaa tai kieltää korvaaminen.',
+  // import_log_data_explanation:
+  //   'BEEP -alustan sovelluksessa voit ladata lokitietoja BEEP -vaaka-alustan sisäisestä muistista. Aina kun lataat lokitietoja, sisäinen muisti tyhjennetään ja tiedot ladataan BEEP -sovellukseen. Alla on luettelo ladatuista lokitiedoista. Voit korvata tietokannan tiedot ladatuissa lokitiedostoissa olevilla tiedoilla napsauttamalla painiketta Tarkista lokitiedot. Tämä tarkistaa ensin, kuinka paljon tietoja korvataan tietokannan sisällä ja onko lokitiedoston tietojen aika oikea. Saat vahvistusruudun tuloksena tiedoista ja mahdollisuuden vahvistaa tai kieltää korvaaminen.',
   import_log_data_url_text:
     'Täältä löydät tukiartikkelin lokitietojen lataamisesta BEEP -alustan sovelluksen avulla.',
   import_log_data_support_url:
@@ -831,8 +831,8 @@ const translations = {
     ', ja avaan BEEp soveluksen nähdäkseni hälytykset.',
   alertrule_active_email_sentence:
     ', ja vastaanotan hälytykset sähköpostiin. Lisäksi näen hälytykset BEEP sovelluksessa.',
-  First_occurence: 'Ensimmäinen: ',
-  Last_occurence: 'Viimeinen: ',
+  First_occurence: 'Ensimmäinen',
+  Last_occurence: 'Viimeinen',
   // default alert rule names:
   Hive_stability_and_theft: 'Pesän vakaus & varkaukden esto',
   Temperature_sensor_defect: 'Lämpötila-anturin vika',
@@ -893,10 +893,45 @@ const translations = {
   data_zoom: 'Data zoom',
   data_zoom_ok: 'Would you like to zoom in on the data of ',
   data_zoom_out_ok: 'Would you like to zoom out to the data of ',
+
+  Length: 'Length: ',
+  match: 'match | matches',
+  Matches_found: 'Matches found',
+  Firmware_version: 'Firmware version',
+  Interval: 'Interval',
+  View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
     '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
   Relative_startpoint: 'Relative',
+
+  import_log_data_explanation:
+    "In the BEEP base app you can download log data from the internal memory of the BEEP base. Every time you download log data, the internal memory gets cleared and the data gets uploaded to the BEEP app. Below is the list of your downloaded log data. You can view the log data by clicking the button 'Check log data'. As a result of this check you will see blocks of data that may or may not contain matches with the database data. For each block that contains matches you can view the log data and database data in a chart, and choose to supplement the data in the database with the log data.",
+  Log_data: 'Log data',
+  Flashlog: 'Log',
+  Block: 'Block',
+  Nr_of_match_props: 'Number of identical values per match',
+  no_admin: 'You must be an admin to view this page',
+  next_week: 'Next week',
+  prev_week: 'Previous week',
+  import_block_data_short: 'Import block data',
+  no_flashlog_data: 'No log data',
+  no_flashlog_file: 'No log file',
+  no_device: 'No device',
+  data_not_stored: 'Data not stored',
+  no_flashlog_found: 'No log file found',
+  Match: 'Match | Matches',
+  Missing_data: 'Missing data',
+  not_yet_in_db: 'not yet in DB',
+  From_cache: 'From cache',
+  Time_diff: 'ΔTime',
+  seconds_short: 'sec',
+  commit_block_data:
+    'Supplement BEEP app data with data from this log data block: ',
+  persisted_measurements: 'Persisted measurements',
+  persisted_days: 'Persisted days',
+  no_data_stored: 'No data stored',
+  data_stored_for_log: 'Data stored for Log ',
 }
 
 export default translations

@@ -1,19 +1,47 @@
 <template>
   <Layout :title="$t('Log_data_import')">
-    <v-container v-if="ready">
+    <v-toolbar
+      v-if="!mobile && flashLogs.length > 0"
+      class="save-bar save-bar--back"
+      dense
+      light
+    >
+      <v-spacer></v-spacer>
+      <div class="beep-label mr-1" v-text="$t('From_cache') + ': '"></div>
+      <v-switch
+        v-model="fromCache"
+        class="pt-0 mt-0 mr-2"
+        dense
+        hide-details
+      ></v-switch>
+      <div class="beep-label" v-text="$t('Nr_of_match_props') + ': '"></div>
+      <v-slider
+        v-model="matchProps"
+        class="slider--default"
+        track-color="#b0b0b0"
+        min="5"
+        max="12"
+        step="1"
+        :tick-labels="['5', '6', '7', '8', '9', '10', '11', '12']"
+        ticks="always"
+        tick-size="4"
+        style="max-width: 200px;"
+      >
+      </v-slider>
+    </v-toolbar>
+
+    <v-container v-if="ready" :class="mobile ? '' : 'back-content'">
       <v-row>
-        <v-col v-if="showCommitMessage" cols="12">
+        <v-col v-if="importMessage" cols="12">
           <v-alert
-            v-model="showCommitMessage"
             text
             prominent
             dense
-            dismissible
             type="success"
             color="green"
             class="mt-3 mb-n4"
           >
-            {{ commitMessage }}
+            {{ importSentence }}
           </v-alert>
         </v-col>
 
@@ -31,170 +59,171 @@
         </v-col>
 
         <v-col v-if="flashLogs.length > 0" cols="12">
-          <div class="mb-2">
-            <div class="overline mt-0 mt-sm-3">
-              {{ $t('Log_files') }}
-              <v-icon
-                class="mdi mdi-information ml-1 icon-info cursor-pointer"
-                dark
-                small
-                color="accent"
-                @click="showInfo = !showInfo"
-              ></v-icon>
+          <div class="d-flex justify-space-between align-end">
+            <div class="mb-2">
+              <div class="overline mt-0 mt-sm-3">
+                {{ $t('Log_files') }}
+                <v-icon
+                  class="mdi mdi-information ml-1 icon-info cursor-pointer"
+                  dark
+                  small
+                  color="accent"
+                  @click="showInfo = !showInfo"
+                ></v-icon>
+              </div>
             </div>
-
-            <p v-if="showInfo" class="info-text">
-              <em
-                >{{ $t('import_log_data_explanation') + ' '
-                }}<a
-                  :href="$t('import_log_data_support_url')"
-                  target="_blank"
-                  >{{ $t('import_log_data_url_text') }}</a
-                ></em
-              >
-            </p>
           </div>
+
+          <p v-if="showInfo" class="info-text">
+            <em
+              >{{ $t('import_log_data_explanation') + ' '
+              }}<a :href="$t('import_log_data_support_url')" target="_blank">{{
+                $t('import_log_data_url_text')
+              }}</a></em
+            >
+          </p>
 
           <div class="rounded-border">
-            <v-simple-table class="v-data-table--smallfont" dense>
-              <template v-slot>
-                <thead>
-                  <tr>
-                    <th class="text-left">
-                      {{ $t('Upload_date') }}
-                    </th>
-                    <th class="text-left">
-                      {{ $tc('device', 1) }}
-                    </th>
-                    <th class="text-left">
-                      {{ $tc('Hive', 1) }}
-                    </th>
-                    <th class="text-left">
-                      {{ $t('Messages') }}
-                    </th>
-                    <th class="text-left">
-                      {{ $t('Log_time') }}
-                    </th>
-                    <th class="text-left">
-                      {{ $t('File_size') }}
-                    </th>
-                    <th class="text-left">
-                      {{ $t('Actions') }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(flashLog, index) in flashLogs"
-                    :key="index"
-                    :class="flashLog.delete === true ? 'flashlog-delete' : ''"
-                  >
-                    <td>
-                      <span
-                        v-text="momentify(flashLog.created_at, true)"
-                      ></span>
-                    </td>
-                    <td>
-                      <span
-                        v-text="findDeviceById(flashLog.device_id).name"
-                      ></span>
-                    </td>
-                    <td>
-                      <span v-text="hiveName(flashLog.hive_id)"></span>
-                    </td>
-                    <td class="td--small">
-                      <span v-text="flashLog.log_messages"></span>
-                    </td>
-                    <td class="td--small">
-                      <v-sheet
-                        v-if="flashLog.log_has_timestamps === 1"
-                        class="beep-icon beep-icon-text color-green text-center"
-                      >
-                        {{ $t('yes') }}
-                      </v-sheet>
-                      <v-sheet
-                        v-if="flashLog.log_has_timestamps === 0"
-                        class="beep-icon beep-icon-text color-red text-center"
-                      >
-                        {{ $t('no') }}
-                      </v-sheet>
-                    </td>
-                    <td class="td--small">
-                      <span
-                        v-text="
-                          (flashLog.log_size_bytes / 1024 / 1024).toFixed(2) +
-                            'MB (' +
-                            (flashLog.bytes_received /
-                              flashLog.log_size_bytes) *
-                              100 +
-                            '%)'
-                        "
-                      ></span>
-                    </td>
-                    <td>
-                      <div class="d-flex flex-no-wrap py-2">
-                        <v-btn
-                          tile
-                          small
-                          outlined
-                          class="mr-1"
-                          color="primary"
-                          :disabled="
-                            showLoadingIconById.indexOf(flashLog.id) > -1
-                          "
-                          @click="checkFlashLog(flashLog)"
-                        >
-                          <v-progress-circular
-                            v-if="showLoadingIconById.indexOf(flashLog.id) > -1"
-                            class="ml-n1 mr-2"
-                            size="18"
-                            width="2"
-                            color="disabled"
-                            indeterminate
-                          />
-                          <v-icon
-                            v-if="
-                              showLoadingIconById.indexOf(flashLog.id) === -1
-                            "
-                            left
-                            >mdi-check</v-icon
-                          >
-                          {{ $t('check_log_data') }}</v-btn
-                        >
-
-                        <v-tooltip
-                          v-if="flashLog.delete"
-                          open-delay="500"
-                          bottom
-                        >
-                          <template v-slot:activator="{ on }">
-                            <v-icon
-                              dark
-                              color="red"
-                              v-on="on"
-                              @click="confirmDeleteFlashLog(flashLog)"
-                              >mdi-refresh</v-icon
-                            >
-                          </template>
-                          <span v-if="flashLog.delete">{{
-                            $t('Undelete')
-                          }}</span>
-                        </v-tooltip>
-                        <v-icon
-                          v-if="!flashLog.delete"
-                          dark
-                          color="red"
-                          @click="confirmDeleteFlashLog(flashLog)"
-                          >mdi-delete</v-icon
-                        >
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
+            <v-data-table
+              :headers="logFileHeaders"
+              :items="flashLogs"
+              :items-per-page="mobile ? 1 : 5"
+              :item-class="rowClassLogFile"
+              :search="logFileSearch"
+              :no-data-text="$t('no_data')"
+              :no-results-text="$t('no_results')"
+              multi-sort
+              class="elevation-0"
+            >
+              <template v-slot:top>
+                <v-text-field
+                  v-model="logFileSearch"
+                  :label="$t('Search')"
+                  class="mx-1 mx-sm-4"
+                ></v-text-field>
               </template>
-            </v-simple-table>
+
+              <template v-slot:[`item.created_at`]="{ item }">
+                <span v-text="momentify(item.created_at, true)"></span>
+              </template>
+
+              <template v-slot:[`item.device_name`]="{ item }">
+                <span
+                  v-text="
+                    item.device_name !== null ? item.device_name : $t('unknown')
+                  "
+                ></span>
+              </template>
+
+              <template v-slot:[`item.hive_name`]="{ item }">
+                <span
+                  v-text="
+                    item.hive_name !== null ? item.hive_name : $t('unknown')
+                  "
+                ></span>
+              </template>
+
+              <template v-slot:[`item.log_has_timestamps`]="{ item }">
+                <v-sheet
+                  v-if="item.log_has_timestamps === 1"
+                  class="beep-icon beep-icon-text color-green text-center"
+                >
+                  {{ $t('yes') }}
+                </v-sheet>
+                <v-sheet
+                  v-if="item.log_has_timestamps === 0"
+                  class="beep-icon beep-icon-text color-red text-center"
+                >
+                  {{ $t('no') }}
+                </v-sheet>
+              </template>
+
+              <template v-slot:[`item.bytes_received`]="{ item }">
+                <span v-text="fileSizeText(item)"></span>
+              </template>
+
+              <template v-slot:[`item.actions`]="{ item }">
+                <div class="d-flex flex-no-wrap py-2">
+                  <v-btn
+                    tile
+                    small
+                    outlined
+                    class="mr-1"
+                    color="accent"
+                    :disabled="showLoadingIconById.indexOf(item.id) > -1"
+                    @click="checkFlashLog(item.id)"
+                  >
+                    <v-progress-circular
+                      v-if="showLoadingIconById.indexOf(item.id) > -1"
+                      class="ml-n1 mr-2"
+                      size="18"
+                      width="2"
+                      color="disabled"
+                      indeterminate
+                    />
+                    <v-icon
+                      v-if="
+                        // eslint-disable vue/comma-dangle
+                        showLoadingIconById.indexOf(item.id) === -1
+                      "
+                      left
+                      >mdi-check</v-icon
+                    >
+                    {{ $t('check_log_data') }}</v-btn
+                  >
+
+                  <v-tooltip v-if="item.delete" open-delay="500" bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-icon
+                        dark
+                        color="red"
+                        v-on="on"
+                        @click="confirmDeleteFlashLog(item)"
+                        >mdi-refresh</v-icon
+                      >
+                    </template>
+                    <span v-if="item.delete">{{ $t('Undelete') }}</span>
+                  </v-tooltip>
+                  <v-icon
+                    v-if="!item.delete"
+                    dark
+                    color="red"
+                    @click="confirmDeleteFlashLog(item)"
+                    >mdi-delete</v-icon
+                  >
+                </div>
+              </template>
+            </v-data-table>
+          </div>
+
+          <div v-if="mobile" class="mt-4 mt-sm-2 d-flex flex-row">
+            <div class="mr-6">
+              <div class="beep-label ml-1 mb-4" v-text="$t('From_cache')"></div>
+              <v-switch
+                v-model="fromCache"
+                class="pt-0 mt-0"
+                dense
+                hide-details
+              ></v-switch>
+            </div>
+            <div>
+              <div class="beep-label" v-text="$t('Nr_of_match_props')"></div>
+              <v-slider
+                v-model="matchProps"
+                class="slider--default"
+                track-color="#b0b0b0"
+                min="5"
+                max="12"
+                step="1"
+                :tick-labels="['5', '6', '7', '8', '9', '10', '11', '12']"
+                ticks="always"
+                tick-size="4"
+              >
+              </v-slider>
+            </div>
           </div>
         </v-col>
+
         <v-col v-if="flashLogs.length === 0" cols="12">
           <span>
             <em
@@ -204,6 +233,113 @@
               }}</a></em
             >
           </span>
+        </v-col>
+
+        <v-col
+          v-if="selectedFlashLog && selectedFlashLog.log !== undefined"
+          ref="log-data"
+          cols="12"
+        >
+          <div
+            class="overline primary--text mt-0 mt-sm-3 mb-3"
+            v-text="selectedFlashLogHeader"
+          ></div>
+
+          <div class="rounded-border primary-border">
+            <v-data-table
+              :headers="logDataHeaders"
+              :items="selectedFlashLog.log"
+              :items-per-page="5"
+              :item-class="rowClassLogData"
+              :no-data-text="$t('no_data')"
+              :no-results-text="$t('no_results')"
+              multi-sort
+              class="elevation-0"
+            >
+              <template v-slot:[`item.matches`]="{ item }">
+                <span
+                  v-if="
+                    item.matches === undefined && item.no_matches !== undefined
+                  "
+                  v-text="
+                    // eslint-disable vue/no-v-html
+                    item.no_matches.message
+                  "
+                ></span>
+                <span
+                  v-if="item.matches !== undefined"
+                  class="cursor-pointer"
+                  @click="matchesOverlay = item.block"
+                  v-text="matchesText(item)"
+                ></span>
+
+                <v-overlay
+                  v-if="
+                    item.matches !== undefined && item.block === matchesOverlay
+                  "
+                >
+                  <v-toolbar class="hive-color-picker-toolbar" dense light flat>
+                    <div
+                      class="hive-color-picker-title ml-1"
+                      v-text="matchesHeader(item)"
+                    ></div>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                      <v-icon class="mr-1" @click="matchesOverlay = null"
+                        >mdi-close</v-icon
+                      >
+                    </v-toolbar-items>
+                  </v-toolbar>
+                  <v-container class="matches-container">
+                    <v-row>
+                      <v-col
+                        v-for="(match, i) in item.matches.matches"
+                        :key="'match ' + i"
+                        :cols="mobile ? 6 : 3"
+                        class="text-left"
+                      >
+                        <span v-text="matchText(match, i)"></span>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-overlay>
+              </template>
+
+              <template v-slot:[`item.duration_hours`]="{ item }">
+                <span v-html="sizeText(item)"></span>
+              </template>
+
+              <template v-slot:[`item.dbCount`]="{ item }">
+                <span
+                  v-if="item.matches !== undefined"
+                  v-html="missingDataText(item)"
+                ></span>
+              </template>
+
+              <template v-slot:[`item.time_end`]="{ item }">
+                <span
+                  v-if="item.matches !== undefined"
+                  v-html="periodText(item)"
+                ></span>
+              </template>
+
+              <template v-slot:[`item.actions`]="{ item }">
+                <router-link
+                  v-if="item.matches !== undefined && selectedFlashLog !== null"
+                  :to="{
+                    name: `flashlog`,
+                    params: { id: selectedFlashLog.flashlog_id },
+                    query: { blockId: item.block },
+                  }"
+                >
+                  <v-btn :small="smAndDown" tile outlined color="accent">
+                    <v-icon left>mdi-chart-line</v-icon>
+                    {{ $t('View_data') }}
+                  </v-btn>
+                </router-link>
+              </template>
+            </v-data-table>
+          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -217,7 +353,7 @@ import Api from '@api/Api'
 import Confirm from '@components/confirm.vue'
 import Layout from '@layouts/back.vue'
 import { mapGetters } from 'vuex'
-import { momentify } from '@mixins/momentMixin'
+import { momentHumanizeDuration, momentify } from '@mixins/momentMixin'
 import { readApiariesAndGroupsIfNotPresent } from '@mixins/methodsMixin'
 
 export default {
@@ -225,49 +361,145 @@ export default {
     Confirm,
     Layout,
   },
-  mixins: [momentify, readApiariesAndGroupsIfNotPresent],
+  mixins: [
+    momentHumanizeDuration,
+    momentify,
+    readApiariesAndGroupsIfNotPresent,
+  ],
+  props: {
+    importMessage: {
+      type: Object,
+      default: null,
+      required: false,
+    },
+  },
   data() {
     return {
       errorMessage: null,
       showLoadingIconById: [],
       ready: false,
       flashLogs: [],
-      tryMessage: null,
-      commitMessage: null,
-      showCommitMessage: false,
       showInfo: false,
+      matchProps: 9,
+      logDataHeaders: [
+        { text: this.$i18n.t('Block'), value: 'block' },
+        { text: this.$i18n.tc('Match', 2), value: 'matches' },
+        {
+          text: this.$i18n.t('Size'),
+          value: 'duration_hours',
+        },
+        {
+          text: this.$i18n.t('Missing_data'),
+          value: 'dbCount',
+        },
+        {
+          text: this.$i18n.t('period'),
+          value: 'time_end',
+        },
+        {
+          text: this.$i18n.t('Firmware_version'),
+          value: 'fw_version',
+        },
+        {
+          text: this.$i18n.t('Interval') + ' (min)',
+          value: 'interval_min',
+        },
+        { text: this.$i18n.t('Actions'), sortable: false, value: 'actions' },
+      ],
+      logFileSearch: null,
+      logFileHeaders: [
+        { text: 'ID', value: 'id' },
+        { text: this.$i18n.t('Upload_date'), value: 'created_at' },
+        {
+          text: this.$i18n.tc('device', 1),
+          value: 'device_name',
+        },
+        {
+          text: this.$i18n.tc('Hive', 1),
+          value: 'hive_name',
+        },
+        {
+          text: this.$i18n.t('Messages'),
+          value: 'log_messages',
+        },
+        {
+          text: this.$i18n.t('persisted_measurements'),
+          value: 'persisted_measurements',
+        },
+
+        {
+          text: this.$i18n.t('Log_time'),
+          value: 'log_has_timestamps',
+        },
+        {
+          text: this.$i18n.t('File_size'),
+          value: 'bytes_received',
+        },
+        { text: this.$i18n.t('Actions'), sortable: false, value: 'actions' },
+      ],
+      fromCache: true,
+      matchesOverlay: null,
     }
   },
   computed: {
-    ...mapGetters('devices', ['devices']),
     ...mapGetters('groups', ['groups']),
     ...mapGetters('locations', ['apiaries']),
-    hives() {
-      const ownHivesArray = []
-      this.apiaries.forEach((apiary) => {
-        apiary.hives.forEach((hive) => {
-          ownHivesArray.push(hive)
+    importSentence() {
+      return this.importMessage !== null && this.importMessage.data_stored
+        ? this.$i18n.t('data_stored_for_log') +
+            this.importMessage.flashlog_id +
+            ' - ' +
+            this.importMessage.device_name +
+            ' - ' +
+            this.$i18n.t('Block') +
+            ' ' +
+            this.importMessage.block_id +
+            '. ' +
+            this.$i18n.t('persisted_measurements') +
+            ': ' +
+            this.importMessage.persisted_measurements +
+            ', ' +
+            this.$i18n.t('persisted_days') +
+            ': ' +
+            this.importMessage.persisted_days
+        : this.$i18n.t('no_data_stored') +
+            '. ' +
+            JSON.stringify(this.importMessage)
+    },
+    selectedFlashLog: {
+      get() {
+        return this.$store.getters['devices/selectedFlashLog']
+      },
+      set(value) {
+        this.$store.commit('devices/setData', {
+          prop: 'selectedFlashLog',
+          value,
         })
-      })
-
-      const sharedHivesArray = []
-      this.groups.forEach((group) => {
-        group.hives.forEach((hive) => {
-          sharedHivesArray.push(hive)
-        })
-      })
-
-      const allHives = ownHivesArray.concat(sharedHivesArray)
-
-      var uniqueHives = {}
-      const map = new Map()
-      for (const item of allHives) {
-        if (!map.has(item.id)) {
-          map.set(item.id, true) // set any value to Map
-          uniqueHives[item.id] = item
-        }
-      }
-      return uniqueHives
+      },
+    },
+    selectedFlashLogHeader() {
+      return this.selectedFlashLog !== null &&
+        this.selectedFlashLog.log !== undefined
+        ? 'Log ID: ' +
+            this.selectedFlashLog.flashlog_id +
+            ', ' +
+            this.$i18n.tc('device', 1) +
+            ': ' +
+            this.selectedFlashLog.device_name +
+            ', Time match: ' +
+            this.selectedFlashLog.time_percentage +
+            ', Weight match: ' +
+            this.selectedFlashLog.weight_percentage +
+            ', On/off blocks: ' +
+            this.selectedFlashLog.log.length +
+            ', Lines: ' +
+            this.selectedFlashLog.lines_received +
+            ', Messages: ' +
+            this.selectedFlashLog.records_flashlog
+        : ''
+    },
+    lgAndUp() {
+      return this.$vuetify.breakpoint.lgAndUp
     },
     locale() {
       return this.$i18n.locale
@@ -275,10 +507,23 @@ export default {
     mobile() {
       return this.$vuetify.breakpoint.mobile
     },
+    smAndDown() {
+      return this.$vuetify.breakpoint.smAndDown
+    },
   },
   created() {
     this.readApiariesAndGroupsIfNotPresent().then(() => {
       this.readFlashLogs().then(() => {
+        if (
+          localStorage.beepPreviousRoute === 'flashlog' &&
+          this.selectedFlashLog !== null &&
+          this.importMessage === null
+        ) {
+          // update flashlog result if coming from the flashlog view & flashlog has previously been selected (= saved in store) and has not just been imported
+          this.checkFlashLog(this.selectedFlashLog.flashlog_id)
+        } else {
+          this.selectedFlashLog = null
+        }
         this.ready = true
       })
     })
@@ -294,7 +539,7 @@ export default {
       } catch (error) {
         if (error.response) {
           console.log(error.response)
-          const msg = error.response.data.message
+          const msg = error.response.data.error
           this.errorMessage = this.$i18n.t(msg)
         } else {
           console.log('Error: ', error)
@@ -302,45 +547,41 @@ export default {
         }
       }
     },
-    async checkFlashLog(flashLog) {
+    async checkFlashLog(flashLogId) {
       this.clearMessages()
-      this.showLoadingIconById.push(flashLog.id)
+      this.selectedFlashLog = null
+      this.showLoadingIconById.push(flashLogId)
       try {
-        const response = await Api.postRequest(
-          '/flashlogs/' + flashLog.id + '/try'
+        const response = await Api.readRequest(
+          '/flashlogs/' +
+            flashLogId +
+            '?match_props=' +
+            this.matchProps +
+            '&from_cache=' +
+            (this.fromCache ? '1' : '0')
         )
-        this.tryMessage = response.message || 'try not yet implemented' // TODO: remove fallback
         this.showLoadingIconById.splice(
-          this.showLoadingIconById.indexOf(flashLog.id),
+          this.showLoadingIconById.indexOf(flashLogId),
           1
         )
-        this.confirmCommitFlashLog(flashLog)
-      } catch (error) {
-        this.showLoadingIconById.splice(
-          this.showLoadingIconById.indexOf(flashLog.id),
-          1
-        )
-        if (error.response) {
-          console.log(error.response)
-          const msg = error.response.data.message
-          this.errorMessage = this.$i18n.t(msg)
+        this.selectedFlashLog = response.data
+
+        if (this.selectedFlashLog.log !== undefined) {
+          setTimeout(() => {
+            this.scrollTo('log-data')
+          }, 100)
         } else {
-          console.log('Error: ', error)
-          this.errorMessage = this.$i18n.t('something_wrong')
+          this.errorMessage = this.$i18n.t('no_flashlog_data')
         }
-      }
-    },
-    async commitFlashLog(flashLog) {
-      try {
-        const response = await Api.postRequest(
-          '/flashlogs/' + flashLog.id + '/commit'
-        )
-        this.commitMessage = response.message || 'commit not yet implemented' // TODO: remove fallback
-        this.showCommitMessage = true
       } catch (error) {
+        this.showLoadingIconById.splice(
+          this.showLoadingIconById.indexOf(flashLogId),
+          1
+        )
+        this.selectedFlashLog = null
         if (error.response) {
           console.log(error.response)
-          const msg = error.response.data.message
+          const msg = error.response.data.error
           this.errorMessage = this.$i18n.t(msg)
         } else {
           console.log('Error: ', error)
@@ -355,51 +596,22 @@ export default {
         return true
       } catch (error) {
         if (error.response) {
-          console.log('Error: ', error.response)
+          console.log(error.response)
+          const msg = error.response.data.error
+          this.errorMessage = this.$i18n.t(msg)
         } else {
           console.log('Error: ', error)
+          this.errorMessage = this.$i18n.t('something_wrong')
         }
       }
-    },
-    clearMessages() {
-      this.tryMessage = null
-      this.commitMessage = null
-      this.showCommitMessage = false
-      this.errorMessage = null
-    },
-    confirmCommitFlashLog(flashLog) {
-      this.$refs.confirm
-        .open(
-          this.$i18n.t('commit_log_data_short') +
-            ' - ' +
-            this.hiveName(flashLog.hive_id),
-          this.$i18n.t('commit_log_data') +
-            ' "' +
-            this.hiveName(flashLog.hive_id) +
-            ' - ' +
-            this.momentify(flashLog.created_at, true) +
-            '"?',
-          {
-            color: 'red',
-          },
-          this.tryMessage
-        )
-        .then((confirm) => {
-          this.commitFlashLog(flashLog.id)
-        })
-        .catch((reject) => {
-          return true
-        })
     },
     confirmDeleteFlashLog(flashLog) {
       this.$refs.confirm
         .open(
-          this.$i18n.t('delete_log_file') +
-            ' - ' +
-            this.hiveName(flashLog.hive_id),
+          this.$i18n.t('delete_log_file') + ' - ' + flashLog.hive_name,
           this.$i18n.t('delete_log_file') +
             ' "' +
-            this.hiveName(flashLog.hive_id) +
+            flashLog.hive_name +
             ' - ' +
             this.momentify(flashLog.created_at, true) +
             '"?',
@@ -414,23 +626,139 @@ export default {
           return true
         })
     },
-    findDeviceById(id) {
-      return this.devices.filter((device) => device.id === id)[0]
+    clearMessages() {
+      this.importMessage = null
+      this.errorMessage = null
     },
-    hiveName(hiveId) {
-      return this.hives[hiveId]
-        ? this.hives[hiveId].name
-        : this.$i18n.tc('Hive_short', 1) + ' ' + this.$i18n.t('unknown')
+    fileSizeText(item) {
+      var nrOfMB = (item.bytes_received / 1024 / 1024).toFixed(2)
+      return (
+        nrOfMB +
+        'MB (' +
+        (item.log_size_bytes !== null
+          ? ((item.bytes_received / item.log_size_bytes) * 100).toFixed(1) + '%'
+          : this.$i18n.t('unknown')) +
+        ')'
+      )
+    },
+    matchText(match, index) {
+      var text = index + ': '
+      Object.entries(match).map(([key, value]) => {
+        if (key !== 'flashlog_index' && key !== 'minute_interval') {
+          text += key + ': ' + value + ', '
+        }
+      })
+      return text
+    },
+    matchesHeader(log) {
+      return (
+        this.matchesText(log) +
+        ' (Log ' +
+        this.selectedFlashLog.flashlog_id +
+        ', ' +
+        this.$i18n.t('Block') +
+        ' ' +
+        log.block +
+        ')'
+      )
+    },
+    matchesText(log) {
+      var nrOfMatches = Object.keys(log.matches.matches).length
+      return this.$i18n.t('Matches_found') + ': ' + nrOfMatches
+    },
+    missingDataText(log) {
+      var ptNotInDb = this.percentageNotInDB(log)
+      return (
+        ptNotInDb +
+        '% ' +
+        this.$i18n.t('not_yet_in_db') +
+        '<br>' +
+        '(' +
+        this.momentHumanizeDuration(
+          log.duration_hours * (ptNotInDb / 100),
+          'hours'
+        ) +
+        ')'
+      )
+    },
+    percentageNotInDB(log) {
+      return (100 * (1 - log.dbCount / log.setCount)).toFixed(1)
+    },
+    periodText(log) {
+      return (
+        this.momentify(log.time_start, true, this.smAndDown ? 'll' : 'lll') +
+        ' -<br>' +
+        this.momentify(log.time_end, true, this.smAndDown ? 'll' : 'lll')
+      )
+    },
+    rowClassLogData(item) {
+      return item.matches === undefined
+        ? 'no-match-block'
+        : 'match-block ' +
+            (this.percentageNotInDB(item) > 10 ? 'much-missing' : 'few-missing')
+    },
+    rowClassLogFile(item) {
+      return this.selectedFlashLog !== null &&
+        item.id === this.selectedFlashLog.flashlog_id
+        ? 'flashlog-selected'
+        : '' + (item.delete === true ? 'flashlog-delete' : '')
+    },
+    scrollTo(refName) {
+      var element = this.$refs[refName]
+      var offset = this.mobile ? 54 : 60
+      var top = element.offsetTop
+
+      window.scrollTo(0, top - offset)
+    },
+    sizeText(log) {
+      return (
+        this.momentHumanizeDuration(
+          log.duration_hours,
+          'hours',
+          this.$i18n.t('Length')
+        ) +
+        '<br>' +
+        this.$i18n.t('Messages') +
+        ': ' +
+        (log.end_i - log.start_i).toString()
+      )
     },
   },
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .progress-icon {
   margin-left: 6px;
 }
 .flashlog-delete {
   background-color: rgba(255, 0, 0, 0.2);
+}
+.flashlog-selected {
+  background-color: $color-orange-light;
+}
+.match-block {
+  // background-color: $color-orange-medium !important;
+  &.much-missing {
+    color: $color-green !important;
+  }
+  &.few-missing {
+    color: $color-red !important;
+  }
+}
+.no-match-block {
+  color: $color-grey-medium !important;
+}
+.matches-container {
+  font-size: 0.7rem;
+  line-height: 1;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: $color-black;
+  background-color: $color-white;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  margin-top: -4px;
 }
 </style>

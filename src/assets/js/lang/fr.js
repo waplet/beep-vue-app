@@ -319,7 +319,7 @@ const translations = {
   light: 'Ensoleillement',
   l: 'Ensoleillement',
   water: 'Eau',
-  w: 'Eau',
+  w: 'Poids (ancien)',
   humidity: 'Humidité',
   h: 'Humidité',
   air_pressure: 'Pression atmosphérique',
@@ -890,8 +890,8 @@ const translations = {
   commit_log_data_short: 'Importer les données de log',
   commit_log_data:
     "Importer les données de ce fichier de log vers l'application BEEP",
-  import_log_data_explanation:
-    "Dans l'application de base BEEP, vous pouvez télécharger les données de log à partir de la mémoire de la base BEEP. Chaque fois que vous téléchargez des données de log, la mémoire interne est effacée et les données sont téléchargées vers l'application BEEP. Vous trouverez ci-dessous la liste de vos données de log téléchargées. Vous pouvez remplacer les données de la base de données par les données contenues dans les fichiers de log téléchargés en cliquant sur le bouton « Vérifier les données de log ». Cela vérifiera d'abord combien de données seront remplacées dans la base de données et si l'heure des données dans le fichier de log est correcte. Vous recevrez une demande de confirmation avec les informations résultantes et la possibilité d'appliquer ou de refuser le remplacement. ",
+  // import_log_data_explanation:
+  //   "Dans l'application de base BEEP, vous pouvez télécharger les données de log à partir de la mémoire de la base BEEP. Chaque fois que vous téléchargez des données de log, la mémoire interne est effacée et les données sont téléchargées vers l'application BEEP. Vous trouverez ci-dessous la liste de vos données de log téléchargées. Vous pouvez remplacer les données de la base de données par les données contenues dans les fichiers de log téléchargés en cliquant sur le bouton « Vérifier les données de log ». Cela vérifiera d'abord combien de données seront remplacées dans la base de données et si l'heure des données dans le fichier de log est correcte. Vous recevrez une demande de confirmation avec les informations résultantes et la possibilité d'appliquer ou de refuser le remplacement. ",
   import_log_data_url_text:
     "Vous trouverez ici l'explication du téléchargement de données de log vers l'application BEEP.",
   import_log_data_support_url:
@@ -902,8 +902,8 @@ const translations = {
     ", et j'ouvre l'app BEEP pour voir les alertes",
   alertrule_active_email_sentence:
     ", et je reçois les alertes par email. De plus, je peux voir les alertes dans l'app BEEP.",
-  First_occurence: 'Premier: ',
-  Last_occurence: 'Dernier: ',
+  First_occurence: 'Premier',
+  Last_occurence: 'Dernier',
   /* default alert rule names: */
   Hive_stability_and_theft: 'Stabilité de la ruche et vol',
   Temperature_sensor_defect: 'Defaut de la sonde de température',
@@ -965,10 +965,45 @@ const translations = {
   data_zoom: 'Data zoom',
   data_zoom_ok: 'Would you like to zoom in on the data of ',
   data_zoom_out_ok: 'Would you like to zoom out to the data of ',
+
+  Length: 'Length: ',
+  match: 'match | matches',
+  Matches_found: 'Matches found',
+  Firmware_version: 'Firmware version',
+  Interval: 'Interval',
+  View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
     '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
   Relative_startpoint: 'Relative',
+
+  import_log_data_explanation:
+    "In the BEEP base app you can download log data from the internal memory of the BEEP base. Every time you download log data, the internal memory gets cleared and the data gets uploaded to the BEEP app. Below is the list of your downloaded log data. You can view the log data by clicking the button 'Check log data'. As a result of this check you will see blocks of data that may or may not contain matches with the database data. For each block that contains matches you can view the log data and database data in a chart, and choose to supplement the data in the database with the log data.",
+  Log_data: 'Log data',
+  Flashlog: 'Log',
+  Block: 'Block',
+  Nr_of_match_props: 'Number of identical values per match',
+  no_admin: 'You must be an admin to view this page',
+  next_week: 'Next week',
+  prev_week: 'Previous week',
+  import_block_data_short: 'Import block data',
+  no_flashlog_data: 'No log data',
+  no_flashlog_file: 'No log file',
+  no_device: 'No device',
+  data_not_stored: 'Data not stored',
+  no_flashlog_found: 'No log file found',
+  Match: 'Match | Matches',
+  Missing_data: 'Missing data',
+  not_yet_in_db: 'not yet in DB',
+  From_cache: 'From cache',
+  Time_diff: 'ΔTime',
+  seconds_short: 'sec',
+  commit_block_data:
+    'Supplement BEEP app data with data from this log data block: ',
+  persisted_measurements: 'Persisted measurements',
+  persisted_days: 'Persisted days',
+  no_data_stored: 'No data stored',
+  data_stored_for_log: 'Data stored for Log ',
 }
 
 export default translations
