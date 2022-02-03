@@ -906,6 +906,55 @@ const translations = {
   pollihub_led_toggled: 'LED stāvoklis izmainīts',
   toggle_led_state: 'Izmainīt LED stāvokli',
   toggle_alarm_state: 'Izmainīt Signalizācijas stāvokli',
+
+  /* New translations v3.0.74 */
+  Decline: 'Decline',
+  Decline_invitation: 'Decline invitation',
+  Decline_invitation_sure:
+      'Are you sure you would like to decline the group invitation?',
+  selection: 'selection',
+  selection_placeholder: 'Select a period',
+  data_zoom: 'Data zoom',
+  data_zoom_ok: 'Would you like to zoom in on the data of ',
+  data_zoom_out_ok: 'Would you like to zoom out to the data of ',
+
+  Length: 'Length: ',
+  match: 'match | matches',
+  Matches_found: 'Matches found',
+  Firmware_version: 'Firmware version',
+  Interval: 'Interval',
+  View_data: 'View data',
+  show_all: 'Show all',
+  only_active_if_measurement_present:
+      '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+  Relative_startpoint: 'Relative',
+
+  Log_data: 'Log data',
+  Flashlog: 'Log',
+  Block: 'Block',
+  Nr_of_match_props: 'Number of identical values per match',
+  no_admin: 'You must be an admin to view this page',
+  next_week: 'Next week',
+  prev_week: 'Previous week',
+  import_block_data_short: 'Import block data',
+  no_flashlog_data: 'No log data',
+  no_flashlog_file: 'No log file',
+  no_device: 'No device',
+  data_not_stored: 'Data not stored',
+  no_flashlog_found: 'No log file found',
+  Match: 'Match | Matches',
+  Missing_data: 'Missing data',
+  not_yet_in_db: 'not yet in DB',
+  From_cache: 'From cache',
+  Time_diff: 'ΔTime',
+  seconds_short: 'sec',
+  commit_block_data:
+      'Supplement BEEP app data with data from this log data block: ',
+  persisted_measurements: 'Persisted measurements',
+  persisted_days: 'Persisted days',
+  no_data_stored: 'No data stored',
+  data_stored_for_log: 'Data stored for Log ',
+  Fill_holes: 'Fill holes (connect all data points)',
 }
 
 export default translations
