@@ -322,6 +322,8 @@ const translations = {
   toggle_alarm_state: 'Toggle Alarm state',
   enable_alarm_all_devices: 'Enable Alarms',
   disable_alarm_all_devices: 'Disable Alarms',
+  pollihub_location_alarm_enabled: 'Apiary alarms enabled',
+  pollihub_location_alarm_disabled: 'Apiary alarms disabled',
 
   /* Measurements */
   Hour: 'Hour',

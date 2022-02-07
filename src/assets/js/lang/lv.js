@@ -908,6 +908,8 @@ const translations = {
   toggle_alarm_state: 'Izmainīt Signalizācijas stāvokli',
   enable_alarm_all_devices: 'Ieslēgt signalizācijas',
   disable_alarm_all_devices: 'Izslēgt signalizācijas',
+  pollihub_location_alarm_enabled: 'Signalizācijas ieslēgtas',
+  pollihub_location_alarm_disabled: 'Signalizācijas izslēgtas',
 
   /* New translations v3.0.74 */
   Decline: 'Decline',
