@@ -114,6 +114,33 @@
                   hide-details
                 ></v-switch>
               </v-col>
+              <v-col
+                v-if="selectedHiveSet && allHivesSelected"
+                cols="12"
+                sm="12"
+                >
+                  <v-btn
+                    tile
+                    outlined
+                    color="accent"
+                    class="mr-1"
+                    @click.prevent="enableAlarm(hiveSetId)">
+                    <v-icon color="accent">
+                      mdi-shield-lock
+                    </v-icon>
+                    <span v-text="$t('enable_alarm_all_devices')"></span>
+                  </v-btn>
+                  <v-btn
+                      tile
+                      outlined
+                      class="mr-1"
+                      @click.prevent="disableAlarm(hiveSetId)">
+                    <v-icon>
+                      mdi-shield-lock
+                    </v-icon>
+                    <span v-text="$t('disable_alarm_all_devices')"></span>
+                  </v-btn>
+              </v-col>
             </v-row>
           </v-col>
 
@@ -1168,6 +1195,66 @@ export default {
       }
       this.setInspectionEdited(true)
     },
+    async enableAlarm(locationId) {
+      this.showLoadingIcon = true;
+      
+      try {
+        const response = await Api.postRequest(
+            '/locations/' + locationId + '/enable_alarm'
+        );
+
+        this.showLoadingIcon = false;
+        if (!response) {
+          // TODO change translation
+          this.snackbar.text = this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error');
+        } else {
+          this.snackbar.text = this.$i18n.t(response.data || 'Success');
+        }
+        this.snackbar.show = true;
+        
+        return true;
+      } catch (error) {
+        this.showLoadingIcon = false;
+        if (error.response) {
+          console.log('Error: ', error.response);
+          const msg = error.response.data;
+          this.snackbar.text = this.$i18n.t(msg);
+        } else {
+          this.snackbar.text = this.$i18n.t('Error');
+        }
+        this.snackbar.show = true;
+      }
+    },
+    async disableAlarm(locationId) {
+      this.showLoadingIcon = true;
+
+      try {
+        const response = await Api.postRequest(
+            '/locations/' + locationId + '/disable_alarm'
+        );
+
+        this.showLoadingIcon = false;
+        if (!response) {
+          // TODO change translation
+          this.snackbar.text = this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error');
+        } else {
+          this.snackbar.text = this.$i18n.t(response.data || 'Success');
+        }
+        this.snackbar.show = true;
+
+        return true;
+      } catch (error) {
+        this.showLoadingIcon = false;
+        if (error.response) {
+          console.log('Error: ', error.response);
+          const msg = error.response.data;
+          this.snackbar.text = this.$i18n.t(msg);
+        } else {
+          this.snackbar.text = this.$i18n.t('Error');
+        }
+        this.snackbar.show = true;
+      }
+    }
   },
 }
 </script>

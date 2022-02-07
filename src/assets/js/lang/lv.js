@@ -906,6 +906,8 @@ const translations = {
   pollihub_led_toggled: 'LED stāvoklis izmainīts',
   toggle_led_state: 'Izmainīt LED stāvokli',
   toggle_alarm_state: 'Izmainīt Signalizācijas stāvokli',
+  enable_alarm_all_devices: 'Ieslēgt signalizācijas',
+  disable_alarm_all_devices: 'Izslēgt signalizācijas',
 
   /* New translations v3.0.74 */
   Decline: 'Decline',

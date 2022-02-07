@@ -315,11 +315,13 @@ const translations = {
   /* Pollihub */
   pollihub_downlink_unsupported_for_device: 'Downlink is not supported for this type of device',
   pollihub_sensortype_missing: 'Device sensortype missing - Pollihub',
-  pollihub_downlink_error: 'Error executing donwlink',
+  pollihub_downlink_error: 'Error executing downlink',
   pollihub_alarm_toggled: 'Alarm state changed',
   pollihub_led_toggled: 'LED state changed',
   toggle_led_state: 'Toggle LED state',
   toggle_alarm_state: 'Toggle Alarm state',
+  enable_alarm_all_devices: 'Enable Alarms',
+  disable_alarm_all_devices: 'Disable Alarms',
 
   /* Measurements */
   Hour: 'Hour',
