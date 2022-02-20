@@ -14,7 +14,7 @@
             </v-btn>
           </div>
           <v-switch
-              v-model="relativeInterval"
+              v-model="setRelativeInterval"
               :label="`${$t('Relative_startpoint')}`"
               class="pt-0 mt-0"
               :disabled="interval === 'selection'"
@@ -294,6 +294,7 @@ export default {
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       periodStart: null,
       periodEnd: null,
+      relativeInterval: true,
     }
   },
   watch: {
@@ -328,14 +329,14 @@ export default {
     periods() {
       return [
         { name: this.$i18n.t('Hour'), interval: 'hour' },
-        { name: this.$i18n.t('day'), interval: 'day' },
+        { name: this.$i18n.tc('day', 1), interval: 'day' },
         { name: this.$i18n.t('week'), interval: 'week' },
         { name: this.$i18n.t('month'), interval: 'month' },
         { name: this.$i18n.t('year'), interval: 'year' },
         { name: this.$i18n.t('selection'), interval: 'selection' },
       ]
     },
-    relativeInterval: {
+    setRelativeInterval: {
       get() {
         if (localStorage.beepRelativeInterval) {
           return localStorage.beepRelativeInterval === 'true';
@@ -344,7 +345,7 @@ export default {
         }
       },
       set(value) {
-        localStorage.beepRelativeInterval = value;
+        localStorage.beepRelativeInterval = value.toString();
       }
     },
     requiredRules() {

@@ -95,7 +95,7 @@ const translations = {
   remove_hive: 'Noņemt stropu',
   remove_inspection: 'Noņemt pārbaudi ',
 
-  Error: 'Kļūda',
+  Error: 'Kļūda | Kļūdas',
   Warning: 'Brīdinājums',
   first_remove_hives:
     'Uzmanību: Dravā vēl ir reģistrēti stropi. Jūs varat saglabāt specifisku stropu un tās reģistrētās pārbaudes, pārvietojot tās uz citu dravu. Ja turpināsies ar datu izdzēšanu, tiks izdzēsti visi reģistrētie stropi un tās pārbaudes, kas atrodas šajā dravā.',
@@ -392,7 +392,7 @@ const translations = {
   /* Measurements */
   Hour: 'Stunda',
   hour: 'stunda | stundas',
-  day: 'Diena',
+  day: 'diena | dienas',
   week: 'Nedēļa',
   month: 'Mēnesis',
   year: 'Gads',
@@ -617,6 +617,7 @@ const translations = {
   overrides_layer_colors: 'Ignorē telpu krāsu',
   drag_layers: 'Pārvieto telpas lai komplektētu stropu',
   page: 'lapa | lapas',
+  Page: 'Lapa | Lapas',
   not_found: 'nav atrasts',
   sorry: 'Atvaino',
   delete_layer: 'Dzēst telpu',
@@ -758,7 +759,7 @@ const translations = {
   alertrule_not_active:
     "Šis paziņojums ir Deaktivizēts. Jūs varat to aktivizēt, atzīmējot 'Aktīvs' un saglabājot izveidoto brīdinājuma komandu.",
   export_email_sent: 'E-pasts ar eksceļa failu ir nosūtīts',
-  export_file_saved: 'Eksceļa fails ir saglabāts Jūsu Lejupielādes mapē',
+  export_file_saved: 'Ekseļa fails ir saglabāts Jūsu Lejupielādes mapē',
   Updated_at: 'Atjaunināts',
   Not_yet_saved: 'Vēl nav saglabāts',
   add_own_device: 'Pievieno savu iekārtu',
@@ -768,8 +769,8 @@ const translations = {
   alert_explanation_1:
     'Ja Jums ir BEEP svari vai cita iekārta Jūs varat saņemt paziņojumus pie noteiktiem mērījuma apstākļiem. Piemēram, straujas svara samazināšanās gadījumā Spietošanas dēļ. Brīdinājumi tiks attēloti šajā aplikācijā, Jūs varat izvēlēties vai saņemt tos caur e-pastu vai tikai aplikācija.',
   alert_explanation_2:
-    'Lai būtu vienkāršāk uzsākt, šeit ir izveidotas daži filtri, ko varat lietot vai pielāgot. VArat arī papildināt ar jauniem filtriem.',
-  alertrules_url_text: "Ejiet uz 'Brīdinājuma Iestatījumi' lai izveidotu Jūsu piermo filtru",
+    'Lai būtu vienkāršāk uzsākt, šeit ir izveidotas daži filtri, ko varat lietot vai pielāgot. Varat arī papildināt ar jauniem filtriem.',
+  alertrules_url_text: "Ejiet uz 'Brīdinājuma Iestatījumi' lai izveidotu Jūsu pirmo filtru",
   Apiary_management: 'Dravas pārvaldība',
   Move: 'Pārvietot',
   Current_apiary: 'Patreizējā drava',
@@ -901,7 +902,7 @@ const translations = {
     'https://beepsupport.freshdesk.com/nl/support/solutions/articles/60000706484-alerts',
   pollihub_downlink_unsupported_for_device: 'Lejupsaite nav atbalstīta šim ierīces tipam.',
   pollihub_sensortype_missing: 'Nav atrasts ierīces tips - Pollihub',
-  pollihub_downlink_error: 'Lepujsaite nosūtīšanas kļūda',
+  pollihub_downlink_error: 'Lepujsaites nosūtīšanas kļūda',
   pollihub_alarm_toggled: 'Signalizācijas stāvoklis izmainīts',
   pollihub_led_toggled: 'LED stāvoklis izmainīts',
   toggle_led_state: 'Izmainīt LED stāvokli',

@@ -1206,7 +1206,7 @@ export default {
         this.showLoadingIcon = false;
         if (!response) {
           // TODO change translation
-          this.snackbar.text = this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error');
+          this.snackbar.text = this.$i18n.tc('Error', 1) + ': ' + this.$i18n.t('not_saved_error');
         } else {
           this.snackbar.text = this.$i18n.t(response.data || 'Success');
         }
@@ -1220,7 +1220,7 @@ export default {
           const msg = error.response.data;
           this.snackbar.text = this.$i18n.t(msg);
         } else {
-          this.snackbar.text = this.$i18n.t('Error');
+          this.snackbar.text = this.$i18n.tc('Error', 1);
         }
         this.snackbar.show = true;
       }
@@ -1236,7 +1236,7 @@ export default {
         this.showLoadingIcon = false;
         if (!response) {
           // TODO change translation
-          this.snackbar.text = this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error');
+          this.snackbar.text = this.$i18n.tc('Error', 1) + ': ' + this.$i18n.t('not_saved_error');
         } else {
           this.snackbar.text = this.$i18n.t(response.data || 'Success');
         }
@@ -1250,7 +1250,7 @@ export default {
           const msg = error.response.data;
           this.snackbar.text = this.$i18n.t(msg);
         } else {
-          this.snackbar.text = this.$i18n.t('Error');
+          this.snackbar.text = this.$i18n.tc('Error', 1);
         }
         this.snackbar.show = true;
       }

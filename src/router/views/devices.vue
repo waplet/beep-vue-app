@@ -912,7 +912,7 @@ export default {
         this.showLoadingIcon = false;
         if (!response) {
           // TODO change translation
-          this.errorMessage = this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error');
+          this.errorMessage = this.$i18n.tc('Error', 1) + ': ' + this.$i18n.t('not_saved_error');
         } else {
           this.successMessage = this.$i18n.t(response.data || 'Success');
           setTimeout(() => {
@@ -928,7 +928,7 @@ export default {
           const msg = error.response.data;
           this.errorMessage = this.$i18n.t(msg);
         } else {
-          this.errorMessage = this.$i18n.t('Error');
+          this.errorMessage = this.$i18n.tc('Error', 1);
         }
       }
     },
@@ -943,7 +943,7 @@ export default {
         this.showLoadingIcon = false;
         if (!response) {
           // TODO change translation
-          this.errorMessage = this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error');
+          this.errorMessage = this.$i18n.tc('Error', 1) + ': ' + this.$i18n.t('not_saved_error');
         } else {
           this.successMessage = this.$i18n.t(response.data || 'Success');
           setTimeout(() => {
@@ -959,7 +959,7 @@ export default {
           const msg = error.response.data;
           this.errorMessage = this.$i18n.t(msg);
         } else {
-          this.errorMessage = this.$i18n.t('Error');
+          this.errorMessage = this.$i18n.tc('Error', 1);
         }
       }
     },
