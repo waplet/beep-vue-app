@@ -35,6 +35,7 @@
     activeClasses: {
       flashlog: ['t_0', 't_i'],
       database: ['t_0', 't_i'],
+      apiary: ['t', 'h'],
     },
   }
 

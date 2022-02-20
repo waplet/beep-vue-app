@@ -741,6 +741,7 @@ export default {
             }),
             this.$chartist.plugins.beep(),
             this.$chartist.plugins.legendBeep({
+              dataSet: 'apiary',
               simpleToggle: true,
               inactiveByDefault: false
             }),
