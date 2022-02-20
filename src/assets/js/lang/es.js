@@ -88,7 +88,7 @@ const translations = {
   remove_apiary: 'Eliminar apiario',
   remove_hive: 'Eliminar colmena',
   remove_inspection: 'Eliminar inspección',
-  Error: 'Error',
+  Error: 'Error | Errores',
   Warning: 'Advertencia',
   first_remove_hives:
     'Atención: Aun hay colmenas en este apiario. Usted puede guardar colmenas específicas (y sus inspecciones) trasladándolas primero a otro apiario. Si continúa con la eliminación, eliminará TODAS las colmenas e inspecciones presentes en esta ubicación.',
@@ -369,7 +369,7 @@ const translations = {
   /* Medidas */
   Hour: 'Horas',
   hour: 'hora | horas',
-  day: 'Día',
+  day: 'día | días',
   week: 'Semana',
   month: 'Mes',
   year: 'Año',
@@ -563,6 +563,7 @@ const translations = {
   overrides_layer_colors: 'anula los colores de las capas',
   drag_layers: 'Arrastrar capas para configurar colmenas',
   page: 'page | páginas',
+  Page: 'Page | Páginas',
   not_found: 'no encontrado',
   sorry: 'lo siento',
   delete_layer: 'eliminar capa',
@@ -873,7 +874,7 @@ const translations = {
   View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
-    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.',
   Relative_startpoint: 'Relative',
 
   import_log_data_explanation:

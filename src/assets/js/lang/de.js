@@ -87,7 +87,7 @@ const translations = {
   remove_apiary: 'Entferne Bienenstand',
   remove_hive: 'Entferne Beute',
   remove_inspection: 'Entferne Durchsicht',
-  Error: 'Fehler',
+  Error: 'Fehler | Fehler',
   Warning: 'Warnung',
   first_remove_hives:
     'Da sind bereits Beuten an diesem Ort. Der Ort kann gelöscht werden, wenn alle Beuten an einen anderen Ort transferiert oder gelöscht wurden.',
@@ -367,7 +367,7 @@ const translations = {
   /* Measurements */
   Hour: 'Stunde',
   hour: 'Stunde | Stunden',
-  day: 'Tag',
+  day: 'Tag | Tage',
   week: 'Woche',
   month: 'Monat',
   year: 'Jahr',
@@ -509,7 +509,7 @@ const translations = {
   Hive_order: 'Beutensortierung am Bienenstand',
   bb_width_cm: 'Brutbox Breite (cm)',
   bb_height_cm: 'Brutbox Höhe (cm)',
-  bb_depth_cm: 'Brood box depth (cm)',
+  bb_depth_cm: 'Brutbox Tiefe (cm)',
   fr_width_cm: 'Rähmchen Breite (cm)',
   fr_height_cm: 'Rähmchen Höhe (cm)',
   queen_line: 'Linie',
@@ -570,13 +570,14 @@ const translations = {
   no_inspections: 'Keine Durchsichten bisher',
   no_results: 'Keine Ergebnisse',
   Hive_brood_layer: 'Brutzarge | Brutzargen',
-  Hive_honey_layer: 'Brutzarge | Brutzargen',
+  Hive_honey_layer: 'Honigzarge | Honigzargen',
   Hive_queen_excluder_layer:
     'Königinnenabsperrgitter | Königinnenabsperrgitter',
   Hive_feeding_box_layer: 'Futterbox | Futterboxen',
   overrides_layer_colors: 'überschreibt Zargenfarbe',
   drag_layers: 'Zur Konfiguration der Beute - Elemente ziehen',
   page: 'Seite | Seiten',
+  Page: 'Seite | Seiten',
   not_found: 'nicht gefunden',
   sorry: 'Entschuldigung',
   delete_layer: 'Lösche Zarge',
@@ -884,7 +885,7 @@ const translations = {
   View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
-    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.',
   Relative_startpoint: 'Relative',
 
   import_log_data_explanation:

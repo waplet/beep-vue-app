@@ -75,7 +75,7 @@ const translations = {
   remove_hive: 'Remove hive',
   remove_inspection: 'Remove inspection',
 
-  Error: 'Error',
+  Error: 'Error | Errors',
   first_remove_hives:
     'Attention: there are still hives at this apiary. You can save specific hives (and their inspections) by first moving them to another apiary. If you continue with the deletion, you will delete ALL hives and inspections present at this location.',
 
@@ -328,7 +328,7 @@ const translations = {
   /* Measurements */
   Hour: 'Hour',
   hour: 'hour | hours',
-  day: 'Day',
+  day: 'day | days',
   week: 'Week',
   month: 'Month',
   year: 'Year',
@@ -497,6 +497,7 @@ const translations = {
   Hive_feeding_box_layer: 'Feeding box | Feeding boxes',
   drag_layers: 'Drag layers to configure hive',
   page: 'page | pages',
+  Page: 'Page | Pages',
   not_found: 'not found',
   sorry: 'Sorry',
   delete_layer: 'Delete layer',
@@ -787,7 +788,7 @@ const translations = {
   View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
-    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.. BEEP bases do not measure weather data.',
   Relative_startpoint: 'Relative',
 
   Log_data: 'Log data',

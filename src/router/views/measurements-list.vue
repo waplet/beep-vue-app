@@ -20,7 +20,7 @@
             </v-btn>
           </div>
           <v-switch
-            v-model="relativeInterval"
+            v-model="setRelativeInterval"
             :label="`${$t('Relative_startpoint')}`"
             class="pt-0 mt-0"
             :disabled="interval === 'selection'"
@@ -69,7 +69,7 @@
             <v-col cols="5" sm="4" class="pa-0">
               <div class="d-flex justify-center">
                 <v-switch
-                  v-model="relativeInterval"
+                  v-model="setRelativeInterval"
                   :label="`${$t('Relative_startpoint')}`"
                   class="pt-0 mt-0"
                   :disabled="interval === 'selection'"
@@ -647,6 +647,7 @@ export default {
       periodStart: null,
       periodEnd: null,
       loadingData: false,
+      relativeInterval: true,
     }
   },
   computed: {
@@ -760,14 +761,14 @@ export default {
     periods() {
       return [
         { name: this.$i18n.t('Hour'), interval: 'hour' },
-        { name: this.$i18n.t('day'), interval: 'day' },
+        { name: this.$i18n.tc('day', 1), interval: 'day' },
         { name: this.$i18n.t('week'), interval: 'week' },
         { name: this.$i18n.t('month'), interval: 'month' },
         { name: this.$i18n.t('year'), interval: 'year' },
         { name: this.$i18n.t('selection'), interval: 'selection' },
       ]
     },
-    relativeInterval: {
+    setRelativeInterval: {
       get() {
         if (localStorage.beepRelativeInterval) {
           return localStorage.beepRelativeInterval === 'true'
@@ -776,7 +777,8 @@ export default {
         }
       },
       set(value) {
-        localStorage.beepRelativeInterval = value
+        localStorage.beepRelativeInterval = value.toString()
+        this.relativeInterval = value
       },
     },
     requiredRules() {
@@ -924,20 +926,28 @@ export default {
       }, 10)
     },
     relativeInterval() {
-      this.loadData()
+      this.loadData(false)
     },
   },
   created() {
     this.readTaxonomy()
-    // if selected device id is saved in localStorage, use it
-    if (localStorage.beepSelectedDeviceId) {
-      this.selectedDeviceId = localStorage.beepSelectedDeviceId
-    }
     if (localStorage.beepChartCols) {
       this.chartCols = parseInt(localStorage.beepChartCols)
     }
+    if (localStorage.beepRelativeInterval) {
+      this.relativeInterval = localStorage.beepRelativeInterval === 'true'
+    }
     this.preselectedDate = this.$route.query.date || null
     this.preselectedDeviceId = parseInt(this.$route.params.id) || null
+    // if selected device id is saved in localStorage, and there is no preselected device id, use it
+    if (
+      this.preselectedDeviceId === null &&
+      localStorage.beepSelectedDeviceId
+    ) {
+      this.selectedDeviceId = localStorage.beepSelectedDeviceId
+    } else if (this.preselectedDeviceId !== null) {
+      this.selectedDeviceId = this.preselectedDeviceId
+    }
     this.checkAlertRulesAndAlerts() // for alerts-tab badge
     this.stopTimer()
     this.readDevicesIfNotPresent()
@@ -947,7 +957,6 @@ export default {
           this.preselectedDate.length === 10 &&
           !isNaN(this.preselectedDeviceId)
         ) {
-          this.selectedDeviceId = this.preselectedDeviceId
           this.selectDate(this.preselectedDate)
         } else if (this.devices.length > 0) {
           this.setInitialDeviceIdAndLoadData()
@@ -1298,8 +1307,10 @@ export default {
         dates.length === 1
       )
     },
-    loadData() {
-      this.loadLastSensorValuesTimer()
+    loadData(loadLastSensorValues = true) {
+      if (loadLastSensorValues) {
+        this.loadLastSensorValuesTimer()
+      }
       this.sensorMeasurementRequest(this.interval)
       this.setPeriodTitle()
     },

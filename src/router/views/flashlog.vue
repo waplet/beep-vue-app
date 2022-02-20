@@ -39,36 +39,56 @@
       <div
         v-if="blockData !== null"
         :class="
-          'd-flex flex-row font-weight-bold' + (smAndDown ? '' : ' overline')
+          'font-weight-bold ' +
+            (smAndDown ? 'd-flex flex-column font-small' : 'overline')
         "
       >
-        <span
-          :class="
-            'mr-3 ' +
-              (blockData.block_data_match_percentage >= thresholdMatches
-                ? 'green--text'
-                : 'red--text')
-          "
-          v-text="
-            $tc('Match', 2) + ': ' + blockData.block_data_match_percentage + '%'
-          "
-        ></span>
-        <span
-          :class="
-            Math.abs(blockData.block_data_flashlog_sec_diff) >=
-              thresholdSecDiff ||
-            blockData.block_data_flashlog_sec_diff === null
-              ? 'red--text'
-              : 'green--text'
-          "
-          v-text="
-            $t('Time_diff') +
-              ': ' +
-              (blockData.block_data_flashlog_sec_diff !== null
-                ? blockData.block_data_flashlog_sec_diff + $t('seconds_short')
-                : $t('unknown'))
-          "
-        ></span>
+        <div class="d-flex flex-row">
+          <span
+            :class="
+              'mr-3 ' +
+                (blockData.block_data_match_percentage >= thresholdMatches
+                  ? 'green--text'
+                  : 'red--text')
+            "
+            v-text="
+              $tc('Match', 2) +
+                ': ' +
+                blockData.block_data_match_percentage +
+                '%'
+            "
+          ></span>
+          <span
+            v-if="!smAndDown && blockData.block_data_match_errors !== ''"
+            class="mr-3 red--text"
+            v-text="$tc('Error', 2) + ': ' + blockData.block_data_match_errors"
+          ></span>
+          <span
+            :class="
+              Math.abs(blockData.block_data_flashlog_sec_diff) >=
+                thresholdSecDiff ||
+              blockData.block_data_flashlog_sec_diff === null
+                ? 'red--text'
+                : 'green--text'
+            "
+            v-text="
+              $t('Time_diff') +
+                ': ' +
+                (blockData.block_data_flashlog_sec_diff !== null
+                  ? blockData.block_data_flashlog_sec_diff + $t('seconds_short')
+                  : $t('unknown'))
+            "
+          ></span>
+        </div>
+        <div
+          v-if="smAndDown && blockData.block_data_match_errors !== ''"
+          class="d-flex flex-row"
+        >
+          <span
+            class="mr-3 red--text"
+            v-text="$tc('Error', 2) + ': ' + blockData.block_data_match_errors"
+          ></span>
+        </div>
       </div>
       <v-spacer></v-spacer>
       <v-btn
@@ -100,13 +120,21 @@
         :color="smAndDown ? 'accent' : 'black'"
         class="mr-n1 ml-1"
         :disabled="loading || finalIndex"
-        @click="changeBlockDataIndex(blockData.block_data_index_max)"
+        @click="changeBlockDataIndex(blockDataIndexMax)"
         >mdi-chevron-double-right</v-icon
       >
     </v-toolbar>
 
     <v-container class="back-content">
       <v-row>
+        <v-col cols="12" class="py-0">
+          <span
+            class="float-right mt-n1 font-small"
+            v-text="paginationText"
+          ></span>
+        </v-col>
+      </v-row>
+      <v-row class="my-0">
         <v-col v-if="errorMessage" cols="12">
           <v-alert
             text
@@ -221,6 +249,7 @@ export default {
       errorMessage: null,
       measurements: {},
       blockDataIndex: 0,
+      blockDataIndexMax: 0,
       showLoadingIcon: false,
       dataSets: ['flashlog', 'database'],
       thresholdSecDiff: 120,
@@ -237,7 +266,7 @@ export default {
     finalIndex() {
       return (
         (this.blockData !== null &&
-          this.blockDataIndex === this.blockData.block_data_index_max) ||
+          this.blockDataIndex === this.blockDataIndexMax) ||
         this.blockData === null
       )
     },
@@ -275,7 +304,9 @@ export default {
         return entries > 2000
           ? 100
           : entries > 1000
-          ? 36
+          ? this.mobile
+            ? 72
+            : 36
           : entries > 500
           ? 12
           : 6
@@ -297,7 +328,17 @@ export default {
           : '') + this.logDetails
       )
     },
-
+    paginationText() {
+      return (
+        this.$i18n.tc('Page', 1) +
+        ' ' +
+        this.blockDataIndex +
+        ' ' +
+        this.$i18n.t('of') +
+        ' ' +
+        this.blockDataIndexMax
+      )
+    },
     smAndDown() {
       return this.$vuetify.breakpoint.smAndDown
     },
@@ -309,7 +350,9 @@ export default {
   },
   created() {
     this.readTaxonomy().then(() => {
-      this.checkBlockData()
+      this.checkBlockData().then(() => {
+        this.blockDataIndexMax = this.blockData.block_data_index_max
+      })
     })
   },
   methods: {
@@ -432,7 +475,7 @@ export default {
           }),
           self.$chartist.plugins.beep(),
           self.$chartist.plugins.legendBeep({
-            dataSet,
+            dataSet: dataSet,
             simpleToggle: true,
             inactiveByDefault: true,
             // N.B. active classes are now set inside legendBeep plugin for smooth performance

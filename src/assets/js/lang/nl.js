@@ -76,7 +76,7 @@ const translations = {
   remove_hive: 'Verwijder kast',
   remove_inspection: 'Verwijder inspectie',
 
-  Error: 'Fout',
+  Error: 'Fout | Fouten',
   first_remove_hives:
     'Let op: er zijn nog kasten op deze bijenstand aanwezig. U kunt specifieke kasten (en hun inspecties) bewaren door ze eerst te verplaatsen naar een andere bijenstand. Als u doorgaat met verwijderen, verwijdert u ALLE kasten en inspecties die op deze locatie aanwezig zijn.',
 
@@ -330,7 +330,7 @@ const translations = {
   /* Measurements */
   Hour: 'Uur',
   hour: 'uur | uur',
-  day: 'Dag',
+  day: 'dag | dagen',
   week: 'Week',
   month: 'Maand',
   year: 'Jaar',
@@ -506,6 +506,7 @@ const translations = {
   Hive_feeding_box_layer: 'Voederbak | Voederbakken',
   drag_layers: 'Versleep kamers om bijenkast te configureren',
   page: "pagina | pagina's",
+  Page: "Pagina | Pagina's",
   not_found: 'niet gevonden',
   sorry: 'Sorry',
   delete_layer: 'Verwijder laag',
@@ -793,7 +794,7 @@ const translations = {
   data_zoom_out_ok: 'Wil je uitzoomen naar de data van ',
   show_all: 'Toon alle',
   only_active_if_measurement_present:
-    '*N.B. Notificaties worden alleen geactiveerd wanneer de geselecteerde meting door je BEEP base / meetsysteem gemeten wordt',
+    '*N.B. Notificaties worden alleen geactiveerd wanneer de geselecteerde meting door je BEEP base / meetsysteem gemeten wordt. BEEP bases meten geen weerdata.',
   Relative_startpoint: 'Relatief',
 
   Log_data: 'Log data',

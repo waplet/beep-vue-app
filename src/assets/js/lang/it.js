@@ -88,7 +88,7 @@ const translations = {
   remove_apiary: 'Rimuovi apiario',
   remove_hive: 'Rimuovi alveare',
   remove_inspection: 'Rimuovi visita',
-  Error: 'Errore',
+  Error: 'Errore | Errori',
   Warning: 'Attenzione',
   first_remove_hives:
     'Attenzione: ci sono ancora alveari in questo apiario. Puoi salvare alveari specifici (e le loro visita) spostandoli prima in un altro apiario. Se continui, cancellerai TUTTI gli alveari e dati di visite per questa località.',
@@ -368,7 +368,7 @@ const translations = {
   /* Measurements */
   Hour: 'Ora',
   hour: 'ora | ore',
-  day: 'Giorno',
+  day: 'giorno | giorni',
   week: 'Settimana',
   month: 'Mese',
   year: 'Anno',
@@ -563,6 +563,7 @@ const translations = {
   overrides_layer_colors: 'annulla i colori degli strati',
   drag_layers: "Trascina i pezzi per configurare l'alveare",
   page: 'pagina | pagine',
+  Page: 'Pagina | Pagine',
   not_found: 'non trovato',
   sorry: 'Spiacente',
   delete_layer: 'Cancella strato',
@@ -863,7 +864,7 @@ const translations = {
   View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
-    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.',
   Relative_startpoint: 'Relative',
 
   import_log_data_explanation:

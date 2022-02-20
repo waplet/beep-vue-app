@@ -87,7 +87,7 @@ const translations = {
   remove_apiary: 'Eliminați stupina',
   remove_hive: 'Eliminare stup',
   remove_inspection: 'Eliminați inspecția',
-  Error: 'Eroare',
+  Error: 'Eroare | Erori',
   Warning: 'Advertisment',
   first_remove_hives:
     'Atenție încă există stupi în această stupină. Puteți salva stupi specifici (și inspecțiile lor) prin mutarea acestora într-o altă stupină. Dacă veți continua cu ștergerea, vor fi șterse toate inspecțiile și toți stupii din prezenta locație.',
@@ -370,7 +370,7 @@ const translations = {
   /* Measurements */
   Hour: 'Oră',
   hour: 'oră | ore',
-  day: 'Zi',
+  day: 'zi | zile',
   week: 'Săptămână',
   month: 'Lună',
   year: 'An',
@@ -565,6 +565,7 @@ const translations = {
   overrides_layer_colors: 'anulează culorile stratului',
   drag_layers: 'Trageți straturile pentru a configura stupul',
   page: 'pagina | pagini',
+  Page: 'Pagina | Pagini',
   not_found: 'nu a fost găsit',
   sorry: 'Ne pare rău.',
   delete_layer: 'Ștergeți strat',
@@ -867,7 +868,7 @@ const translations = {
   View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
-    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.',
   Relative_startpoint: 'Relative',
 
   import_log_data_explanation:

@@ -569,7 +569,9 @@
                                   "
                                   class="mt-2 mb-n5"
                                   solo
-                                  @input="sensorDefEdited = true"
+                                  @input="
+                                    selectInputMeasurementId(sensorDef, $event)
+                                  "
                                 ></v-select>
                               </td>
                               <td class="td--small">
@@ -878,7 +880,7 @@ export default {
         )
         if (!response) {
           this.errorMessage =
-            this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error')
+            this.$i18n.tc('Error', 1) + ': ' + this.$i18n.t('not_saved_error')
           this.showLoadingIcon = false
         }
         this.getDevicesForList().then(() => {
@@ -895,7 +897,7 @@ export default {
           const msg = error.response.data
           this.errorMessage = this.$i18n.t(msg)
         } else {
-          this.errorMessage = this.$i18n.t('Error')
+          this.errorMessage = this.$i18n.tc('Error', 1)
         }
       }
     },
@@ -985,7 +987,7 @@ export default {
         }
         if (!response) {
           this.errorMessage =
-            this.$i18n.t('Error') + ': ' + this.$i18n.t('not_saved_error')
+            this.$i18n.tc('Error', 1) + ': ' + this.$i18n.t('not_saved_error')
           this.showLoadingIconById.splice(
             this.showLoadingIconById.indexOf(sensorDef.id),
             1
@@ -1009,7 +1011,7 @@ export default {
           const msg = error.response.data.message
           this.errorMessage = this.$i18n.t(msg)
         } else {
-          this.errorMessage = this.$i18n.t('Error')
+          this.errorMessage = this.$i18n.tc('Error', 1)
         }
       }
     },
@@ -1139,6 +1141,10 @@ export default {
       if (device.sensor_definitions[sensorDefIndex] !== 'undefined') {
         device.sensor_definitions.splice(sensorDefIndex, 1)
       }
+    },
+    selectInputMeasurementId(sensorDef, $event) {
+      sensorDef.output_measurement_id = $event
+      this.sensorDefEdited = true
     },
     sortedSensorDefinitions(sensordefs) {
       // sort sensor_definitions: newly added first (if multiple new: sory by name), then first by output_abbr then input_abbr then updated_at

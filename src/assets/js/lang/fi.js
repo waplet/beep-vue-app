@@ -95,7 +95,7 @@ const translations = {
   remove_hive: 'Poista pesä',
   remove_inspection: 'Poista pesätarkastus',
 
-  Error: 'Virhe',
+  Error: 'Virhe | Virheitä',
   Warning: 'Varoitus',
   first_remove_hives:
     'Huomio: tällä tarhalla on vielä pesiä. Voit tallentaa haluamasi pesät (ja niiden tarkastukset) siirtämällä ne ensin toiseen mehiläistarhaan. Jos jatkat poistamista, poistat KAIKKI tämän tarhapaikan pesät ja niiden tarkastukset.',
@@ -389,7 +389,7 @@ const translations = {
   /* Measurements */
   Hour: 'Tunti',
   hour: 'tunti | tuntia',
-  day: 'Päivä',
+  day: 'päivä | päivää',
   week: 'Viikko',
   month: 'Kuukausi',
   year: 'Vuosi',
@@ -597,6 +597,7 @@ const translations = {
   overrides_layer_colors: 'Korvaa osastojen värit',
   drag_layers: 'Lisää osastoja vetämällä',
   page: 'sivu | sivut',
+  Page: 'Sivu | Sivut',
   not_found: 'ei löydetty',
   sorry: 'Pahoittelut',
   delete_layer: 'Poista osasto',
@@ -902,7 +903,7 @@ const translations = {
   View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
-    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.',
   Relative_startpoint: 'Relative',
 
   import_log_data_explanation:

@@ -95,7 +95,7 @@ const translations = {
   remove_hive: 'Supprimer la ruche',
   /* Cyrille - 31/05 : Translation updated */
   remove_inspection: "Supprimer l'inspection",
-  Error: 'Erreur',
+  Error: 'Erreur | Erreurs',
   Warning: 'Attention',
   /* Cyrille - 31/05 : Translation updated */
   first_remove_hives:
@@ -433,7 +433,7 @@ const translations = {
   /* Measurements */
   Hour: 'Heure',
   hour: 'heure | heures',
-  day: 'Jour',
+  day: 'jour | jours',
   week: 'Semaine',
   month: 'Mois',
   year: 'Année',
@@ -655,6 +655,7 @@ const translations = {
   overrides_layer_colors: 'Remplacer la couleur des cadres',
   drag_layers: 'Glisser des cadres pour configurer la ruche',
   page: 'page | pages',
+  Page: 'Page | Pages',
   not_found: 'introuvable',
   sorry: 'désolé',
   delete_layer: 'Supprimer le cadre',
@@ -974,7 +975,7 @@ const translations = {
   View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
-    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device',
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.',
   Relative_startpoint: 'Relative',
 
   import_log_data_explanation:
