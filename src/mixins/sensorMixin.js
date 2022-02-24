@@ -89,6 +89,7 @@ export const sensorMixin = {
         bee_power_state: 'silver',
         food_state: 'silver',
         led3_state: 'silver',
+        alarm_out: 'crimson',
       },
       WEATHER: [
         'icon',
@@ -135,6 +136,7 @@ export const sensorMixin = {
         'led3_state',
         'bee_power_state',
         'food_state',
+        'alarm_out',
       ], // not actuators
       SOUND: [
         's_fan_4',
@@ -262,6 +264,7 @@ export const sensorMixin = {
         bee_power_state: 'bee_power_state',
         food_state: 'food_state',
         led3_state: 'led3_state',
+        alarm_out: 'alarm_out',
       },
       SENSOR_MIN: {
         t: -10,
@@ -301,6 +304,7 @@ export const sensorMixin = {
         bee_power_state: -0.1,
         food_state: -0.1,
         led3_state: -0.1,
+        alarm_out: -0.1,
       },
       SENSOR_LOW: {
         t: 0,
@@ -340,6 +344,7 @@ export const sensorMixin = {
         bee_power_state: 3,
         food_state: 3,
         led3_state: 3,
+        alarm_out: 0.25,
       },
       SENSOR_HIGH: {
         t: 30,
@@ -379,6 +384,7 @@ export const sensorMixin = {
         bee_power_state: 8,
         food_state: 8,
         led3_state: 8,
+        alarm_out: 1,
       },
       SENSOR_MAX: {
         t: 50,
@@ -418,6 +424,7 @@ export const sensorMixin = {
         bee_power_state: 7,
         food_state: 7,
         led3_state: 7,
+        alarm_out: 1,
       },
       SENSOR_UNITS: {
         t: '°C',
@@ -503,6 +510,7 @@ export const sensorMixin = {
         bee_power_state: '',
         food_state: '',
         led3_state: '',
+        alarm_out: '',
       },
     }
   },

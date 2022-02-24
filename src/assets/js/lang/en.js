@@ -311,6 +311,7 @@ const translations = {
   bee_power_state: 'Bee power state',
   food_state: 'Food state',
   led3_state: 'LED3 state',
+  alarm_out: 'Alarm triggered',
   
   /* Pollihub */
   pollihub_downlink_unsupported_for_device: 'Downlink is not supported for this type of device',

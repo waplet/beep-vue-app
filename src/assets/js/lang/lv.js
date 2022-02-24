@@ -283,7 +283,7 @@ const translations = {
 
   /* sensors */
   Select_sensor: 'Atzīmēt sensoru',
-  temperature: 'Temperatūras',
+  temperature: 'Temperatūra',
   t: 'Temperatūra',
   t_0: 'Temperatūra 1',
   t_1: 'Temperatūra 2',
@@ -388,6 +388,7 @@ const translations = {
   bee_power_state: 'Bišu saimes spēka stāvoklis',
   food_state: 'Ēdiena stāvoklis',
   led3_state: 'LED3 stāvoklis',
+  alarm_out: 'Iedarbināta signalizācija',
 
   /* Measurements */
   Hour: 'Stunda',
@@ -413,12 +414,12 @@ const translations = {
   checklist: 'saraksts | saraksti',
   Checklist_items: 'Saraksta sadaļa',
   edit_hive_checklist:
-    'Atzīmēt/noņemt atzīmi sarakstiem zemāk, lai pievienotu/noņemtu sadaļas no stropu kopējā pārbaudes saraksta. You can also izklāt/sakļaut un  vienkārši aizvilkt sadaļas, lai pārkārtotu sev vēlamā secībā.',
+    'Atzīmēt/noņemt atzīmi sarakstiem zemāk, lai pievienotu/noņemtu sadaļas no stropu kopējā pārbaudes saraksta. Varat izklāt/sakļaut un vienkārši aizvilkt sadaļas, lai pārkārtotu sev vēlamā secībā.',
 
   /* user */
   Data_export: 'Eksportēt datus',
   Export_your_data:
-    'Eksportēt visus datus kas ir jūsu kontā un nosūtīt e-pastu ar datiem ekscel formātā. Eksceļa failam ir dažādas tabulas kolonnas kas satur personas datus, stropi, atrašanās vieta un Pārbaudes.',
+    'Eksportēt visus datus, kas ir jūsu kontā un nosūtīt e-pastu ar datiem excel formātā. Excel failam ir dažādas tabulas kolonnas, kas satur personas datus, stropi, atrašanās vieta un pārbaudes.',
 
   Terms_of_use: 'Lietošanas nosacījumi',
   accept_policy:
@@ -441,7 +442,7 @@ const translations = {
   nothing: 'nekas',
   on_the_scale: 'uz svariem',
   calibration_started:
-    'kalibrācija ir uzsākta... Gaidiet nākamo mērījumu lai izmaiņas tiktu ņemtas vērā.',
+    'kalibrācija ir uzsākta... Gaidiet nākamo mērījumu, lai izmaiņas tiktu ņemtas vērā.',
   calibration_ended: 'kalibrācija veikta veiksmīgi!',
 
   /* General items */
@@ -509,7 +510,7 @@ const translations = {
 
   /* TO BE TRANSLATED */
   /* New translations v2.2.0 */
-  roofed: 'Vai kādai dravai ir Jumts?',
+  roofed: 'Vai dravai ir jumts?',
   info: 'Info',
 
   research: 'Pētniecība',
@@ -562,7 +563,7 @@ const translations = {
   Last: 'Pēdējais',
 
   Export_sensor_data:
-    "Eksportēt visus datus ar visaugstāko izšķirtspēju kā  .csv failu, ko iespējams atvērt ar Ekscel vai SPSS. Laika un datuma dati 'time' kolonā ir GMT laika formātā ar RFC 3339 datums-laiks standartu.",
+    "Eksportēt visus datus ar visaugstāko izšķirtspēju kā .csv failu, ko iespējams atvērt ar Excel vai SPSS. Laika un datuma dati 'time' kolonā ir GMT laika formātā ar RFC 3339 datums-laiks standartu.",
   CSV_export_separator: 'CSV datu kolonnu atdalīšana',
   Selected_date: 'Izvēlētais laika periods',
   Sensor_measurements: 'Sensoru mērījumi',
@@ -600,7 +601,7 @@ const translations = {
   limit_exceeded: 'Limits ir sasniegts, mēģiniet vēlāk vēlreiz',
   confirm_email_title: 'Apstipriniet Jūsu e-pastu',
   confirm_email_summary:
-    "jūs esat saņēmuši verivikācijas kodu uz Jūsu e-pasta adresi. ievadiet to zemāk, lai apstiprinātu Jūsu e-pasta adresi",
+    "jūs esat saņēmuši verifikācijas kodu uz Jūsu e-pasta adresi. ievadiet to zemāk, lai apstiprinātu Jūsu e-pasta adresi",
   confirm: 'Apstiprināt',
   Profile: 'Profils',
   Checklist_template: 'Pārbaužu sagatave | Pārbaužu sagataves',
@@ -615,7 +616,7 @@ const translations = {
   Hive_queen_excluder_layer: 'Bišu māšu šķirsiets | Bišu māšu šķirsieti',
   Hive_feeding_box_layer: 'Barotava | Barotavas',
   overrides_layer_colors: 'Ignorē telpu krāsu',
-  drag_layers: 'Pārvieto telpas lai komplektētu stropu',
+  drag_layers: 'Pārvieto telpas, lai komplektētu stropu',
   page: 'lapa | lapas',
   Page: 'Lapa | Lapas',
   not_found: 'nav atrasts',
