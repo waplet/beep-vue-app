@@ -789,7 +789,7 @@ const translations = {
   View_data: 'View data',
   show_all: 'Show all',
   only_active_if_measurement_present:
-    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.. BEEP bases do not measure weather data.',
+    '*N.B. the alert rule will only be active if the selected measurement is measured by your BEEP base / device. BEEP bases do not measure weather data.',
   Relative_startpoint: 'Relative',
 
   Log_data: 'Log data',
@@ -819,6 +819,21 @@ const translations = {
   no_data_stored: 'No data stored',
   data_stored_for_log: 'Data stored for Log ',
   Fill_holes: 'Fill holes (connect all data points)',
+
+  Data_imported: 'Data imported',
+  undo_import: 'Undo import',
+  undo_block_import_exp:
+    'Are you sure that you want to delete the previously imported data from this block from the database?',
+  data_deleted: 'Data deleted',
+  data_not_deleted: 'Data not deleted',
+  deleted_measurements: 'Deleted measurements',
+  deleted_days: 'deleted days',
+  Memory_erased: 'BEEP base memory emptied',
+  Export: 'Export',
+  Export_as_json: 'Export as JSON data',
+  Export_as_csv: 'Export as .csv file',
+  Export_full_json: 'Export full JSON',
+  Export_full_csv: 'Export full .csv',
 }
 
 export default translations

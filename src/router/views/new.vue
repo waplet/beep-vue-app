@@ -2,8 +2,84 @@
   <Layout :title="$t('Whats_new')">
     <v-container>
       <div class="overline mb-1"
-        ><span class="lowercase">v</span>3.0.84 (17-02-2022) - Current
+        ><span class="lowercase">v</span>3.0.91 (28-03-2022) - Current
         version</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li>Minor improvements</li>
+          <li>Bugfixes: small fixes for issues received as feedback</li>
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.90 (24-03-2022)</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li>
+            Import:
+            <router-link :to="{ name: 'import' }">
+              several improvements (only for users with a BEEP
+              base)</router-link
+            >, such as:
+            <ul>
+              <li
+                >Option to export block data as a .csv file or in JSON
+                format</li
+              >
+              <li>Bugfixes: small fixes for issues received as feedback</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.88 (07-03-2022)</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li>
+            Swedish language has been added
+          </li>
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.87 (22-02-2022)</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li>
+            Import:
+            <router-link :to="{ name: 'import' }">
+              several improvements (only for users with a BEEP
+              base)</router-link
+            >, such as:
+            <ul>
+              <li
+                >Option to undo imported block data ('undo import' button is
+                shown in table (result of 'check log data'), for each block that
+                has been imported). This removes imported data from the
+                database, for that particular block.</li
+              >
+              <li
+                >Option to 'view data' for each block, even if no matches are
+                present</li
+              >
+              <li>Show all blocks at once instead of paginated per 5</li>
+              <li
+                >Table tweaks: show 'BEEP base memory emptied' instead of 'Time
+                logged' and add 'Data imported' to block data table</li
+              >
+              <li>In flashlog vs. database comparison view: add pagination</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.86 (22-02-2022)</div
       >
       <div class="rounded-border mb-4">
         <ul>
@@ -549,8 +625,11 @@
                 ><router-link :to="{ name: 'devices' }">Devices</router-link>,
                 <router-link :to="{ name: 'export' }">Data export</router-link>,
                 <router-link :to="{ name: 'research' }">Research</router-link>,
-                <router-link :to="{ name: 'support' }">Helpdesk</router-link>,
-                <router-link :to="{ name: 'new' }">New!</router-link> and
+                <a
+                  href="https://beepsupport.freshdesk.com/en/support/solutions"
+                  target="_blank"
+                  >Support</a
+                >, <router-link :to="{ name: 'new' }">New!</router-link> and
                 <a href="https://beep.nl/home-english" target="_blank"
                   >BEEP website</a
                 >
@@ -1044,8 +1123,11 @@
                   >Data exporteren</router-link
                 >,
                 <router-link :to="{ name: 'research' }">Onderzoek</router-link>,
-                <router-link :to="{ name: 'support' }">Helpdesk</router-link>,
-                <router-link :to="{ name: 'new' }">Nieuw!</router-link> en
+                <a
+                  href="https://beepsupport.freshdesk.com/nl/support/solutions"
+                  target="_blank"
+                  >Support</a
+                >, <router-link :to="{ name: 'new' }">Nieuw!</router-link> en
                 <a href="https://beep.nl/" target="_blank">BEEP website</a>
                 zijn verhuisd naar het
                 <v-icon class="color-black inline-icon">mdi-menu</v-icon> menu
@@ -1130,11 +1212,8 @@
           >
           <!-- <li>Photos: ability to add images to inspections<a ng-click="switchMenu($event, true, '/images')">and view all images</a></li> -->
           <li
-            >Helpdesk:
-            <router-link :to="{ name: 'support' }">
-              search the knowledge base for help, or file a support ticket
-              directly from the app</router-link
-            ></li
+            >Helpdesk: search the knowledge base for help, or file a support
+            ticket directly from the app</li
           >
           <li
             >Weather:

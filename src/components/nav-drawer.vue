@@ -86,7 +86,7 @@
 
         <div class="version-number">
           <v-spacer></v-spacer>
-          v3.0.84
+          v3.0.91
         </div>
       </div>
     </v-navigation-drawer>
@@ -179,7 +179,14 @@ export default {
         {
           icon: 'mdi-comment-question-outline',
           title: this.$i18n.t('Support'),
-          route: 'support',
+          external: true,
+          route:
+            this.locale !== 'sv'
+              ? 'https://beepsupport.freshdesk.com/' +
+                this.locale +
+                (this.locale === 'pt' ? '-PT' : '') +
+                '/support/solutions'
+              : 'https://beepsupport.freshdesk.com/en/support/solutions',
           beepBaseRequired: false,
         },
         {

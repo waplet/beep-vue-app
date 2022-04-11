@@ -12,6 +12,7 @@ import it from '@assets/js/lang/it'
 import nl from '@assets/js/lang/nl'
 import pt from '@assets/js/lang/pt'
 import ro from '@assets/js/lang/ro'
+import sv from '@assets/js/lang/sv'
 import lv from '@assets/js/lang/lv'
 // import enUS from '@assets/js/lang/en-US'
 import languages from '@assets/js/lang/languages'
@@ -51,6 +52,7 @@ const i18n = new VueI18n({
     nl,
     pt,
     ro,
+    sv,
     lv,
     // add 4-letter code like: 'en-US': enUS, (can only be imported without dash, as enUS)
   },
