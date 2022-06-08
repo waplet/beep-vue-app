@@ -76,9 +76,24 @@
                 "
               >
                 <span
+                  v-if="inspectionIndexes.indexOf(i) > -1"
+                  class="inspection-line"
+                  @click="viewInspection(i)"
+                >
+                  <!-- <v-hover v-slot="{ hover }">
+                    <span class="beep-tooltip" v-on="hover"
+                      >{{ getInspectionByIndex(i).date }} <br />{{
+                        getInspectionByIndex(i).text
+                      }}
+                    </span>
+                  </v-hover> -->
+                </span>
+
+                <span
                   v-if="measurement[soundSensor] !== null"
                   class="hover-overlay"
                 ></span>
+
                 <span
                   v-if="measurement[soundSensor] !== null"
                   class="beep-tooltip"
@@ -102,6 +117,11 @@ export default {
       default: () => [],
       required: true,
     },
+    inspectionsForCharts: {
+      type: Array,
+      default: () => [],
+      required: false,
+    },
     maxValue: {
       type: Number,
       default: 1,
@@ -124,6 +144,16 @@ export default {
     },
   },
   computed: {
+    inspectionIndexes() {
+      if (this.inspectionsForCharts.length > 0) {
+        return this.inspectionsForCharts.map((inspection) => {
+          return inspection.closestIndex
+        })
+      } else {
+        return []
+      }
+    },
+
     locale() {
       return this.$i18n.locale
     },
@@ -137,6 +167,11 @@ export default {
     },
     displayValue(input) {
       return Math.round(input) !== input ? input.toFixed(2) : input
+    },
+    getInspectionByIndex(index) {
+      return this.inspectionsForCharts.find(
+        (inspection) => inspection.closestIndex === index
+      )
     },
     momentAll(date) {
       return this.$moment(date)
@@ -173,6 +208,13 @@ export default {
           .replace(currentYearEsPt, '')
           .replace(' ' + currentYear, '') // Remove year hardcoded per language, currently no other way to get rid of year whilst keeping localized time
       }
+    },
+    viewInspection(index) {
+      var inspection = this.getInspectionByIndex(index)
+      this.$emit('view-inspection', {
+        id: inspection.id,
+        date: inspection.date,
+      })
     },
   },
 }
@@ -226,13 +268,12 @@ export default {
   max-width: 8px !important;
   height: 13px !important;
   padding: 0 !important;
-  cursor: auto !important;
+  cursor: auto;
   .beep-tooltip,
   .hover-overlay {
     display: none;
   }
   &:hover {
-    cursor: pointer;
     .hover-overlay {
       display: block;
       width: 100%;
@@ -312,5 +353,14 @@ export default {
 
 tbody .tr--heatmap:first-child .td--heatmap {
   border-top: 1px solid rgb(0, 0, 0, 0.1);
+}
+
+.inspection-line {
+  cursor: pointer;
+  display: block;
+  width: 3px;
+  height: 60%;
+  background-color: $color-primary !important;
+  opacity: 0.5;
 }
 </style>

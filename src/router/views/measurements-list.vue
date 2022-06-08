@@ -85,123 +85,55 @@
       </v-container>
     </div>
 
+    <v-app-bar
+      v-if="!hideScrollBar && ready && !noChartData"
+      fixed
+      inverted-scroll
+      :dense="smAndDown"
+      class="sticky-header"
+    >
+      <MeasurementsDateSelection
+        :interval="interval"
+        :period-title="periodTitle"
+        :relative-interval="relativeInterval"
+        :selected-date="selectedDate"
+        :time-index="timeIndex"
+        :dates="dates"
+        :date-range-text="dateRangeText"
+        :sticky="true"
+        :selected-device-title="selectedDeviceTitle"
+        @load-data="loadData"
+        @save-dates="dates = $event"
+        @set-time-index="setTimeIndex($event)"
+        @select-date="selectDate($event)"
+      />
+
+      <div v-if="mobile" class="float-right mr-n1">
+        <v-icon class="grey--text" @click="hideScrollBar = true">
+          mdi-close
+        </v-icon>
+      </div>
+    </v-app-bar>
+
     <v-container
       v-if="ready"
       :class="devices.length > 0 ? 'measurements-content' : ''"
     >
-      <v-row>
-        <v-col v-if="devices.length > 0 && interval !== 'selection'" cols="12">
-          <div class="d-flex align-center justify-center">
-            <v-icon class="color-grey-dark" @click="setTimeIndex(1)">
-              mdi-chevron-left
-            </v-icon>
+      <MeasurementsDateSelection
+        :interval="interval"
+        :period-title="periodTitle"
+        :relative-interval="relativeInterval"
+        :selected-date="selectedDate"
+        :time-index="timeIndex"
+        :dates="dates"
+        :date-range-text="dateRangeText"
+        @load-data="loadData"
+        @save-dates="dates = $event"
+        @set-time-index="setTimeIndex($event)"
+        @select-date="selectDate($event)"
+      />
 
-            <span class="period-title">{{ periodTitle }}</span>
-
-            <v-dialog
-              v-if="
-                interval !== 'year' ||
-                  (interval === 'year' && !relativeInterval)
-              "
-              ref="dialog"
-              v-model="modal"
-              :return-value.sync="selectedDate"
-              persistent
-              width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-icon small class="color-grey-light ml-1" v-on="on">
-                  mdi-pencil
-                </v-icon>
-              </template>
-              <v-date-picker
-                v-model="selectedDate"
-                :first-day-of-week="1"
-                :locale="locale"
-                no-title
-                scrollable
-              >
-                <v-spacer></v-spacer>
-                <v-btn text color="secondary" @click="modal = false">
-                  {{ $t('Cancel') }}
-                </v-btn>
-                <v-btn
-                  text
-                  color="secondary"
-                  @click="
-                    $refs.dialog.save(selectedDate), selectDate(selectedDate)
-                  "
-                >
-                  {{ $t('ok') }}
-                </v-btn>
-              </v-date-picker>
-            </v-dialog>
-
-            <v-icon
-              v-if="timeIndex !== 0"
-              class="color-grey-dark"
-              @click="setTimeIndex(-1)"
-            >
-              mdi-chevron-right
-            </v-icon>
-          </div>
-        </v-col>
-
-        <v-col
-          v-if="interval === 'selection'"
-          cols="12"
-          sm="4"
-          md="3"
-          :class="mobile ? 'py-0' : 'mx-auto'"
-        >
-          <div class="d-flex align-center justify-center mr-3 mr-sm-0">
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              :return-value.sync="dates"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="dateRangeText"
-                  :rules="requiredRules"
-                  :label="$t('period')"
-                  prepend-icon="mdi-calendar"
-                  class="date-picker"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="dates"
-                :first-day-of-week="1"
-                :locale="locale"
-                range
-                no-title
-                scrollable
-                @change="checkDateOrder($event)"
-              >
-                <v-spacer></v-spacer>
-                <v-btn text color="secondary" @click="menu = false">
-                  {{ $t('Cancel') }}
-                </v-btn>
-                <v-btn
-                  :disabled="invalidDates(dates)"
-                  text
-                  color="secondary"
-                  @click="$refs.menu.save(dates), loadData()"
-                >
-                  {{ $t('ok') }}
-                </v-btn>
-              </v-date-picker>
-            </v-menu>
-          </div>
-        </v-col>
-
+      <v-row class="my-0">
         <v-col class="d-flex justify-space-between" cols="12">
           <Treeselect
             v-if="devices.length > 0"
@@ -352,11 +284,7 @@
                 <div class="d-flex justify-space-between align-center">
                   <span>{{
                     selectedDevice && !mobile
-                      ? $tc('Measurement', 2) +
-                        ': ' +
-                        selectedDevice.hive_name +
-                        ' - ' +
-                        selectedDevice.name
+                      ? $tc('Measurement', 2) + ': ' + selectedDeviceTitle
                       : $tc('Measurement', 2)
                   }}</span>
                   <v-spacer></v-spacer>
@@ -499,6 +427,10 @@
                       :y-axis="sortedCurrentSoundSensors"
                       :modulo-number="moduloNr"
                       :interval="interval"
+                      :inspections-for-charts="inspectionsForCharts"
+                      @view-inspection="
+                        confirmViewInspection($event.id, $event.date)
+                      "
                     >
                     </MeasurementsChartHeatmap>
                   </div>
@@ -580,19 +512,27 @@ import Confirm from '@components/confirm.vue'
 import Layout from '@layouts/main.vue'
 import { mapGetters } from 'vuex'
 import MeasurementsChartHeatmap from '@components/measurements-chart-heatmap.vue'
+import MeasurementsDateSelection from '@components/measurements-date-selection.vue'
 import Treeselect from '@riophae/vue-treeselect'
 import 'chartist/dist/chartist.min.css'
 import {
   checkAlerts,
   readDevicesIfNotPresent,
+  readGeneralInspectionsIfNotPresent,
   readTaxonomy,
 } from '@mixins/methodsMixin'
-import { momentFormat } from '@mixins/momentMixin'
+import {
+  momentifyDayMonth,
+  momentFormat,
+  momentFromNow,
+  timeZone,
+} from '@mixins/momentMixin'
 import { sensorMixin } from '@mixins/sensorMixin'
 import { SlideYUpTransition } from 'vue2-transitions'
 import '@plugins/chartist-plugin-beep.js'
 import '@plugins/chartist-plugin-legend-beep.js'
 import 'chartist-plugin-pointlabels'
+import '@plugins/chartist-plugin-targetlines.js'
 import 'chartist-plugin-tooltips-updated'
 import 'chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.css'
 
@@ -601,15 +541,20 @@ export default {
     Confirm,
     Layout,
     MeasurementsChartHeatmap,
+    MeasurementsDateSelection,
     SlideYUpTransition,
     Treeselect,
   },
   mixins: [
     checkAlerts,
+    momentifyDayMonth,
     momentFormat,
+    momentFromNow,
     readDevicesIfNotPresent,
+    readGeneralInspectionsIfNotPresent,
     readTaxonomy,
     sensorMixin,
+    timeZone,
   ],
   data() {
     return {
@@ -619,6 +564,7 @@ export default {
       interval: 'day',
       timeIndex: 0,
       timeFormat: 'ddd D MMM YYYY',
+      dateTimeFormat: 'YYYY-MM-DD HH:mm:ss',
       currentWeatherSensors: {},
       currentSensors: [],
       currentSoundSensors: {},
@@ -634,9 +580,7 @@ export default {
       ready: false,
       timer: 0,
       selectedDate: '',
-      modal: false,
       periodTitle: null,
-      preselectedDate: null,
       preselectedDeviceId: null,
       chartCols: 6,
       chartColsIcons: [
@@ -647,17 +591,18 @@ export default {
       assetsUrl:
         process.env.VUE_APP_ASSETS_URL ||
         process.env.VUE_APP_ASSETS_URL_FALLBACK,
-      menu: false,
       dates: [],
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       periodStart: null,
       periodEnd: null,
       loadingData: false,
       relativeInterval: true,
+      hideScrollBar: false,
     }
   },
   computed: {
     ...mapGetters('devices', ['devices']),
+    ...mapGetters('inspections', ['generalInspections']),
     ...mapGetters('taxonomy', ['sensorMeasurementsList']),
     dateRangeText() {
       if (this.dates.length > 0) {
@@ -672,8 +617,92 @@ export default {
         return this.$i18n.t('selection_placeholder')
       }
     },
-    timeZone() {
-      return this.$moment.tz.guess()
+    inspectionsWithDates() {
+      if (this.generalInspections.length > 0) {
+        var inspectionsWithDates = this.generalInspections
+        inspectionsWithDates.map((inspection) => {
+          inspection.created_at_locale_date = this.momentFormat(
+            inspection.created_at,
+            'lll'
+          )
+          inspection.created_at_moment_from_now = this.momentFromNow(
+            inspection.created_at
+          )
+          inspection.reminder_date_locale_date = this.momentFormat(
+            inspection.reminder_date,
+            'lll'
+          )
+          inspection.reminder_date_day_month = this.momentifyDayMonth(
+            inspection.reminder_date
+          )
+        })
+        return inspectionsWithDates
+      } else {
+        return []
+      }
+    },
+    inspectionsForCharts() {
+      var inspectionsForChartsArray = []
+      var timeArray = this.measurementData.measurements.map((measurement) => {
+        return measurement.time
+      })
+      var totalDataPointsInPeriod = timeArray.length
+
+      if (totalDataPointsInPeriod > 0) {
+        var momentTimeArray = timeArray.map((time) => {
+          return this.$moment(time)
+        })
+
+        // for each inspection, find its position on the current chart
+        this.inspectionsForPeriod.map((inspection) => {
+          var inspectionDateInUtc = this.$moment(inspection.created_at)
+            .tz(this.timeZone)
+            .utc()
+
+          var closestTime = momentTimeArray.reduce((prev, curr) => {
+            return Math.abs(curr - inspectionDateInUtc) <
+              Math.abs(prev - inspectionDateInUtc)
+              ? curr
+              : prev
+          })
+
+          var closestIndex = timeArray.findIndex(
+            (time) =>
+              time === closestTime.utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+          )
+
+          // var position = closestIndex / totalDataPointsInPeriod
+
+          // console.log(closestTime, closestIndex)
+
+          // var inspectionTimestamp = inspectionDateInUtc.valueOf()
+
+          // and add position and meta data for chartist plugin targetlines
+          var inspectionForChart = {
+            id: inspection.id,
+            closestIndex,
+            // position,
+            // xValue: inspectionTimestamp,
+            date: this.momentFormat(inspection.created_at, 'llll'),
+            text: inspection.notes,
+          }
+
+          inspectionsForChartsArray.push(inspectionForChart)
+        })
+      }
+
+      return inspectionsForChartsArray
+    },
+    inspectionsForPeriod() {
+      var inspections = []
+      if (this.selectedDevice.hive_id !== null) {
+        inspections = this.inspectionsWithDates.filter(
+          (inspection) =>
+            inspection.hive_id === this.selectedDevice.hive_id &&
+            this.inspectionWithinPeriod(inspection)
+        )
+      }
+      return inspections
     },
     locale() {
       return this.$i18n.locale
@@ -701,6 +730,9 @@ export default {
       )
       return Math.max(...allSoundSensorValues)
     },
+    mdScreen() {
+      return this.$vuetify.breakpoint.width < 960
+    },
     mobile() {
       return this.$vuetify.breakpoint.mobile
     },
@@ -715,7 +747,6 @@ export default {
       }
       return 1
     },
-
     moduloNr() {
       switch (this.interval) {
         case 'hour':
@@ -774,6 +805,30 @@ export default {
         { name: this.$i18n.t('selection'), interval: 'selection' },
       ]
     },
+    queriedChartCols() {
+      var queriedValue = parseInt(this.$route.query.chartCols)
+      var valid =
+        queriedValue === 12 || queriedValue === 6 || queriedValue === 4
+      return valid ? queriedValue : null
+    },
+    queriedDate() {
+      return this.$route.query.date || null
+    },
+    queriedInterval() {
+      return this.$route.query.interval || null
+    },
+    queriedTimeIndex() {
+      return parseInt(this.$route.query.timeIndex) || 0
+    },
+    queriedStart() {
+      return this.$route.query.start || null
+    },
+    queriedEnd() {
+      return this.$route.query.end || null
+    },
+    queriedRelativeInterval() {
+      return this.$route.query.relativeInterval || null
+    },
     setRelativeInterval: {
       get() {
         return this.relativeInterval
@@ -782,21 +837,6 @@ export default {
         localStorage.beepRelativeInterval = value.toString()
         this.relativeInterval = value
       },
-    },
-    requiredRules() {
-      var laterEndDate = true
-      this.dates.length === 2 && this.dates[0] > this.dates[1]
-        ? (laterEndDate = false)
-        : (laterEndDate = true)
-      return [
-        (v) => laterEndDate || this.$i18n.t('later_end_start'), // don't allow start date later than end date
-        (v) =>
-          this.dates[0] !== this.dates[1] ||
-          this.$i18n.t('different_end_start'), // don't allow end date identical to start date
-        (v) =>
-          this.dates.length > 1 ||
-          this.$i18n.t('end_date') + ' ' + this.$i18n.t('not_filled'), // don't allow start date only
-      ]
     },
     resolutionNr() {
       return this.measurementData !== null
@@ -831,11 +871,11 @@ export default {
         localStorage.beepSelectedDeviceId = value
       },
     },
+    selectedDeviceTitle() {
+      return this.selectedDevice.hive_name + ' - ' + this.selectedDevice.name
+    },
     smAndDown() {
       return this.$vuetify.breakpoint.smAndDown
-    },
-    mdScreen() {
-      return this.$vuetify.breakpoint.width < 960
     },
     sortedCurrentSoundSensors() {
       var sorted = Object.keys(this.currentSoundSensors)
@@ -917,6 +957,9 @@ export default {
       })
       return uniqueApiaries
     },
+    touchDevice() {
+      return window.matchMedia('(hover: none)').matches
+    },
   },
   watch: {
     locale() {
@@ -930,13 +973,16 @@ export default {
   },
   created() {
     this.readTaxonomy()
-    if (localStorage.beepChartCols) {
+    if (this.queriedChartCols) {
+      this.chartCols = this.queriedChartCols
+    } else if (localStorage.beepChartCols) {
       this.chartCols = parseInt(localStorage.beepChartCols)
     }
-    if (localStorage.beepRelativeInterval) {
+    if (this.queriedRelativeInterval) {
+      this.relativeInterval = this.queriedRelativeInterval === true
+    } else if (localStorage.beepRelativeInterval) {
       this.relativeInterval = localStorage.beepRelativeInterval === 'true'
     }
-    this.preselectedDate = this.$route.query.date || null
     this.preselectedDeviceId = parseInt(this.$route.params.id) || null
     // if selected device id is saved in localStorage, and there is no preselected device id, use it
     if (
@@ -952,18 +998,28 @@ export default {
     this.readDevicesIfNotPresent()
       .then(() => {
         if (
-          this.preselectedDate !== null &&
-          this.preselectedDate.length === 10 &&
+          this.queriedDate !== null &&
+          this.queriedDate.length === 10 &&
           !isNaN(this.preselectedDeviceId)
         ) {
-          this.selectDate(this.preselectedDate)
+          this.selectDate(this.queriedDate)
         } else if (this.devices.length > 0) {
+          if (this.queriedInterval) {
+            this.interval = this.queriedInterval
+            this.timeIndex = this.queriedTimeIndex
+            this.dates =
+              this.queriedStart && this.queriedEnd
+                ? [this.queriedStart, this.queriedEnd]
+                : []
+          }
+
           this.setInitialDeviceIdAndLoadData()
         }
       })
       .then(() => {
         this.ready = true
       })
+    this.readGeneralInspectionsIfNotPresent()
   },
   beforeDestroy() {
     if (this.timer > 0) {
@@ -1082,23 +1138,28 @@ export default {
         return ((value - min) / (max - min)) * 100
       }
     },
-    calculateTimeIndex(period, date, zoom = false, from = null) {
-      var newPeriodIndex = 0
-      var todayEnd = this.$moment().endOf(period)
-      var endOfPeriod = this.$moment.parseZone(date, this.photoParseFormat)
-      var periodDiff = todayEnd.diff(endOfPeriod, period + 's')
-      if (!isNaN(periodDiff)) newPeriodIndex = periodDiff
-      if (!zoom && period === 'hour') newPeriodIndex -= 12
-      if (!zoom && period === 'day')
-        from !== 'hour'
-          ? this.relativeInterval
-            ? (newPeriodIndex -= 4)
-            : (newPeriodIndex -= 3)
-          : this.relativeInterval
-          ? (newPeriodIndex -= 1)
-          : (newPeriodIndex -= 0)
+    calculateTimeIndex(newPeriod, startDate, zoom = false, fromPeriod = null) {
+      var todayEnd = this.$moment().endOf(newPeriod)
 
-      return !isNaN(newPeriodIndex) && newPeriodIndex > 0 ? newPeriodIndex : 0
+      var endOfPeriod = this.$moment(startDate).endOf(fromPeriod)
+
+      var halfPeriodInDays = 0
+
+      if (fromPeriod === 'week' || fromPeriod === 'month')
+        halfPeriodInDays = Math.floor(
+          Math.abs(this.$moment(startDate).diff(endOfPeriod, 'days')) / 2
+        )
+      else if (fromPeriod === 'year') halfPeriodInDays = 182
+
+      var middleDatePeriod = endOfPeriod.subtract(halfPeriodInDays, 'days')
+
+      var newIndex = todayEnd.diff(middleDatePeriod, newPeriod + 's')
+
+      if (this.relativeInterval && !zoom) newIndex -= 1
+
+      if (!zoom && newPeriod === 'hour') newIndex += 10
+
+      return !isNaN(newIndex) && newIndex > 0 ? newIndex : 0
     },
     chartDataSingleSeries(quantity, unit) {
       var data = {
@@ -1210,7 +1271,7 @@ export default {
             },
           }),
           self.$chartist.plugins.legendBeep({
-            simpleToggle: false,
+            simpleToggle: true,
             inactiveByDefault: false,
           }),
           self.$chartist.plugins.ctPointLabels({
@@ -1230,6 +1291,12 @@ export default {
               } else {
                 return '-'
               }
+            },
+          }),
+          self.$chartist.plugins.ctTargetLines({
+            inspections: self.inspectionsForCharts,
+            onClick: function(inspectionId, inspectionDate) {
+              self.confirmViewInspection(inspectionId, inspectionDate)
             },
           }),
         ],
@@ -1254,6 +1321,39 @@ export default {
       if (dates[1] < dates[0]) {
         this.dates = [dates[1], dates[0]]
       }
+    },
+    confirmViewInspection(inspectionId, inspectionDate) {
+      this.$refs.confirm
+        .open(
+          this.$i18n.t('view') + ' ' + this.$i18n.tc('inspection', 1),
+          this.$i18n.t('View_inspection_confirm') + inspectionDate + '?',
+          {
+            color: 'primary',
+          }
+        )
+        .then((confirm) => {
+          var query = {
+            search: 'id=' + inspectionId.toString(),
+            interval: this.interval,
+            relativeInterval: this.relativeInterval,
+            chartCols: this.chartCols,
+          }
+          if (this.interval === 'selection' && this.dates.length > 0) {
+            query.start = this.dates[0]
+            query.end = this.dates[1]
+          } else {
+            query.timeIndex = this.timeIndex
+          }
+
+          return this.$router.push({
+            name: 'hive-inspections',
+            params: { id: this.selectedDevice.hive_id },
+            query,
+          })
+        })
+        .catch((reject) => {
+          return true
+        })
     },
     formatMeasurementData(measurementData) {
       if (
@@ -1298,6 +1398,12 @@ export default {
         this.noChartData = true
       }
       this.loadingData = false
+    },
+    inspectionWithinPeriod(inspection) {
+      return (
+        inspection.created_at < this.periodEnd.format(this.dateTimeFormat) &&
+        inspection.created_at > this.periodStart.format(this.dateTimeFormat)
+      )
     },
     invalidDates(dates) {
       return (
@@ -1471,14 +1577,18 @@ export default {
       if (interval === 'selection' && this.dates.length === 0) {
         this.noPeriodData = true
       } else {
-        // change period around the same date instead of resetting to timeIndex 0
-        if (this.timeIndex !== 0)
+        if (prevInterval === interval) {
+          // set index to 0 if if clicked interval is same as already selected
+          this.timeIndex = 0
+        } else if (this.timeIndex !== 0) {
+          // change period around the same date instead of resetting to timeIndex 0
           this.timeIndex = this.calculateTimeIndex(
             interval,
             this.selectedDate,
             false,
             prevInterval
           )
+        }
         this.loadData()
       }
     },
@@ -1508,11 +1618,11 @@ export default {
 .period-bar-wrapper {
   position: fixed;
   top: 100px;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   margin-top: -4px;
   background-color: $color-orange-light;
-  border-bottom: 1px solid #fff5e2;
+  border-bottom: 1px solid $color-orange-border;
   .period-container {
     padding-right: 80px;
     padding-left: 80px;
@@ -1584,5 +1694,18 @@ export default {
 
 .date-picker {
   max-width: 300px;
+}
+
+.sticky-header {
+  top: 153px !important;
+  z-index: 1 !important;
+  background-color: $color-orange-light !important;
+  border-bottom: 1px solid $color-orange-border;
+  @include for-phone-only {
+    top: 148px !important;
+  }
+  @include for-tablet-landscape-up {
+    top: 130px !important;
+  }
 }
 </style>

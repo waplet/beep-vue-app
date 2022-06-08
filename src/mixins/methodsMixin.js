@@ -11,6 +11,15 @@ export const checkAlerts = {
     ]),
   },
   methods: {
+    // only read alert rules when they are either not checked yet, or checked AND present (used for updating alertrules after deleting a hive)
+    async checkAlertRules() {
+      if (
+        !this.alertRulesChecked ||
+        (this.alertRulesChecked && this.alertRules.length > 0)
+      ) {
+        this.readAlertRules()
+      }
+    },
     // check whether alertrules & alerts have been read, if not do so, then only read alerts if alert rules OR alerts are present
     async checkAlertRulesAndAlerts() {
       this.$store.commit('alerts/setData', {
@@ -374,6 +383,28 @@ export const readGeneralInspections = {
         } else {
           console.log('Error: ', error)
         }
+      }
+    },
+  },
+}
+
+export const readGeneralInspectionsIfNotPresent = {
+  methods: {
+    async readGeneralInspectionsIfNotPresent() {
+      if (this.generalInspections.length === 0) {
+        try {
+          const response = await Api.readRequest('/inspections')
+          this.$store.commit('inspections/setGeneralInspections', response.data)
+          return true
+        } catch (error) {
+          if (error.response) {
+            console.log('Error: ', error.response)
+          } else {
+            console.log('Error: ', error)
+          }
+        }
+      } else {
+        return true
       }
     },
   },

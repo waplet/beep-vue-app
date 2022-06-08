@@ -3,19 +3,22 @@ import router from '@router'
 import store from '@state/store'
 import vuetify from '@plugins/vuetify'
 import VueI18n from 'vue-i18n'
-import de from '@assets/js/lang/de'
-import en from '@assets/js/lang/en'
-import es from '@assets/js/lang/es'
-import fi from '@assets/js/lang/fi'
-import fr from '@assets/js/lang/fr'
-import it from '@assets/js/lang/it'
-import nl from '@assets/js/lang/nl'
-import pt from '@assets/js/lang/pt'
-import ro from '@assets/js/lang/ro'
-import sv from '@assets/js/lang/sv'
-import lv from '@assets/js/lang/lv'
-// import enUS from '@assets/js/lang/en-US'
-import languages from '@assets/js/lang/languages'
+import de from '@public/js/lang/de'
+import el from '@public/js/lang/el'
+import en from '@public/js/lang/en'
+import es from '@public/js/lang/es'
+import fi from '@public/js/lang/fi'
+import fr from '@public/js/lang/fr'
+import it from '@public/js/lang/it'
+import nb from '@public/js/lang/nb'
+import nl from '@public/js/lang/nl'
+// import pl from '@public/js/lang/pl'
+import pt from '@public/js/lang/pt'
+import ro from '@public/js/lang/ro'
+import sv from '@public/js/lang/sv'
+import lv from '@public/js/lang/lv'
+// import enUS from '@public/js/lang/en-US'
+import languages from '@assets/js/languages'
 import moment from 'moment-timezone'
 import vueCountryRegionSelect from 'vue-country-region-select'
 import './plugins/element.js'
@@ -44,12 +47,15 @@ const i18n = new VueI18n({
   locale: languages.checkBrowserLanguage() || 'en',
   messages: {
     de,
+    el,
     en,
     es,
     fi,
     fr,
     it,
+    nb,
     nl,
+    // pl,
     pt,
     ro,
     sv,

@@ -22,13 +22,13 @@
       <v-col cols="11" class="pa-0">
         <h4
           v-if="mView"
-          class="hive-name truncate mb-3"
+          class="hive-name truncate-md mb-3"
           style="max-width: 120px;"
           v-text="hive.name"
         >
         </h4>
         <div v-if="xlView" class="d-flex flex-row">
-          <h4 class="hive-name truncate mb-3" style="max-width: 250px;">
+          <h4 class="hive-name truncate-md mb-3" style="max-width: 250px;">
             {{ hive.name }}
             <span
               v-if="hiveSet.users && hiveSet.users.length"
@@ -322,7 +322,7 @@
           </div>
           <span
             v-if="xlView"
-            class="truncate"
+            class="truncate-md"
             style="max-width: 224px;"
             v-text="alertRuleNamesText"
           ></span>
@@ -444,9 +444,25 @@
               <v-sheet class="beep-icon beep-icon-note color-grey"> </v-sheet>
             </router-link>
           </div>
+          <v-tooltip
+            v-if="!mobile && hive.notes && hive.notes.length > 33 && xlView"
+            bottom
+            max-width="60%"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <span
+                v-bind="attrs"
+                class="truncate-md"
+                style="max-width: 224px;"
+                v-on="on"
+                v-text="hive.notes"
+              >
+              </span>
+            </template>
+            <span v-text="hive.notes"> </span>
+          </v-tooltip>
           <span
-            v-if="hive.notes && xlView"
-            class="truncate"
+            v-if="hive.notes && (mobile || hive.notes.length <= 33) && xlView"
             style="max-width: 224px;"
             v-text="hive.notes"
           >
@@ -496,7 +512,7 @@
           </span>
           <span
             v-if="hive.reminder && xlView"
-            class="truncate"
+            class="truncate-md"
             style="max-width: 164px;"
             v-text="hive.reminder"
           >
@@ -566,6 +582,9 @@ export default {
         }
       })
       return uniqueAlertRuleNames.join(', ')
+    },
+    mobile() {
+      return this.$vuetify.breakpoint.mobile
     },
   },
   methods: {

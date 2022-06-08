@@ -249,11 +249,10 @@
 
           var removedSeriesIndex = removedSeries.indexOf(clickedSeriesIndex)
 
+          var otherSeries = Array.prototype.slice.call(legendElement.childNodes)
+          otherSeries.splice(clickedSeriesIndex, 1)
+
           if (!options.simpleToggle) {
-            var otherSeries = Array.prototype.slice.call(
-              legendElement.childNodes
-            )
-            otherSeries.splice(clickedSeriesIndex, 1)
             var otherSeriesIndexArray = []
             otherSeries.forEach(function(item) {
               otherSeriesIndexArray.push(
@@ -281,7 +280,7 @@
                 item.classList.remove('inactive')
               })
             }
-          } else if (options.simpleToggle) {
+          } else if (options.simpleToggle && options.inactiveByDefault) {
             // for updating activeClasses and keep the rest inactive
             var className = originalSeries[clickedSeriesIndex].className
             // Alternative simple toggle:
@@ -302,6 +301,17 @@
                 ),
                 1
               )
+            }
+          } else if (options.simpleToggle) {
+            // Alternative simple toggle:
+            if (removedSeriesIndex > -1) {
+              // if clicked series is inactive, make it active
+              removedSeries.splice(removedSeriesIndex, 1)
+              clickedSeries.classList.remove('inactive')
+            } else if (otherSeries.length > 0) {
+              // if clicked series is active AND part of multiple series make it inactive
+              removedSeries.push(clickedSeriesIndex)
+              clickedSeries.classList.add('inactive')
             }
           }
 
