@@ -102,21 +102,10 @@ const translations = {
 
   Date: 'Päivämäärä',
   ok: 'Ok',
-  previous: 'Edellinen',
   prev: 'edellinen',
   next: 'Seuraava',
   add: 'Lisää',
-  create_new: 'Lisää uusi',
-  New: 'Uusi',
-
-  warning: 'Varoitus',
-
-  apply: 'Ota käyttöön',
   Cancel: 'Peruuta',
-  automatic: 'Automaattinen',
-  manually: 'Manuaalinen',
-  on: 'On',
-  off: 'Off',
 
   /* login */
   login_title: 'Kirjaudu',
@@ -194,7 +183,7 @@ const translations = {
   Inspection: 'Tarkastus | Tarkastukset',
   New_inspection: 'Uusi tarkastus',
   Edit_inspection: 'Muokkaa tarkastusta',
-  Actions: 'Toimenpiteet',
+  Action: 'Toiminta | Toimenpiteet',
   Conditions: 'Olosuhteet (tarkastettu)',
   edit: 'Muokkaa',
   // Hive_brood_layers: 'Sikiö osastot',
@@ -241,7 +230,7 @@ const translations = {
   Country: 'Maa',
   City: 'Kaupunki',
   Address: 'Osoite',
-  Lattitude: 'Leveysaste',
+  latitude: 'Leveysaste',
   Longitude: 'Pituusaste',
   Street: 'Katu',
   Number: 'Numero',
@@ -671,8 +660,8 @@ const translations = {
   deleted_but_not_saved_devices_warning:
     'Huomaa: laitteet poistetaan vasta napsauttamalla Tallenna ja poista -painiketta oikeassa yläkulmassa.',
   no_alerts: 'Ei uusia ilmoituksia',
-  alertrule: 'Hälytyssääntö | Hälytyssäännöt',
-  alertrule_pagetitle: 'Hälytysasetukset',
+  alertrule: 'hälytyssääntö | hälytyssäännöt',
+  Alertrule: 'Hälytyssääntö | Hälytyssäännöt',
   Measurement: 'Mittaus | Mittaukset',
   Calculation: 'Laskeminen',
   calculation: 'laskeminen',
@@ -740,7 +729,7 @@ const translations = {
   alertrule_not_active:
     "Tämä hälytys on poistettu käytöstä. Voit aktivoida sen valitsemalla 'Aktiivinen' -ruudun ja tallentamalla tämän hälytyssäännön.",
   export_email_sent: 'Sähköposti Excel-tiedostolla on lähetetty',
-  export_file_saved: 'Excel-tiedosto on tallennettu Lataukset-kansioon',
+  excel_file_saved: 'Excel-tiedosto on tallennettu Lataukset-kansioon',
   Updated_at: 'Päivitetty',
   Not_yet_saved: 'Ei vielä tallennettu',
   beep_base_explanation:
@@ -793,6 +782,11 @@ const translations = {
     'Haluatko varmasti poistaa kaikki hälytykset? Tätä ei voi peruuttaa.',
   delete_all_alerts_warning_filter_active:
     'Haluatko varmasti poistaa kaikki hälytykset? Myös hälytykset, jotka eivät vastaa hakutermiäsi, poistetaan. Tätä ei voi peruuttaa.',
+  delete_selected_alert: 'Delete selected alert | Delete selected alerts', // to be translated
+  delete_selected_alerts_warning:
+    'Are you sure you want to delete the selected alert? This cannot be undone. | Are you sure you want to delete the selected alerts? This cannot be undone.', // to be translated
+  delete_selected_alerts_invisible_checked_warning:
+    'Please note: the selected alert does not match your search term. | Please note: there are selected alerts that do not match your search term, those will be deleted as well.', // to be translated
   already_verified:
     'Olen vahvistanut sähköpostiosoitteeni ja haluaisin kirjautua sisään',
   password_recovery_resend_mail: 'Lähetä uusi vahvistuskoodi',
@@ -913,8 +907,7 @@ const translations = {
   Block: 'Block',
   Nr_of_match_props: 'Number of identical values per match',
   no_admin: 'You must be an admin to view this page',
-  next_week: 'Next week',
-  prev_week: 'Previous week',
+
   import_block_data_short: 'Import block data',
   no_flashlog_data: 'No log data',
   no_flashlog_file: 'No log file',
@@ -949,6 +942,10 @@ const translations = {
   Export_as_csv: 'Export as .csv file',
   Export_full_json: 'Export full JSON',
   Export_full_csv: 'Export full .csv',
+  Export_file_being_saved:
+    'Export file will be saved in your Downloads folder - wait a moment please',
+  no_data_deleted_because_no_matches_found:
+    'No data deleted because no matches were found',
 
   Now: 'Now',
   input_only_possible_when_date_present:
@@ -962,6 +959,60 @@ const translations = {
     'To become a translator, please request a translator account via support@beep.nl. If you would like to update translations, please download the .js file below and email the updated file to support@beep.nl. Thank you for your effort!',
   unpublished_exp: 'Translations that are yet unpublished:',
   as_plain_text: 'as plain text',
+
+  /* Checklists page */
+  new_checklist: 'New checklist',
+  duplicate: 'Duplicate',
+  delete_checklist: 'Delete checklist',
+  delete_checklist_confirm:
+    'Are you sure you want to delete this checklist? This cannot be undone. Checklist: "',
+
+  /* Menu items */
+  View_measurements: 'Näytä mittaukset',
+  View_inspection: 'Näytä tarkastus | Katso tarkastukset',
+  View_alert: 'Näytä hälytys | Näytä hälytykset',
+
+  Edit_alertrule: 'Muokkaa hälytyssääntöä',
+  Edit_hive: 'Muokkaa pesää',
+  Edit_queen: 'Muokkaa emo',
+  Edit_apiary: 'Muokkaa mehiläista',
+  Edit_group: 'Muokkaa yhteistyöryhmää',
+  Edit_group_short: 'Muokkaa ryhmää',
+  Edit_checklist: 'Muokkaa tarkistuslistaa',
+  Edit_devices: 'Muokkaa laitteita',
+  Edit_consent: 'Muokkaa suostumusta',
+  Edit_hivetag: 'Edit hive tag',
+
+  Hivetag: 'Hive tag | Hive tags',
+  Hivetag_exp_1:
+    "‘Hive tags’ are QR codes you can attach to a hive, and for which you can set an action that will be performed as soon as you scan the hive tag. An 'action' refers to actions in the BEEP app, such as creating a new inspection for the relevant hive. Once the hive tag has been set up, you only need to scan the QR code with your smartphone, and a new inspection will be automatically created. You can print the hive tags yourself, by ",
+  Hivetag_download_text: 'downloading this pdf.',
+  Hivetag_exp_2:
+    ' Just scan a hive tag to get started, you will be taken to the setup page automatically if no action has been set yet.',
+  qrcode: 'QR Code | QR Codes',
+  Qrcode_exp1: "Attach the hive tag with number '",
+  Qrcode_exp2: "' to a hive.",
+  Qrcode_note:
+    'Please note: the above QR code is not the actual hive tag, it is only meant as an example.',
+  Download_hivetags: 'Download hive tag pdf',
+  Delete_hivetag: 'Delete hive tag',
+  for_hive: 'for hive "',
+  Add_hivetag: 'Add hive tag',
+  Select_hivetag_number: 'Select a hive tag number',
+  Select_hive: 'Select a hive',
+  Select_hive_for_hivetag_exp:
+    'For which hive would you like to perform the action? Select one hive.',
+  Select_hivetag_action: 'Select an action',
+  Select_hivetag_action_exp:
+    'Which action would you like to perform, after scanning the QR code?',
+  Hivetag_hive_in_overview: 'Show hive in hives overview',
+  Hivetag_new_inspection: 'Create a new inspection',
+  Hivetag_edit_hive: 'Edit hive configuration',
+  Hivetag_view_inspections: 'View inspections',
+  No_hivetags_left:
+    'All hive tags are currently in use. Remove an existing hive tag in order to add a new one, or modify it.',
+
+  View_alert_confirm: 'Would you like to view the alert "',
 }
 
 export default translations

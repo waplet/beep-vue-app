@@ -29,7 +29,6 @@ import App from './app.vue'
 
 Vue.use(VueI18n)
 Vue.use(vueCountryRegionSelect)
-Vue.use(require('vue-chartist'))
 Vue.use(VueEllipseProgress)
 Vue.prototype.$moment = moment
 

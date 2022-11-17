@@ -82,11 +82,10 @@ const translations = {
 
   Date: 'Datum',
   ok: 'Ok',
+  prev: 'vorige',
+  next: 'volgende',
   add: 'Toevoegen',
-  create_new: 'Maak een nieuwe',
-
   Cancel: 'Annuleren',
-  automatic: 'Automatisch',
 
   /* login */
   login_title: 'Inloggen',
@@ -151,7 +150,7 @@ const translations = {
   Inspection: 'Inspectie | Inspecties',
   New_inspection: 'Nieuwe inspectie',
   Edit_inspection: 'Inspectie aanpassen',
-  Actions: 'Acties',
+  Action: 'Actie | Acties',
   Conditions: 'Bevindingen (geïnspecteerd)',
   edit: 'Aanpassen',
   Bee_race: 'Bijenras',
@@ -188,7 +187,7 @@ const translations = {
   Country: 'Land',
   City: 'Stad',
   Address: 'Adres',
-  Lattitude: 'Breedtegraad',
+  latitude: 'Breedtegraad',
   Longitude: 'Lengtegraad',
   Street: 'Straat',
   Number: 'Nr.',
@@ -504,6 +503,7 @@ const translations = {
   Hive_honey_layer: 'Honingkamer | Honingkamers',
   Hive_queen_excluder_layer: 'Koninginnenrooster | Koninginnenroosters',
   Hive_feeding_box_layer: 'Voederbak | Voederbakken',
+  overrides_layer_colors: 'overschrijft kamerkleuren',
   drag_layers: 'Versleep kamers om bijenkast te configureren',
   page: "pagina | pagina's",
   Page: "Pagina | Pagina's",
@@ -575,7 +575,7 @@ const translations = {
     "Let op: meetsystemen worden pas definitief verwijderd wanneer je op de 'Opslaan en verwijderen' knop klikt, rechtsboven.",
   no_alerts: 'Geen nieuwe notificaties',
   alertrule: 'notificatie-instelling | notificatie-instellingen',
-  alertrule_pagetitle: 'Notificaties beheren',
+  Alertrule: 'Notificatie-instelling | Notificatie-instellingen',
   Measurement: 'Meting | Metingen',
   Calculation: 'Berekening',
   calculation: 'berekening',
@@ -643,7 +643,7 @@ const translations = {
   alertrule_not_active:
     "Deze notificatie is uitgeschakeld. Je kunt deze weer activeren door 'Actief' aan te vinken en de notificatie-instelling op te slaan.",
   export_email_sent: 'E-mail met Excel bestand is verzonden',
-  export_file_saved: 'Excel bestand is opgeslagen in je Downloads map',
+  excel_file_saved: 'Excel bestand is opgeslagen in je Downloads map',
   Updated_at: 'Aangepast op',
   Not_yet_saved: 'Nog niet opgeslagen',
   add_own_device: 'Voeg eigen meetsysteem toe',
@@ -691,6 +691,12 @@ const translations = {
     'Weet u zeker dat u alle notificaties wilt verwijderen? Dit kan niet ongedaan gemaakt worden.',
   delete_all_alerts_warning_filter_active:
     'Weet u zeker dat u alle notificaties wilt verwijderen? Ook notificaties die niet aan je zoekterm voldoen zullen verwijderd worden. Dit kan niet ongedaan gemaakt worden.',
+  delete_selected_alert:
+    'Wis geselecteerde notificatie | Wis geselecteerde notificaties',
+  delete_selected_alerts_warning:
+    'Weet u zeker dat u de geselecteerde notificatie wilt verwijderen? Dit kan niet ongedaan gemaakt worden. | Weet u zeker dat u de geselecteerde notificaties wilt verwijderen? Dit kan niet ongedaan gemaakt worden.',
+  delete_selected_alerts_invisible_checked_warning:
+    'N.B.: de geselecteerde notificatie voldoet niet aan je zoekterm. | N.B.: er zijn geselecteerde notificaties die niet aan je zoekterm voldoen, deze zullen ook verwijderd worden.',
   already_verified: 'Ik heb mijn e-mailadres gevalideerd en wil graag inloggen',
   password_recovery_resend_mail: 'Verstuur code opnieuw',
   alert_rule_created: 'Nieuwe notificatie ingesteld',
@@ -802,8 +808,6 @@ const translations = {
   Block: 'Blok',
   Nr_of_match_props: 'Aantal gelijke waardes per match',
   no_admin: 'Je moet beheerder zijn om deze pagina te kunnen bekijken',
-  next_week: 'Volgende week',
-  prev_week: 'Vorige week',
   import_block_data_short: 'Importeer blok data',
   no_flashlog_data: 'Geen log data',
   no_flashlog_file: 'Geen logbestand',
@@ -839,6 +843,10 @@ const translations = {
   Export_as_csv: 'Exporteer als .csv bestand',
   Export_full_json: 'Exporteer volledige JSON',
   Export_full_csv: 'Exporteer volledige .csv',
+  Export_file_being_saved:
+    'Export bestand wordt opgeslagen in je Downloads map - een moment geduld a.u.b.',
+  no_data_deleted_because_no_matches_found:
+    'Geen data verwijderd omdat er geen matches gevonden zijn',
 
   Now: 'Nu',
   input_only_possible_when_date_present:
@@ -846,12 +854,66 @@ const translations = {
   select_inspection_date: 'Selecteer inspectiedatum',
   View_inspection_confirm: 'Wil je de inspectie bekijken van: ',
 
- /* Translations page */
+  /* Translations page */
   Translations: 'Vertalingen',
   translation_exp:
     'Vraag een vertaler account aan via support@beep.nl om een vertaler te worden. Als je een vertaling wilt updaten, download dan hieronder het betreffende .js bestand en mail het geüpdatete bestand naar support@beep.nl. Bedankt voor de moeite!',
   unpublished_exp: 'Vertalingen die nog ongepubliceerd zijn:',
   as_plain_text: 'als platte tekst',
+
+  /* Checklists page */
+  new_checklist: 'Nieuwe kastkaart',
+  duplicate: 'Dupliceer',
+  delete_checklist: 'Verwijder kastkaart',
+  delete_checklist_confirm:
+    'Weet je zeker dat je deze kastkaart wilt verwijderen? Dit kan niet ongedaan gemaakt worden. Kastkaart: "',
+
+  /* Menu items */
+  View_measurements: 'Bekijk metingen',
+  View_inspection: 'Bekijk inspectie | Bekijk inspecties',
+  View_alert: 'Bekijk notificatie | Bekijk notificaties',
+
+  Edit_alertrule: 'Aanpassen notificatie-instelling',
+  Edit_hive: 'Aanpassen kast',
+  Edit_queen: 'Aanpassen moer',
+  Edit_apiary: 'Aanpassen bijenstand',
+  Edit_group: 'Aanpassen samenwerkingsgroep',
+  Edit_group_short: 'Aanpassen groep',
+  Edit_checklist: 'Aanpassen kastkaart',
+  Edit_devices: 'Aanpassen meetsystemen',
+  Edit_consent: 'Aanpassen toestemming',
+  Edit_hivetag: 'Aanpassen hive tag',
+
+  Hivetag: 'Hive tag | Hive tags',
+  Hivetag_exp_1:
+    '‘Hive tags’ zijn QR codes die je op een bijenkast kan plakken, en waarvoor je een actie kunt instellen die uitgevoerd wordt zodra je de hive tag scant. Met ‘actie’ worden handelingen in de BEEP app bedoeld, zoals bijvoorbeeld het aanmaken van een nieuwe inspectie voor de betreffende kast. Zodra de hive tag is ingesteld, hoef je in het vervolg alleen de QR code te scannen met je smartphone, en dan zal er automatisch een nieuwe inspectie worden aangemaakt. De hive tags kan je zelf printen, door ',
+  Hivetag_download_text: 'deze pdf te downloaden.',
+  Hivetag_exp_2:
+    ' Scan een hive tag om aan de slag te gaan, er zal automatisch een pagina openen waar je de actie in kunt stellen indien dat nog niet gebeurd is.',
+  qrcode: 'QR Code | QR Codes',
+  Qrcode_exp1: "Plak de hive tag met nummer '",
+  Qrcode_exp2: "' op een bijenkast.",
+  Qrcode_note:
+    'N.B. Bovenstaande QR code komt niet overeen met de daadwerkelijke hive tag, deze is slechts als voorbeeld bedoeld.',
+  Download_hivetags: 'Download hive tags pdf',
+  Delete_hivetag: 'Verwijder hive tag',
+  for_hive: 'voor bijenkast "',
+  Select_hivetag_number: 'Selecteer een hive tag nummer',
+  Add_hivetag: 'Voeg hive tag toe',
+  Select_hive: 'Selecteer een bijenkast',
+  Select_hive_for_hivetag_exp:
+    'Voor welke bijenkast wil je de actie uitvoeren? Selecteer één bijenkast.',
+  Select_hivetag_action: 'Selecteer een actie',
+  Select_hivetag_action_exp:
+    'Welke actie wil je uitvoeren wanneer je de hive tag scant?',
+  Hivetag_hive_in_overview: 'Toon bijenkast in het kastenoverzicht',
+  Hivetag_new_inspection: 'Maak een nieuwe inspectie aan',
+  Hivetag_edit_hive: 'Pas kastconfiguratie aan',
+  Hivetag_view_inspections: 'Bekijk inspecties',
+  No_hivetags_left:
+    'Alle hive tags zijn momenteel in gebruik. Verwijder een bestaande hive tag om een nieuwe toe te kunnen voegen, of pas deze aan.',
+
+  View_alert_confirm: 'Wil je de notificatie bekijken "',
 }
 
 export default translations

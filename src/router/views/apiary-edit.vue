@@ -1,5 +1,5 @@
 <template>
-  <Layout :title="`${$t('edit')} ${$tc('location', 1)}`">
+  <Layout :title="$t('Edit_apiary')">
     <h1
       v-if="
         activeApiary &&
@@ -188,7 +188,7 @@
                   />
                 </v-col>
                 <v-col cols="6" sm="4">
-                  <div class="beep-label" v-text="`${$t('Lattitude')}`"></div>
+                  <div class="beep-label" v-text="`${$t('latitude')}`"></div>
                   <el-input-number
                     v-if="activeApiary"
                     :value="

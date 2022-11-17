@@ -45,19 +45,6 @@
           </v-alert>
         </v-col>
 
-        <v-col v-if="undoMessage" cols="12">
-          <v-alert
-            text
-            prominent
-            dense
-            :type="undoMessage.data_deleted ? 'success' : 'error'"
-            :color="undoMessage.data_deleted ? 'green' : 'red'"
-            class="mt-3 mb-n4"
-          >
-            {{ undoSentence }}
-          </v-alert>
-        </v-col>
-
         <v-col v-if="errorMessage" cols="12">
           <v-alert
             text
@@ -250,13 +237,26 @@
           </span>
         </v-col>
 
-        <v-col v-if="successMessage" cols="12">
+        <v-col v-if="undoMessage" cols="12">
           <v-alert
             text
             prominent
             dense
-            type="success"
-            color="green"
+            :type="undoMessage.data_deleted ? 'success' : 'error'"
+            :color="undoMessage.data_deleted ? 'green' : 'red'"
+            class="mt-3 mb-n4 break-all"
+          >
+            {{ undoSentence }}
+          </v-alert>
+        </v-col>
+
+        <v-col v-if="showSuccessMessage" cols="12">
+          <v-alert
+            text
+            prominent
+            dense
+            type="info"
+            color="accent"
             class="mt-3 mb-n4"
           >
             {{ successMessage }}
@@ -282,12 +282,30 @@
                     outlined
                     color="accent"
                     class="mx-2"
+                    :disabled="showExportLoadingById.indexOf('csv') > -1"
                     v-on="on"
                     @click="
-                      exportBlockData(selectedFlashLog.flashlog_id, '', true)
+                      exportBlockData(
+                        selectedFlashLog.flashlog_id,
+                        '',
+                        true,
+                        'csv'
+                      )
                     "
                   >
-                    <v-icon left>mdi-file-export</v-icon>
+                    <v-progress-circular
+                      v-if="showExportLoadingById.indexOf('csv') > -1"
+                      class="ml-n1 mr-2"
+                      size="18"
+                      width="2"
+                      color="disabled"
+                      indeterminate
+                    />
+                    <v-icon
+                      v-if="showExportLoadingById.indexOf('csv') === -1"
+                      left
+                      >mdi-file-export</v-icon
+                    >
                     {{ $t('Export_full_csv') }}
                   </v-btn>
                 </template>
@@ -301,19 +319,41 @@
                     tile
                     outlined
                     color="accent"
+                    :disabled="showExportLoadingById.indexOf('json') > -1"
                     v-on="on"
                     @click="
-                      exportBlockData(selectedFlashLog.flashlog_id, '', false)
+                      exportBlockData(
+                        selectedFlashLog.flashlog_id,
+                        '',
+                        false,
+                        'json'
+                      )
                     "
                   >
-                    <v-icon left>mdi-download</v-icon>
+                    <v-progress-circular
+                      v-if="showExportLoadingById.indexOf('json') > -1"
+                      class="ml-n1 mr-2"
+                      size="18"
+                      width="2"
+                      color="disabled"
+                      indeterminate
+                    />
+                    <v-icon
+                      v-if="showExportLoadingById.indexOf('json') === -1"
+                      left
+                      >mdi-download</v-icon
+                    >
                     {{ $t('Export_full_json') }}
                   </v-btn>
                 </template>
                 <span>{{ $t('Export_as_json') }}</span>
               </v-tooltip>
 
-              <v-tooltip v-if="!lgAndUp" open-delay="500" bottom>
+              <v-tooltip
+                v-if="!lgAndUp && showExportLoadingById.indexOf('csv') === -1"
+                open-delay="500"
+                bottom
+              >
                 <template v-slot:activator="{ on }">
                   <v-icon
                     dark
@@ -321,7 +361,12 @@
                     class="mx-2"
                     v-on="on"
                     @click="
-                      exportBlockData(selectedFlashLog.flashlog_id, '', true)
+                      exportBlockData(
+                        selectedFlashLog.flashlog_id,
+                        '',
+                        true,
+                        'csv'
+                      )
                     "
                     >mdi-file-export</v-icon
                   >
@@ -329,20 +374,47 @@
                 <span>{{ $t('Export_as_csv') }}</span>
               </v-tooltip>
 
-              <v-tooltip v-if="!lgAndUp" open-delay="500" bottom>
+              <v-progress-circular
+                v-if="!lgAndUp && showExportLoadingById.indexOf('csv') > -1"
+                class="ml-2 mr-3"
+                size="19"
+                width="2"
+                color="accent"
+                indeterminate
+              />
+
+              <v-tooltip
+                v-if="!lgAndUp && showExportLoadingById.indexOf('json') === -1"
+                open-delay="500"
+                bottom
+              >
                 <template v-slot:activator="{ on }">
                   <v-icon
                     dark
                     color="accent"
                     v-on="on"
                     @click="
-                      exportBlockData(selectedFlashLog.flashlog_id, '', false)
+                      exportBlockData(
+                        selectedFlashLog.flashlog_id,
+                        '',
+                        false,
+                        'json'
+                      )
                     "
                     >mdi-download</v-icon
                   >
                 </template>
                 <span>{{ $t('Export_as_json') }}</span>
               </v-tooltip>
+
+              <v-progress-circular
+                v-if="!lgAndUp && showExportLoadingById.indexOf('json') > -1"
+                class="ml-1"
+                size="19"
+                width="2"
+                color="accent"
+                indeterminate
+              />
             </div>
           </div>
 
@@ -376,7 +448,7 @@
                   v-if="item.matches !== undefined"
                   class="cursor-pointer"
                   @click="matchesOverlay = item.block"
-                  v-text="matchesText(item)"
+                  v-text="$t('Matches_found')"
                 ></span>
 
                 <v-overlay
@@ -493,7 +565,10 @@
 
               <template v-slot:[`item.export`]="{ item }">
                 <v-tooltip
-                  v-if="selectedFlashLog !== null"
+                  v-if="
+                    selectedFlashLog !== null &&
+                      showExportLoadingById.indexOf('csv-' + item.block) === -1
+                  "
                   open-delay="500"
                   bottom
                 >
@@ -507,7 +582,8 @@
                         exportBlockData(
                           selectedFlashLog.flashlog_id,
                           item.block,
-                          true
+                          true,
+                          'csv-' + item.block
                         )
                       "
                       >mdi-file-export</v-icon
@@ -516,8 +592,23 @@
                   <span>{{ $t('Export_as_csv') }}</span>
                 </v-tooltip>
 
+                <v-progress-circular
+                  v-if="
+                    selectedFlashLog !== null &&
+                      showExportLoadingById.indexOf('csv-' + item.block) > -1
+                  "
+                  class="mr-3"
+                  size="19"
+                  width="2"
+                  color="accent"
+                  indeterminate
+                />
+
                 <v-tooltip
-                  v-if="selectedFlashLog !== null"
+                  v-if="
+                    selectedFlashLog !== null &&
+                      showExportLoadingById.indexOf('json-' + item.block) === -1
+                  "
                   open-delay="500"
                   bottom
                 >
@@ -530,7 +621,8 @@
                         exportBlockData(
                           selectedFlashLog.flashlog_id,
                           item.block,
-                          false
+                          false,
+                          'json-' + item.block
                         )
                       "
                       >mdi-download</v-icon
@@ -538,6 +630,18 @@
                   </template>
                   <span>{{ $t('Export_as_json') }}</span>
                 </v-tooltip>
+
+                <v-progress-circular
+                  v-if="
+                    selectedFlashLog !== null &&
+                      showExportLoadingById.indexOf('json-' + item.block) > -1
+                  "
+                  class="ml-1"
+                  size="19"
+                  width="2"
+                  color="accent"
+                  indeterminate
+                />
               </template>
             </v-data-table>
           </div>
@@ -574,11 +678,13 @@ export default {
     return {
       errorMessage: null,
       successMessage: null,
+      showSuccessMessage: false,
       undoMessage: null,
       dateFormat: 'YYYY-MM-DD',
       dateFormatLong: 'YYYY-MM-DD HH:mm:ss',
       showLoadingIconById: [],
       showUndoLoadingIconById: [],
+      showExportLoadingById: [],
       ready: false,
       flashLogs: [],
       showInfo: false,
@@ -650,7 +756,7 @@ export default {
           text: this.$i18n.t('Interval') + ' (min)',
           value: 'interval_min',
         },
-        { text: this.$i18n.t('Actions'), sortable: false, value: 'actions' },
+        { text: this.$i18n.tc('Action', 2), sortable: false, value: 'actions' },
         { text: this.$i18n.t('Export'), sortable: false, value: 'export' },
       ]
     },
@@ -682,7 +788,7 @@ export default {
           text: this.$i18n.t('File_size'),
           value: 'bytes_received',
         },
-        { text: this.$i18n.t('Actions'), sortable: false, value: 'actions' },
+        { text: this.$i18n.tc('Action', 2), sortable: false, value: 'actions' },
       ]
     },
     logFileHeadersAdmin() {
@@ -742,6 +848,7 @@ export default {
       return this.$vuetify.breakpoint.smAndDown
     },
     undoSentence() {
+      var stringifiedMessage = JSON.stringify(this.undoMessage)
       return this.undoMessage !== null && this.undoMessage.data_deleted
         ? this.$i18n.t('data_deleted') +
             '. ' +
@@ -754,7 +861,8 @@ export default {
             this.undoMessage.deleted_days
         : this.$i18n.t('data_not_deleted') +
             '. ' +
-            JSON.stringify(this.undoMessage)
+            stringifiedMessage.substr(0, 1000) +
+            (stringifiedMessage.length > 1000 ? ' ... ' : '')
     },
   },
   created() {
@@ -769,7 +877,8 @@ export default {
           this.checkFlashLog(this.selectedFlashLog.flashlog_id)
         } else {
           if (this.importMessage !== null) {
-            this.logSearch = this.importMessage.flashlog_id // make persisted log item remain on top of table
+            this.logSearch = this.importMessage.flashlog_id.toString() // make persisted log item remain on top of table
+            this.reCheckFlashLog(this.importMessage.flashlog_id)
           }
           this.selectedFlashLog = null
         }
@@ -778,8 +887,14 @@ export default {
     })
   },
   methods: {
-    async exportBlockData(flashLogId, blockId = '', csvFormat = false) {
+    async exportBlockData(
+      flashLogId,
+      blockId = '',
+      csvFormat = false,
+      loadingId
+    ) {
       this.clearMessages()
+      this.showExportLoadingById.push(loadingId)
       try {
         const response = await Api.readRequest(
           '/flashlogs/' +
@@ -792,24 +907,49 @@ export default {
           this.errorMessage = this.$i18n.t('too_much_data')
         }
 
-        const responseLink = response.data.link
-        const csvLink =
-          responseLink.indexOf('https://') > -1
-            ? responseLink
-            : this.baseApiUrl + responseLink
-        // trick to download returned csv link (doesn't work via v-btn because it has already been clicked)
         var link = document.createElement('a')
-        link.href = csvLink
+        var fileName =
+          'beep-base-log-export-user-' +
+          this.selectedFlashLog.user_id +
+          '-' +
+          this.selectedFlashLog.device_name +
+          '-log-file-' +
+          flashLogId +
+          (blockId === '' ? '-all-data' : '-block-' + blockId)
+        fileName = fileName.replace(' ', '')
+
+        if (csvFormat) {
+          var hrefStr = 'data:text/csv;charset=utf-8,' + response.data
+        } else {
+          hrefStr =
+            'data:text/json;charset=utf-8,' +
+            encodeURIComponent(JSON.stringify(response.data))
+        }
+
         link.setAttribute('target', '_blank')
-        link.setAttribute('download', csvLink)
+        link.setAttribute('href', hrefStr)
+        link.setAttribute('download', fileName + (csvFormat ? '.csv' : '.json'))
         document.body.appendChild(link)
         link.click()
 
+        this.showExportLoadingById.splice(
+          this.showExportLoadingById.indexOf(loadingId),
+          1
+        )
+
         if (response.status === 200) {
-          this.successMessage = this.$i18n.t('export_file_saved')
+          this.successMessage = this.$i18n.t('Export_file_being_saved')
+          this.showSuccessMessage = true
+          setTimeout(() => {
+            this.showSuccessMessage = false
+          }, 5000) // wait for file to be saved by user
         }
         return response
       } catch (error) {
+        this.showExportLoadingById.splice(
+          this.showExportLoadingById.indexOf(loadingId),
+          1
+        )
         console.log('Error: ', error)
         this.errorMessage = this.$i18n.t('no_data')
       }
@@ -819,16 +959,15 @@ export default {
       this.showUndoLoadingIconById.push(blockId)
       try {
         const response = await Api.deleteRequest(
-          '/flashlogs/' + flashLogId + '?block_id=' + blockId
+          '/flashlogs/' + flashLogId + '?block_id=',
+          blockId
         )
         this.undoMessage = response.data
         this.showUndoLoadingIconById.splice(
           this.showUndoLoadingIconById.indexOf(blockId),
           1
         )
-        setTimeout(() => {
-          this.readFlashLogs()
-        }, 100)
+        this.reCheckFlashLog(flashLogId)
       } catch (error) {
         this.showUndoLoadingIconById.splice(
           this.showUndoLoadingIconById.indexOf(blockId),
@@ -861,8 +1000,10 @@ export default {
         }
       }
     },
-    async checkFlashLog(flashLogId) {
-      this.clearMessages()
+    async checkFlashLog(flashLogId, keepMessages = false) {
+      if (!keepMessages) {
+        this.clearMessages()
+      }
       this.selectedFlashLog = null
       this.showLoadingIconById.push(flashLogId)
       try {
@@ -996,8 +1137,11 @@ export default {
       return text
     },
     matchesHeader(log) {
+      var nrOfMatches = Object.keys(log.matches.matches).length
       return (
-        this.matchesText(log) +
+        this.$i18n.t('Matches_found') +
+        ': ' +
+        nrOfMatches +
         ' (Log ' +
         this.selectedFlashLog.flashlog_id +
         ', ' +
@@ -1006,10 +1150,6 @@ export default {
         log.block +
         ')'
       )
-    },
-    matchesText(log) {
-      var nrOfMatches = Object.keys(log.matches.matches).length
-      return this.$i18n.t('Matches_found') + ': ' + nrOfMatches
     },
     missingDataText(log) {
       var ptNotInDb = this.percentageNotInDB(log)
@@ -1047,6 +1187,13 @@ export default {
         ' - ' +
         this.momentify(log.time_end, true, this.dateFormat)
       )
+    },
+    reCheckFlashLog(flashLogId) {
+      // check flashlog after (undo) importing data again to display correct values in the table
+      setTimeout(() => {
+        this.readFlashLogs()
+        this.checkFlashLog(flashLogId, true)
+      }, 500)
     },
     rowClassLogData(item) {
       return item.matches === undefined

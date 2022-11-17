@@ -44,7 +44,7 @@
           @click="editChecklist"
         >
           <v-icon left>mdi-pencil</v-icon>
-          {{ $t('edit') + ' ' + $tc('checklist', 1) }}
+          {{ $t('Edit_checklist') }}
         </v-btn>
         <v-btn
           tile
@@ -55,7 +55,9 @@
             !valid ||
               (selectedHives && selectedHives.length === 0) ||
               showLoadingIcon ||
-              forceInspectionDate
+              forceInspectionDate ||
+              inspectionDate === 'Invalid date' ||
+              activeInspection.date === null
           "
           @click.prevent="confirmSaveInspection"
         >
@@ -169,7 +171,9 @@
                 <div class="beep-label">
                   <span v-text="$t('Date_of_inspection')"></span>
                   <span
-                    v-if="forceInspectionDate"
+                    v-if="
+                      forceInspectionDate || inspectionDate === 'Invalid date'
+                    "
                     class="ml-3 font-weight-bold accent--text cursor-pointer"
                     @click="inspectionDate = getNow()"
                     v-text="$t('Now')"
@@ -182,7 +186,9 @@
                   class="color-accent"
                   :max-datetime="endOfToday"
                   :placeholder="
-                    forceInspectionDate ? $t('select_inspection_date') : null
+                    forceInspectionDate || inspectionDate === 'Invalid date'
+                      ? $t('select_inspection_date')
+                      : null
                   "
                 >
                   <template slot="button-cancel">
@@ -213,10 +219,14 @@
             />
           </v-col>
 
-          <v-col class="d-flex" cols="12" sm="4">
+          <v-col
+            v-if="selectedChecklist && selectedChecklist.owner && mobile"
+            class="d-flex"
+            cols="12"
+            sm="4"
+          >
             <v-spacer></v-spacer>
             <v-btn
-              v-if="selectedChecklist && selectedChecklist.owner && mobile"
               tile
               outlined
               class="save-button-mobile-wide"
@@ -224,14 +234,14 @@
               @click="editChecklist"
             >
               <v-icon left>mdi-pencil</v-icon>
-              {{ $t('edit') + ' ' + $tc('checklist', 1) }}
+              {{ $t('Edit_checklist') }}
             </v-btn>
           </v-col>
 
-          <v-col cols="12">
+          <v-col v-if="forceInspectionDate" cols="12">
             <v-alert
-              v-if="forceInspectionDate"
               type="error"
+              class="mb-0"
               text
               prominent
               dense
@@ -641,7 +651,6 @@ export default {
       },
       set(value) {
         var date = this.momentFullDateTime(value)
-        this.activeInspection.date = date
         this.setActiveInspectionDate(date)
       },
     },
@@ -650,6 +659,7 @@ export default {
         (this.inspectionDate === 'Invalid date' ||
           this.inspectionDate === '') &&
         this.selectedChecklist !== null &&
+        this.selectedChecklist.researches !== undefined &&
         this.selectedChecklist.researches.join().includes('B-GOOD')
       )
     },
@@ -698,15 +708,12 @@ export default {
         }
       },
     },
-    lastSelectedChecklist: {
+    lastSelectedChecklistId: {
       get() {
-        return this.$store.getters['inspections/lastSelectedChecklist']
+        return localStorage.beepLastSelectedChecklistId
       },
       set(value) {
-        this.$store.commit('inspections/setData', {
-          prop: 'lastSelectedChecklist',
-          value,
-        })
+        localStorage.beepLastSelectedChecklistId = value
       },
     },
     sortedHiveSets() {
@@ -828,12 +835,15 @@ export default {
         this.readChecklistsIfNotPresent().then(() => {
           if (this.preSelectedChecklistId !== null) {
             this.getChecklistById(this.preSelectedChecklistId)
-          } else if (this.lastSelectedChecklist !== null) {
-            this.getChecklistById(this.lastSelectedChecklist.id)
+          } else if (
+            this.lastSelectedChecklistId !== undefined &&
+            this.lastSelectedChecklistId !== null
+          ) {
+            this.getChecklistById(this.lastSelectedChecklistId)
           } else {
             this.selectedChecklistId = this.checklist.id
             this.selectedChecklist = this.checklist
-            this.lastSelectedChecklist = this.checklist
+            this.lastSelectedChecklistId = this.checklist.id
             this.activeInspection.checklist_id = this.selectedChecklistId
             var itemsObject = {}
             this.selectedChecklist.category_ids.map((categoryId) => {
@@ -841,8 +851,9 @@ export default {
               itemsObject[categoryId] = null
             })
             this.activeInspection.items = itemsObject
-            if (this.selectedChecklist.owner)
-              this.activeInspection.date = this.getNow()
+            if (this.selectedChecklist.owner) {
+              this.setActiveInspectionDate()
+            }
           }
         })
       }
@@ -876,12 +887,12 @@ export default {
         }
       }
     },
-    async getChecklistById(id) {
+    async getChecklistById(id, switchChecklistExistingInspection = false) {
       try {
         const response = await Api.readRequest('/inspections/lists?id=', id)
         this.selectedChecklist = response.data.checklist
         this.selectedChecklistId = response.data.checklist.id
-        this.lastSelectedChecklist = response.data.checklist
+        this.lastSelectedChecklistId = response.data.checklist.id
 
         if (
           this.selectedChecklist !== null &&
@@ -928,9 +939,21 @@ export default {
               itemsObject[key] = value
             }
           })
-          this.activeInspection.date = !this.selectedChecklist.owner
-            ? null
-            : this.getNow()
+          if (
+            !switchChecklistExistingInspection &&
+            this.tempSavedInspection === null
+          ) {
+            // force user to actively select inspection date when checklist is not owned and it is not present yet
+            if (!this.selectedChecklist.owner) {
+              this.activeInspection.date = null
+            } else if (
+              this.selectedChecklist.owner &&
+              (this.activeInspection.date === null ||
+                this.inspectionDate === 'Invalid date')
+            ) {
+              this.setActiveInspectionDate()
+            }
+          }
         }
         this.activeInspection.items = itemsObject
         this.activeInspection.checklist_id = this.selectedChecklistId
@@ -1105,7 +1128,7 @@ export default {
         this.activeInspection.hive_ids !== null &&
         this.activeInspection.hive_ids !== undefined
       ) {
-        this.selectedHivess = this.activeInspection.hive_ids
+        this.selectedHives = this.activeInspection.hive_ids
       }
 
       this.$store.commit(
@@ -1223,7 +1246,9 @@ export default {
         this.$store.commit('hives/setActiveHive', null)
       }
     },
-    setActiveInspectionDate(date) {
+    setActiveInspectionDate(setDate = null) {
+      var date = setDate === null ? this.getNow() : setDate
+      this.activeInspection.date = date
       this.$store.commit('inspections/setData', {
         prop: 'activeInspectionDate',
         value: date,
@@ -1256,7 +1281,8 @@ export default {
             }
           )
           .then((confirm) => {
-            this.getChecklistById(id)
+            // do not change date when switching checklist for an existing (temp saved or regular) inspection
+            this.getChecklistById(id, true)
           })
           .catch((reject) => {
             return true

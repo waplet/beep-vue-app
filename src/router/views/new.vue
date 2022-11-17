@@ -2,8 +2,98 @@
   <Layout :title="$t('Whats_new')">
     <v-container>
       <div class="overline mb-1"
-        ><span class="lowercase">v</span>3.0.98 (12-05-2022) - Current
+        ><span class="lowercase">v</span>3.0.106 (04-10-2022) - Current
         version</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li>Bugfixes: small fixes for issues received as feedback</li>
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.104 (26-09-2022)</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li
+            >Data:
+            <router-link :to="{ name: 'measurements' }">
+              several improvements</router-link
+            >, such as:
+            <ul>
+              <li
+                >Show alerts on charts as vertical lines (or if the alert was
+                triggered for a longer duration: as a period marked in red) &
+                view alert when the alert line / marked period is clicked</li
+              >
+              <li>Updated charts layout</li>
+            </ul>
+          </li>
+          <li>Bugfixes: small fixes for issues received as feedback</li>
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.101 (01-08-2022)</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li
+            >Inspect:
+            <router-link :to="{ name: 'inspect' }"
+              >remember last selected checklist when creating a new
+              inspection</router-link
+            ></li
+          >
+          <li>Bugfixes: small fixes for issues received as feedback</li>
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.100 (24-06-2022)</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li
+            ><router-link :to="{ name: 'hivetags' }">Hive tags:</router-link>
+            you can now stick downloadable "hive tags" (QR codes) to your hives
+            to set up actions that will will be performed as soon as you scan
+            the hive tag with your smartphone. For example: if you scan a hive
+            tag, a new inspection will be automatically created.</li
+          >
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.99 (23-06-2022)</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li
+            ><router-link :to="{ name: 'checklists' }">Checklists:</router-link>
+            create your own checklist (from scratch or start with a duplicate)
+          </li>
+          <li
+            ><router-link :to="{ name: 'alerts' }">Alerts:</router-link> option
+            to delete only selected alerts, multiple at once
+          </li>
+          <li>Queen: option to leave birth date field blank </li>
+          <li
+            >Rename 'Alert settings' page title to
+            <router-link :to="{ name: 'alertrules' }">
+              Alert rules</router-link
+            ></li
+          >
+          <li
+            >Bugfixes: small fixes for issues received as feedback + improve
+            menu translations</li
+          >
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.98 (12-05-2022)</div
       >
       <div class="rounded-border mb-4">
         <ul>
@@ -598,7 +688,7 @@
               >
               <li
                 ><router-link :to="{ name: 'alertrules' }"
-                  >Alert settings</router-link
+                  >Alert rules</router-link
                 >
                 - To get you started there are a few
                 <router-link :to="{ name: 'alertrules-default' }"
@@ -718,7 +808,7 @@
                 <v-icon class="color-black inline-icon">mdi-menu</v-icon> menu
                 (top right):
                 <router-link :to="{ name: 'alertrules' }"
-                  >Alert settings</router-link
+                  >Alert rules</router-link
                 >
                 and
                 <router-link :to="{ name: 'checklists' }"
@@ -1088,7 +1178,7 @@
               >
               <li
                 ><router-link :to="{ name: 'alertrules' }"
-                  >Notificaties beheren</router-link
+                  >Notificatie-instellingen</router-link
                 >
                 - Om je op weg te helpen zijn er een aantal
                 <router-link :to="{ name: 'alertrules-default' }"
@@ -1214,7 +1304,7 @@
                 <v-icon class="color-black inline-icon">mdi-menu</v-icon> menu
                 (rechtsboven):
                 <router-link :to="{ name: 'alertrules' }"
-                  >Notificaties beheren</router-link
+                  >Notificatie-instellingen</router-link
                 >
                 en
                 <router-link :to="{ name: 'checklists' }"

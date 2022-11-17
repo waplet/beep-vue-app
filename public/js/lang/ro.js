@@ -93,19 +93,10 @@ const translations = {
     'Atenție încă există stupi în această stupină. Puteți salva stupi specifici (și inspecțiile lor) prin mutarea acestora într-o altă stupină. Dacă veți continua cu ștergerea, vor fi șterse toate inspecțiile și toți stupii din prezenta locație.',
   Date: 'Data',
   ok: 'Ok',
-  previous: 'Anterior',
   prev: 'anterior',
   next: 'Următorul',
   add: 'Adăugați',
-  create_new: 'Creați un nou',
-  New: 'Nou',
-  warning: 'Advertisment',
-  apply: 'Aplicați',
   Cancel: 'Anulați',
-  automatic: 'Automat',
-  manually: 'Manual',
-  on: 'Pornit',
-  off: 'Oprit',
 
   /* login */
   login_title: 'Autentificare',
@@ -178,7 +169,7 @@ const translations = {
   Inspection: 'Inspecție | Inspecții',
   New_inspection: 'Inspecție nouă',
   Edit_inspection: 'Editați inspecția',
-  Actions: 'Actiune',
+  Action: 'Acțiune | Acțiuni',
   Conditions: 'Condiții(inspectate)',
   edit: 'Editare',
   // Hive_brood_layers: 'Straturi cu puiet',
@@ -224,7 +215,7 @@ const translations = {
   Country: 'Țară',
   City: 'Oraș',
   Address: 'Adresă',
-  Lattitude: 'Latitudine',
+  latitude: 'Latitudine',
   Longitude: 'Longitudine',
   Street: 'Stradă',
   Number: 'Nr.',
@@ -239,7 +230,7 @@ const translations = {
   Hive_frames: 'Rame pe strat',
   Hive_color: 'Culoarea stupului',
   Queen: 'Matcă',
-  queen: 'Matcă',
+  queen: 'matcă',
   settings_title: 'Setări',
   settings_description: 'Setări ale senzorilor',
   Settings: 'Setări',
@@ -640,8 +631,8 @@ const translations = {
   deleted_but_not_saved_devices_warning:
     'N.B. dispozitivele vor fi eliminate numai după ce faceți clic pe butonul „Salvați și ștergeți” din colțul din dreapta sus.',
   no_alerts: 'Nu sunt alerte noi',
-  alertrule: 'regulă alertă| reguli alerte',
-  alertrule_pagetitle: 'Setări alertă',
+  alertrule: 'regulă alertă | reguli alerte',
+  Alertrule: 'Regulă alertă | Reguli alerte',
   Measurement: 'Măsurătoare | Măsurători',
   Calculation: 'Calcul',
   calculation: 'calcul',
@@ -708,7 +699,7 @@ const translations = {
   alertrule_not_active:
     'Această alertă a fost dezactivată. O puteți activa bifând caseta „Activați” și salvând această regulă de alertă.',
   export_email_sent: 'A fost trimis un e-mail cu fișier Excel',
-  export_file_saved: 'Fișierul Excel a fost salvat în folderul Descărcări',
+  excel_file_saved: 'Fișierul Excel a fost salvat în folderul Descărcări',
   Updated_at: 'Actualizat la',
   Not_yet_saved: 'Nu a fost încă salvat',
   add_own_device: 'Adăugați propriul dispozitiv',
@@ -758,6 +749,11 @@ const translations = {
     'Sigur doriți să ștergeți toate alertele? Această modificare nu poate fi anulată',
   delete_all_alerts_warning_filter_active:
     'Sigur doriți să ștergeți toate alertele? Inclusiv alertele care nu corespund termenului  căutarii dvs. vor fi șterse. Acest lucru nu poate fi anulat.',
+  delete_selected_alert: 'Delete selected alert | Delete selected alerts', // to be translated
+  delete_selected_alerts_warning:
+    'Are you sure you want to delete the selected alert? This cannot be undone. | Are you sure you want to delete the selected alerts? This cannot be undone.', // to be translated
+  delete_selected_alerts_invisible_checked_warning:
+    'Please note: the selected alert does not match your search term. | Please note: there are selected alerts that do not match your search term, those will be deleted as well.', // to be translated
   already_verified: 'Am confirmat adresa de e-mail și as dpri să ma autentific',
   password_recovery_resend_mail: 'Trimiteți un nou cod de verificare',
   alert_rule_created: 'Noua regulă de alertă a fost creată',
@@ -878,8 +874,7 @@ const translations = {
   Block: 'Block',
   Nr_of_match_props: 'Number of identical values per match',
   no_admin: 'You must be an admin to view this page',
-  next_week: 'Next week',
-  prev_week: 'Previous week',
+
   import_block_data_short: 'Import block data',
   no_flashlog_data: 'No log data',
   no_flashlog_file: 'No log file',
@@ -914,6 +909,10 @@ const translations = {
   Export_as_csv: 'Export as .csv file',
   Export_full_json: 'Export full JSON',
   Export_full_csv: 'Export full .csv',
+  Export_file_being_saved:
+    'Export file will be saved in your Downloads folder - wait a moment please',
+  no_data_deleted_because_no_matches_found:
+    'No data deleted because no matches were found',
 
   Now: 'Now',
   input_only_possible_when_date_present:
@@ -927,6 +926,60 @@ const translations = {
     'To become a translator, please request a translator account via support@beep.nl. If you would like to update translations, please download the .js file below and email the updated file to support@beep.nl. Thank you for your effort!',
   unpublished_exp: 'Translations that are yet unpublished:',
   as_plain_text: 'as plain text',
+
+  /* Checklists page */
+  new_checklist: 'New checklist',
+  duplicate: 'Duplicate',
+  delete_checklist: 'Delete checklist',
+  delete_checklist_confirm:
+    'Are you sure you want to delete this checklist? This cannot be undone. Checklist: "',
+
+  /* Menu items */
+  View_measurements: 'Vedeți măsurători',
+  View_inspection: 'Vizualizați inspecția | Vedeți inspecțiile',
+  View_alert: 'Vedeți alerta | Vezi alerte',
+
+  Edit_alertrule: 'Editați regula de alertă',
+  Edit_hive: 'Editați stupul',
+  Edit_queen: 'Editează matcă',
+  Edit_apiary: 'Editați stupina',
+  Edit_group: 'Editați grupul de colaborare',
+  Edit_group_short: 'Editați grupul',
+  Edit_checklist: 'Editați lista de verificare',
+  Edit_devices: 'Editați dispozitive',
+  Edit_consent: 'Editați consimțământul',
+  Edit_hivetag: 'Edit hive tag',
+
+  Hivetag: 'Hive tag | Hive tags',
+  Hivetag_exp_1:
+    "‘Hive tags’ are QR codes you can attach to a hive, and for which you can set an action that will be performed as soon as you scan the hive tag. An 'action' refers to actions in the BEEP app, such as creating a new inspection for the relevant hive. Once the hive tag has been set up, you only need to scan the QR code with your smartphone, and a new inspection will be automatically created. You can print the hive tags yourself, by ",
+  Hivetag_download_text: 'downloading this pdf.',
+  Hivetag_exp_2:
+    ' Just scan a hive tag to get started, you will be taken to the setup page automatically if no action has been set yet.',
+  qrcode: 'QR Code | QR Codes',
+  Qrcode_exp1: "Attach the hive tag with number '",
+  Qrcode_exp2: "' to a hive.",
+  Qrcode_note:
+    'Please note: the above QR code is not the actual hive tag, it is only meant as an example.',
+  Download_hivetags: 'Download hive tag pdf',
+  Delete_hivetag: 'Delete hive tag',
+  for_hive: 'for hive "',
+  Add_hivetag: 'Add hive tag',
+  Select_hivetag_number: 'Select a hive tag number',
+  Select_hive: 'Select a hive',
+  Select_hive_for_hivetag_exp:
+    'For which hive would you like to perform the action? Select one hive.',
+  Select_hivetag_action: 'Select an action',
+  Select_hivetag_action_exp:
+    'Which action would you like to perform, after scanning the QR code?',
+  Hivetag_hive_in_overview: 'Show hive in hives overview',
+  Hivetag_new_inspection: 'Create a new inspection',
+  Hivetag_edit_hive: 'Edit hive configuration',
+  Hivetag_view_inspections: 'View inspections',
+  No_hivetags_left:
+    'All hive tags are currently in use. Remove an existing hive tag in order to add a new one, or modify it.',
+
+  View_alert_confirm: 'Would you like to view the alert "',
 }
 
 export default translations

@@ -23,7 +23,7 @@
         @click="changeBlockDataIndex(blockDataIndex - 1)"
       >
         <v-icon left>mdi-chevron-left</v-icon>
-        {{ $t('prev_week') }}</v-btn
+        {{ $t('prev') }}</v-btn
       >
       <v-icon
         v-if="smAndDown && !noMatches"
@@ -75,7 +75,9 @@
               $t('Time_diff') +
                 ': ' +
                 (blockData.block_data_flashlog_sec_diff !== null
-                  ? blockData.block_data_flashlog_sec_diff + $t('seconds_short')
+                  ? blockData.block_data_flashlog_sec_diff +
+                    ' ' +
+                    $t('seconds_short')
                   : $t('unknown'))
             "
           ></span>
@@ -99,7 +101,7 @@
         :disabled="loading"
         @click="changeBlockDataIndex(blockDataIndex + 1)"
       >
-        {{ $t('next_week') }}
+        {{ $t('next') }}
         <v-icon right>mdi-chevron-right</v-icon>
       </v-btn>
       <v-icon
@@ -125,14 +127,53 @@
       >
     </v-toolbar>
 
-    <v-container class="back-content">
+    <div class="period-bar-wrapper">
+      <v-container class="period-container">
+        <v-row class="period-bar">
+          <v-col
+            cols="12"
+            class="d-flex flex-wrap justify-space-between align-center pa-0"
+          >
+            <div v-for="period in periods" :key="period.minutes">
+              <v-btn
+                :class="
+                  `grey--text ${
+                    period.minutes === currentMinutes ? 'accent--text' : ''
+                  }`
+                "
+                text
+                @click="setPeriodDataMinutes(period.minutes)"
+              >
+                {{ period.name }}
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
+
+    <v-container class="flashlog-content">
       <v-row>
-        <v-col cols="12" class="py-0">
-          <span
-            v-if="!loading && blockData !== null"
-            class="float-right mt-n1 font-small"
-            v-text="paginationText"
-          ></span>
+        <v-col cols="12" class="py-0 mb-1">
+          <v-slider
+            v-show="!loading && blockData !== null && blockDataIndexMax !== 0"
+            v-model="blockDataIndex"
+            class="slider--large d-flex align-center"
+            color="accent"
+            track-color="accent"
+            :max="blockDataIndexMax"
+            validate-on-blur
+            hide-details
+            @change="checkBlockDataWithDelay(true)"
+          >
+            <template v-slot:append>
+              <span
+                class="font-small"
+                style="width: 110px;"
+                v-text="paginationText"
+              ></span>
+            </template>
+          </v-slider>
         </v-col>
       </v-row>
       <v-row class="my-0">
@@ -149,38 +190,55 @@
           </v-alert>
         </v-col>
 
-        <v-col cols="12" class="py-0 py-sm-3">
-          <div
-            v-if="loading"
-            class="d-flex align-center justify-center loading-wrapper"
+        <v-col cols="12" class="py-0 pt-sm-3">
+          <v-overlay
+            :absolute="true"
+            :value="loading"
+            :opacity="0.5"
+            color="white"
+            z-index="3"
           >
             <v-progress-circular color="primary" size="50" indeterminate />
-          </div>
+          </v-overlay>
 
-          <div v-if="!loading && blockData !== null" class="charts">
+          <div class="charts">
             <template v-for="(dataSet, index) in dataSets">
-              <div :key="'dataSet' + index" class="pt-0 pb-6">
+              <div :key="'dataSet' + index" class="chart-wrapper pt-0 pb-5">
                 <div
-                  class="overline mt-0 mb-3 text-center"
+                  class="overline mt-0 mb-2 text-center"
                   v-text="dataSet"
                 ></div>
-                <chartist
+                <MeasurementsChartLine
                   v-if="measurements[dataSet] !== undefined"
-                  :class="'modulo-' + moduloNr + ' mb-8 mb-sm-12'"
-                  ratio="ct-chart"
-                  type="Line"
-                  :data="chartDataMultipleSeries(dataSet)"
-                  :options="chartOptions(dataSet)"
+                  :chart-data="chartjsDataSeries(dataSet)"
+                  :interval="'week'"
+                  location="flashlog"
+                  :start-time="getMoment(blockData.start_date)"
+                  :end-time="getMoment(blockData.end_date)"
+                  :chart-id="'chart-' + dataSet"
+                  size="large"
+                  @legend-clicked="
+                    toggleMeasurement(
+                      $event.abbr,
+                      $event.hidden,
+                      // eslint-disable-next-line vue/comma-dangle
+                      dataSet
+                    )
+                  "
                 >
-                </chartist>
-                <div v-else class="text-center my-8">
+                </MeasurementsChartLine>
+
+                <div
+                  v-if="!loading && measurements[dataSet] === undefined"
+                  class="text-center my-8"
+                >
                   {{ $t('no_chart_data') }}
                 </div>
               </div>
             </template>
           </div>
 
-          <v-row v-if="!loading && blockData !== null" class="my-4">
+          <v-row v-if="blockData !== null" class="mt-4">
             <v-col cols="12" sm="6">
               <div>
                 <div class="beep-label" v-text="$t('Fill_holes') + ': '"></div>
@@ -226,20 +284,17 @@
 import Api from '@api/Api'
 import Confirm from '@components/confirm.vue'
 import Layout from '@layouts/back.vue'
+import MeasurementsChartLine from '@components/measurements-chart-line.vue'
 import { mapGetters } from 'vuex'
 import { momentFormat } from '@mixins/momentMixin'
 import { readTaxonomy } from '@mixins/methodsMixin'
 import { sensorMixin } from '@mixins/sensorMixin'
-import 'chartist/dist/chartist.min.css'
-import '@plugins/chartist-plugin-beep.js'
-import '@plugins/chartist-plugin-legend-beep.js'
-import 'chartist-plugin-tooltips-updated'
-import 'chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.css'
 
 export default {
   components: {
     Confirm,
     Layout,
+    MeasurementsChartLine,
   },
   mixins: [momentFormat, readTaxonomy, sensorMixin],
   data() {
@@ -256,7 +311,12 @@ export default {
       thresholdSecDiff: 120,
       thresholdMatches: 99,
       deviceName: null,
-      fillHoles: true,
+      fillHoles: false,
+      shownMeasurements: {
+        flashlog: ['t_0', 't_i', 't_1', 'weight_kg'],
+        database: ['t_0', 't_i', 't_1', 'weight_kg'],
+      },
+      currentMinutes: 1440,
     }
   },
   computed: {
@@ -299,22 +359,6 @@ export default {
     mobile() {
       return this.$vuetify.breakpoint.mobile
     },
-    moduloNr() {
-      if (this.blockData.flashlog.length) {
-        var entries = this.blockData.flashlog.length
-        return entries > 2000
-          ? 100
-          : entries > 1000
-          ? this.mobile
-            ? 72
-            : 36
-          : entries > 500
-          ? 12
-          : 6
-      } else {
-        return 100
-      }
-    },
     noMatches() {
       return this.errorMessage !== null
         ? this.errorMessage.indexOf('no_matches') > -1
@@ -340,37 +384,47 @@ export default {
         (this.blockDataIndexMax + 1)
       )
     },
+    periods() {
+      return [
+        { name: this.$i18n.tc('day', 1), minutes: 1440 },
+        { name: this.$i18n.t('week'), minutes: 10080 },
+        { name: this.$i18n.t('month'), minutes: 43200 },
+        { name: this.$i18n.t('year'), minutes: 525600 },
+      ]
+    },
     smAndDown() {
       return this.$vuetify.breakpoint.smAndDown
     },
   },
   watch: {
     fillHoles() {
-      this.checkBlockData()
+      this.checkBlockData(true)
     },
   },
   created() {
     this.readTaxonomy().then(() => {
-      this.checkBlockData().then(() => {
-        this.blockDataIndexMax = this.blockData.block_data_index_max
-      })
+      this.checkBlockData()
     })
   },
   methods: {
     async checkBlockData(changeIndex = false) {
       this.clearMessages()
       this.loading = true
-      this.blockData = null
+      // this.blockData = null commented out because annotation plugin is disabled for the flashlog view which makes multiple charts reactive again
+      // see https://vue-chartjs.org/guide/#chartjs-plugin-annotation
       try {
         const response = await Api.readRequest(
           '/flashlogs/' +
             this.flashLogId +
             '?block_id=' +
             this.blockId +
-            (changeIndex ? '&block_data_index=' + this.blockDataIndex : '')
+            (changeIndex ? '&block_data_index=' + this.blockDataIndex : '') +
+            '&data_minutes=' +
+            this.currentMinutes
         )
         this.blockData = response.data
         this.blockDataIndex = response.data.block_data_index
+        this.blockDataIndexMax = this.blockData.block_data_index_max
         this.deviceName = response.data.device_name
 
         this.formatFlashlogData(this.blockData)
@@ -419,88 +473,76 @@ export default {
       this.blockDataIndex = newIndex
       this.checkBlockData(true)
     },
-    chartDataMultipleSeries(dataSet) {
+    chartjsDataSeries(dataSet) {
       var data = {
         labels: [],
-        series: [],
+        datasets: [],
       }
 
       if (
         typeof this.measurements[dataSet] !== 'undefined' &&
         this.blockData !== null
       ) {
-        this.measurements[dataSet].map((sensorName, index) => {
+        this.measurements[dataSet].map((quantity, index) => {
           if (
-            sensorName.indexOf('time') === -1 &&
-            sensorName.indexOf('minute') === -1 &&
-            sensorName !== 'i'
+            quantity.indexOf('time') === -1 &&
+            quantity.indexOf('minute') === -1 &&
+            quantity !== 'i'
           ) {
-            data.series.push({
-              // color: '#' + this.findMeasurementType(sensorName).hex_color,
-              color: this.SENSOR_COLOR[sensorName],
-              name: this.$i18n.t(sensorName),
-              data: [],
-              className: sensorName,
-            })
+            var mT = this.getSensorMeasurement(quantity)
+
+            if (mT === null || mT === undefined) {
+              console.log('mT not found ', quantity)
+            } else if (mT.show_in_charts === 1) {
+              var sensorName = this.$i18n.t(quantity)
+              var sensorLabel =
+                sensorName +
+                (mT.unit !== '-' && mT.unit !== '' && mT.unit !== null
+                  ? ' (' + mT.unit + ')'
+                  : '')
+
+              data.datasets.push({
+                id: mT.id,
+                fill: false,
+                borderColor: '#' + mT.hex_color,
+                backgroundColor: '#' + mT.hex_color,
+                borderRadius: 2,
+                label: sensorLabel.replace(/^0/, ''),
+                name: sensorName,
+                abbr: mT.abbreviation,
+                unit: mT.unit !== '-' && mT.unit !== null ? mT.unit : '',
+                data: [],
+                hidden:
+                  this.shownMeasurements[dataSet].indexOf(mT.abbreviation) ===
+                  -1,
+                spanGaps: this.fillHoles,
+              })
+            }
           }
         })
 
         this.blockData[dataSet].map((measurement, index) => {
-          data.labels.push(measurement.time)
-          data.series.map((serie, index) => {
-            var currentSensor = serie.className
-            if (measurement[currentSensor] !== undefined) {
-              serie.data.push({
-                meta: this.getMetaText(measurement, currentSensor, data.series),
-                // +
-                // this.findMeasurementType(currentSensor).unit,
-                value: measurement[currentSensor],
-              })
-            }
+          data.datasets.map((dataset, i) => {
+            var quantity = dataset.abbr
+            // if (
+            //   measurement[quantity] !== null &&
+            //   typeof measurement[quantity] === 'number'
+            // ) {
+            dataset.data.push({
+              x: measurement.time,
+              y: measurement[quantity],
+            })
+            // }
           })
         })
       }
 
-      data.series.map((serie) => {
-        serie.name = serie.name.replace(/^0/, '') // remove first zero for legend legibility (esp with sound sensor s_bin_201_402 and further)
-      })
-
       return data
     },
-    chartOptions(dataSet) {
-      const self = this
-      return {
-        fullWidth: true,
-        height: '250px',
-        plugins: [
-          this.$chartist.plugins.tooltip({
-            class: 'beep-tooltip',
-            metaIsHTML: true,
-          }),
-          self.$chartist.plugins.beep(),
-          self.$chartist.plugins.legendBeep({
-            dataSet: dataSet,
-            simpleToggle: true,
-            inactiveByDefault: true,
-            // N.B. active classes are now set inside legendBeep plugin for smooth performance
-          }),
-        ],
-        showPoint: true,
-        lineSmooth: self.$chartist.Interpolation.simple({
-          divisor: 10,
-          fillHoles: self.fillHoles,
-        }),
-        axisX: {
-          showGrid: true,
-          labelInterpolationFnc(value, index) {
-            if (index % self.moduloNr === 0) {
-              return self.momentFormat(value, 'llll')
-            } else {
-              return ''
-            }
-          },
-        },
-      }
+    checkBlockDataWithDelay(bool) {
+      setTimeout(() => {
+        return this.checkBlockData(bool)
+      }, 200) // wait for user to read slider value
     },
     clearMessages() {
       this.errorMessage = null
@@ -525,12 +567,6 @@ export default {
           return true
         })
     },
-    findMeasurementType(abbr) {
-      var mT = this.sensorMeasurementsList.filter(
-        (measurementType) => measurementType.abbreviation === abbr
-      )[0]
-      return mT
-    },
     formatFlashlogData(blockData) {
       this.measurements = {}
 
@@ -546,42 +582,54 @@ export default {
 
       this.loading = false
     },
-    getMetaText(measurement, currentSensor, dataSeries) {
-      var otherMeasurements = ''
-      dataSeries.map((dataSerie, index) => {
-        if (
-          dataSerie.className !== currentSensor &&
-          measurement[dataSerie.className] !== null &&
-          measurement[dataSerie.className] !== undefined
-        ) {
-          otherMeasurements +=
-            dataSerie.name +
-            ': ' +
-            (dataSerie.className.indexOf('weight_kg') > -1
-              ? measurement[dataSerie.className].toFixed(3)
-              : measurement[dataSerie.className]) +
-            (index !== dataSeries.length - 1 ? '<br>' : '')
-        }
-      })
-      return (
-        this.momentFormat(measurement.time, 'llll') +
-        '<br>' +
-        this.$i18n.t(currentSensor) +
-        ': ' +
-        measurement[currentSensor] +
-        '<br>' +
-        otherMeasurements
+    getSensorMeasurement(abbr) {
+      var smFilter = this.sensorMeasurementsList.filter(
+        (measurementType) => measurementType.abbreviation === abbr
       )
+      return smFilter.length > 0 ? smFilter[0] : null
+    },
+    getMoment(date) {
+      return this.$moment.utc(date)
+    },
+    setPeriodDataMinutes(newMinutes) {
+      // calculate new block data index
+      var currentIndexPerc = this.blockDataIndex / this.blockDataIndexMax
+      var newMaxIndex =
+        (this.blockDataIndexMax * this.currentMinutes) / newMinutes
+      var newIndex = Math.floor(currentIndexPerc * newMaxIndex)
+
+      this.blockDataIndex = newIndex
+      this.currentMinutes = newMinutes
+      this.checkBlockData(true)
+    },
+    toggleMeasurement(abbr, hidden, dataSet) {
+      // add measurement abbreviation to list of showMeasurements per dataset, if it was hidden when clicked
+      if (hidden === true && !this.shownMeasurements[dataSet].includes(abbr)) {
+        this.shownMeasurements[dataSet].push(abbr)
+        // otherwise remove it from that list
+      } else if (
+        hidden === false &&
+        this.shownMeasurements[dataSet].includes(abbr)
+      ) {
+        this.shownMeasurements[dataSet].splice(
+          this.shownMeasurements[dataSet].indexOf(abbr),
+          1
+        )
+      }
     },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.loading-wrapper {
-  height: 90vh;
+.flashlog-content {
+  margin-top: 90px;
+}
+
+.chart-wrapper {
+  min-height: 400px;
   @include for-phone-only {
-    height: 80vh;
+    min-height: 200px;
   }
 }
 </style>

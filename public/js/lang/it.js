@@ -94,19 +94,10 @@ const translations = {
     'Attenzione: ci sono ancora alveari in questo apiario. Puoi salvare alveari specifici (e le loro visita) spostandoli prima in un altro apiario. Se continui, cancellerai TUTTI gli alveari e dati di visite per questa località.',
   Date: 'Data',
   ok: 'Ok',
-  previous: 'Precedente',
   prev: 'precedente',
   next: 'Prossimo',
   add: 'Aggiungi',
-  create_new: 'Crea nuovo',
-  New: 'Nuovo',
-  warning: 'Attenzione',
-  apply: 'Applica',
   Cancel: 'Cancella',
-  automatic: 'Automatico',
-  manually: 'Manuale',
-  on: 'On',
-  off: 'Off',
 
   /* login */
   login_title: 'Accedi',
@@ -178,7 +169,7 @@ const translations = {
   Inspection: 'Visita | Visite',
   New_inspection: 'Nuova visita',
   Edit_inspection: 'Modifica visita',
-  Actions: 'Azioni',
+  Action: 'Azione | Azioni',
   Conditions: 'Condizioni (visitate)',
   edit: 'Modifica',
   Hive_layer_amount: 'Totale scomparti',
@@ -223,7 +214,7 @@ const translations = {
   Country: 'Nazione',
   City: 'Città',
   Address: 'Indirizzo',
-  Lattitude: 'Latitudine',
+  latitude: 'Latitudine',
   Longitude: 'Longitudine',
   Street: 'Via',
   Number: 'N.',
@@ -613,7 +604,7 @@ const translations = {
   select_all_editable_hives: 'Seleziona tutti gli alveari modificabili',
   Alert: 'Allerta | Allerte',
   alert: 'allerta | allerte',
-  remove_alert: 'Rimuovi i messaggi di allerta',
+  remove_alert: 'Rimuovi i messaggio allerta',
   alerts_enabled: 'Abilita i messaggi di allerta',
   alerts_disabled: 'Disbilita i messaggi di allerta',
   edit_checklist_confirm:
@@ -636,8 +627,8 @@ const translations = {
   deleted_but_not_saved_devices_warning:
     "N.B. i dispositivi saranno rimossi solo dopo aver premuto il bottone 'Salva e cancella' in alto a destra.",
   no_alerts: 'Nessun nuovo messaggio di allerta',
-  alertrule: 'Regola messaggio allerta | Regole messaggio di allerta',
-  alertrule_pagetitle: 'Regole messaggio di allerta',
+  alertrule: 'regola messaggio allerta | regole messaggio di allerta',
+  Alertrule: 'Regola messaggio allerta | Regole messaggio di allerta',
   Measurement: 'Misurazione | Misurazioni',
   Calculation: 'Calcolo',
   calculation: 'calcolo',
@@ -705,7 +696,7 @@ const translations = {
   alertrule_not_active:
     "Questo messaggio di allerta è disattivato. Puoi attivarlo cliccando la casella 'Attiva' e salvando questa regola messaggio di allerta.",
   export_email_sent: 'è stata inviata Email con file Excel',
-  export_file_saved: 'file Excel è stato salvato nella tua cartella Downloads',
+  excel_file_saved: 'file Excel è stato salvato nella tua cartella Downloads',
   Updated_at: 'Aggiornato a',
   Not_yet_saved: 'non ancora salvato',
   add_own_device: 'Aggiungere proprio dispositivo',
@@ -755,6 +746,11 @@ const translations = {
     'Sei sicuro di voler cancellare tutti gli avvisi? Questo processo è irreversibile',
   delete_all_alerts_warning_filter_active:
     'Sei sicuro di voler cancellare questo avviso? Gli avvisi che non corrispondono ai tuoi criteri di ricerca saranno anche rimossi. Questo processo è irreversibile',
+  delete_selected_alert: 'Delete selected alert | Delete selected alerts', // to be translated
+  delete_selected_alerts_warning:
+    'Are you sure you want to delete the selected alert? This cannot be undone. | Are you sure you want to delete the selected alerts? This cannot be undone.', // to be translated
+  delete_selected_alerts_invisible_checked_warning:
+    'Please note: the selected alert does not match your search term. | Please note: there are selected alerts that do not match your search term, those will be deleted as well.', // to be translated
   already_verified: 'Ho verificato il mio indirizzo email e vorrei accedere',
   password_recovery_resend_mail: 'Manda nuovo codice di verifica',
   alert_rule_created: 'Nuova regola per avviso creata',
@@ -874,8 +870,7 @@ const translations = {
   Block: 'Block',
   Nr_of_match_props: 'Number of identical values per match',
   no_admin: 'You must be an admin to view this page',
-  next_week: 'Next week',
-  prev_week: 'Previous week',
+
   import_block_data_short: 'Import block data',
   no_flashlog_data: 'No log data',
   no_flashlog_file: 'No log file',
@@ -910,6 +905,10 @@ const translations = {
   Export_as_csv: 'Export as .csv file',
   Export_full_json: 'Export full JSON',
   Export_full_csv: 'Export full .csv',
+  Export_file_being_saved:
+    'Export file will be saved in your Downloads folder - wait a moment please',
+  no_data_deleted_because_no_matches_found:
+    'No data deleted because no matches were found',
 
   Now: 'Now',
   input_only_possible_when_date_present:
@@ -923,6 +922,60 @@ const translations = {
     'To become a translator, please request a translator account via support@beep.nl. If you would like to update translations, please download the .js file below and email the updated file to support@beep.nl. Thank you for your effort!',
   unpublished_exp: 'Translations that are yet unpublished:',
   as_plain_text: 'as plain text',
+
+  /* Checklists page */
+  new_checklist: 'New checklist',
+  duplicate: 'Duplicate',
+  delete_checklist: 'Delete checklist',
+  delete_checklist_confirm:
+    'Are you sure you want to delete this checklist? This cannot be undone. Checklist: "',
+
+  /* Menu items */
+  View_measurements: 'Visualizza misurazioni',
+  View_inspection: 'Visualizza visita | Visualizza visite',
+  View_alert: 'Visualizza messaggio allerta | Visualizza messaggi di allerta',
+
+  Edit_alertrule: 'Modifica regola messaggio allerta',
+  Edit_hive: 'Modifica alveare',
+  Edit_queen: 'Modifica regina',
+  Edit_apiary: 'Modifica apiario',
+  Edit_group: 'Modifica gruppo di collaborazione',
+  Edit_group_short: 'Modifica gruppo',
+  Edit_checklist: 'Modifica lista di controllo',
+  Edit_devices: 'Modifica dispositivi',
+  Edit_consent: 'Modifica consenso',
+  Edit_hivetag: 'Edit hive tag',
+
+  Hivetag: 'Hive tag | Hive tags',
+  Hivetag_exp_1:
+    "‘Hive tags’ are QR codes you can attach to a hive, and for which you can set an action that will be performed as soon as you scan the hive tag. An 'action' refers to actions in the BEEP app, such as creating a new inspection for the relevant hive. Once the hive tag has been set up, you only need to scan the QR code with your smartphone, and a new inspection will be automatically created. You can print the hive tags yourself, by ",
+  Hivetag_download_text: 'downloading this pdf.',
+  Hivetag_exp_2:
+    ' Just scan a hive tag to get started, you will be taken to the setup page automatically if no action has been set yet.',
+  qrcode: 'QR Code | QR Codes',
+  Qrcode_exp1: "Attach the hive tag with number '",
+  Qrcode_exp2: "' to a hive.",
+  Qrcode_note:
+    'Please note: the above QR code is not the actual hive tag, it is only meant as an example.',
+  Download_hivetags: 'Download hive tag pdf',
+  Delete_hivetag: 'Delete hive tag',
+  for_hive: 'for hive "',
+  Add_hivetag: 'Add hive tag',
+  Select_hivetag_number: 'Select a hive tag number',
+  Select_hive: 'Select a hive',
+  Select_hive_for_hivetag_exp:
+    'For which hive would you like to perform the action? Select one hive.',
+  Select_hivetag_action: 'Select an action',
+  Select_hivetag_action_exp:
+    'Which action would you like to perform, after scanning the QR code?',
+  Hivetag_hive_in_overview: 'Show hive in hives overview',
+  Hivetag_new_inspection: 'Create a new inspection',
+  Hivetag_edit_hive: 'Edit hive configuration',
+  Hivetag_view_inspections: 'View inspections',
+  No_hivetags_left:
+    'All hive tags are currently in use. Remove an existing hive tag in order to add a new one, or modify it.',
+
+  View_alert_confirm: 'Would you like to view the alert "',
 }
 
 export default translations

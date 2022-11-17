@@ -489,7 +489,7 @@
                                 {{ $t('Updated_at') }}
                               </th>
                               <th class="text-left">
-                                {{ $t('Actions') }}
+                                {{ $tc('Action', 2) }}
                               </th>
                             </tr>
                           </thead>

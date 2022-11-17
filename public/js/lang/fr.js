@@ -102,19 +102,10 @@ const translations = {
     "Attention : il y a encore des ruches associées à ce rucher. Vous pouvez enregistrer des ruches spécifiques (et leurs inspections) en les déplaçant d'abord vers un autre rucher. Si vous poursuivez, vous supprimerez TOUTES les ruches et les inspections présentes à cet emplacement",
   Date: 'Date',
   ok: 'Ok',
-  previous: 'Précédent',
   prev: 'précédent',
   next: 'Suivant',
   add: 'Ajouter',
-  create_new: 'Créer un nouveau',
-  New: 'Nouveau',
-  warning: 'Attention',
-  apply: 'Appliquer',
   Cancel: 'Annuler',
-  automatic: 'Automatique',
-  manually: 'Manuel',
-  on: 'On',
-  off: 'Off',
 
   /* login */
   login_title: 'Connectez-vous',
@@ -199,7 +190,7 @@ const translations = {
   Inspection: 'Inspection | Inspections',
   New_inspection: 'Nouvelle inspection',
   Edit_inspection: "Modifier l'inspection",
-  Actions: 'Actions',
+  Action: 'Action | Actions',
   Conditions: 'Conditions (inspectées)',
   edit: 'Modifier',
   // Hive_brood_layers: 'Corps',
@@ -250,7 +241,7 @@ const translations = {
   City: 'Ville',
   Address: 'Adresse',
   /* Cyrille - 31/05 : Translation updated */
-  Lattitude: 'Latitude',
+  latitude: 'Latitude',
   Longitude: 'Longitude',
   Street: 'Rue',
   /* Cyrille - 31/05 : Translation updated */
@@ -737,7 +728,7 @@ const translations = {
     'N.B. Les appareils seront supprimés après avoir cliqué sur "Sauvergarder et supprimer" dans le coin supérieur droit de l\'écran.',
   no_alerts: 'Pas de nouvelles alertes',
   alertrule: "règle d'alerte | règles d'alerte",
-  alertrule_pagetitle: "Réglages d'alertes",
+  Alertrule: "Règle d'alerte | Règles d'alerte",
   Measurement: 'Mesure | Mesures',
   /* Cyrille - 31/05 : This translation needs more context */
   Calculation: 'Calcul',
@@ -811,7 +802,7 @@ const translations = {
   alertrule_not_active:
     'Cette alerte a été désactivée. Vous pouvez l\'activer en cochant la case "Actif" et en sauvegardant cette règle.',
   export_email_sent: 'Email avec fichier Excel envoyé',
-  export_file_saved:
+  excel_file_saved:
     'Le fichier Excel a été sauvegardé dans votre dossier "Téléchargements"',
   Updated_at: 'Mis à jour à',
   Not_yet_saved: 'Pas encore sauvegardé',
@@ -865,6 +856,11 @@ const translations = {
     'Êtes vous sûr de vouloir supprimer toutes les alertes? Cette action est irréversible.',
   delete_all_alerts_warning_filter_active:
     'Êtes vous sûr de vouloir supprimer toutes les alertes? Les alertes, qui ne correspondent pas à votre critère de recherche, seront également supprimées. Cette action est irréversible.',
+  delete_selected_alert: 'Delete selected alert | Delete selected alerts', // to be translated
+  delete_selected_alerts_warning:
+    'Are you sure you want to delete the selected alert? This cannot be undone. | Are you sure you want to delete the selected alerts? This cannot be undone.', // to be translated
+  delete_selected_alerts_invisible_checked_warning:
+    'Please note: the selected alert does not match your search term. | Please note: there are selected alerts that do not match your search term, those will be deleted as well.', // to be translated
   already_verified: "J'ai confirmé mon adresse mail, je veux m'identifier",
   password_recovery_resend_mail: 'Envoyer un nouveau code de vérification',
   alert_rule_created: "La nouvelle règle d'alerte a été créée",
@@ -985,8 +981,7 @@ const translations = {
   Block: 'Block',
   Nr_of_match_props: 'Number of identical values per match',
   no_admin: 'You must be an admin to view this page',
-  next_week: 'Next week',
-  prev_week: 'Previous week',
+
   import_block_data_short: 'Import block data',
   no_flashlog_data: 'No log data',
   no_flashlog_file: 'No log file',
@@ -1021,6 +1016,10 @@ const translations = {
   Export_as_csv: 'Export as .csv file',
   Export_full_json: 'Export full JSON',
   Export_full_csv: 'Export full .csv',
+  Export_file_being_saved:
+    'Export file will be saved in your Downloads folder - wait a moment please',
+  no_data_deleted_because_no_matches_found:
+    'No data deleted because no matches were found',
 
   Now: 'Now',
   input_only_possible_when_date_present:
@@ -1034,6 +1033,60 @@ const translations = {
     'To become a translator, please request a translator account via support@beep.nl. If you would like to update translations, please download the .js file below and email the updated file to support@beep.nl. Thank you for your effort!',
   unpublished_exp: 'Translations that are yet unpublished:',
   as_plain_text: 'as plain text',
+
+  /* Checklists page */
+  new_checklist: 'New checklist',
+  duplicate: 'Duplicate',
+  delete_checklist: 'Delete checklist',
+  delete_checklist_confirm:
+    'Are you sure you want to delete this checklist? This cannot be undone. Checklist: "',
+
+  /* Menu items */
+  View_measurements: 'Afficher les mesures',
+  View_inspection: "Voir l'inspection | Voir les inspections",
+  View_alert: "Afficher l'alerte | Afficher les alertes",
+
+  Edit_alertrule: "Modifier la règle d'alerte",
+  Edit_hive: 'Modifier la ruche',
+  Edit_queen: 'Modifier la reine',
+  Edit_apiary: 'Modifier le rucher',
+  Edit_group: 'Modifier le groupe de collaboration',
+  Edit_group_short: 'Modifier le groupe',
+  Edit_checklist: 'Modifier la liste de contrôle',
+  Edit_devices: 'Modifier les appareils',
+  Edit_consent: 'Modifier le consentement',
+  Edit_hivetag: 'Edit hive tag',
+
+  Hivetag: 'Hive tag | Hive tags',
+  Hivetag_exp_1:
+    "‘Hive tags’ are QR codes you can attach to a hive, and for which you can set an action that will be performed as soon as you scan the hive tag. An 'action' refers to actions in the BEEP app, such as creating a new inspection for the relevant hive. Once the hive tag has been set up, you only need to scan the QR code with your smartphone, and a new inspection will be automatically created. You can print the hive tags yourself, by ",
+  Hivetag_download_text: 'downloading this pdf.',
+  Hivetag_exp_2:
+    ' Just scan a hive tag to get started, you will be taken to the setup page automatically if no action has been set yet.',
+  qrcode: 'QR Code | QR Codes',
+  Qrcode_exp1: "Attach the hive tag with number '",
+  Qrcode_exp2: "' to a hive.",
+  Qrcode_note:
+    'Please note: the above QR code is not the actual hive tag, it is only meant as an example.',
+  Download_hivetags: 'Download hive tag pdf',
+  Delete_hivetag: 'Delete hive tag',
+  for_hive: 'for hive "',
+  Add_hivetag: 'Add hive tag',
+  Select_hivetag_number: 'Select a hive tag number',
+  Select_hive: 'Select a hive',
+  Select_hive_for_hivetag_exp:
+    'For which hive would you like to perform the action? Select one hive.',
+  Select_hivetag_action: 'Select an action',
+  Select_hivetag_action_exp:
+    'Which action would you like to perform, after scanning the QR code?',
+  Hivetag_hive_in_overview: 'Show hive in hives overview',
+  Hivetag_new_inspection: 'Create a new inspection',
+  Hivetag_edit_hive: 'Edit hive configuration',
+  Hivetag_view_inspections: 'View inspections',
+  No_hivetags_left:
+    'All hive tags are currently in use. Remove an existing hive tag in order to add a new one, or modify it.',
+
+  View_alert_confirm: 'Would you like to view the alert "',
 }
 
 export default translations

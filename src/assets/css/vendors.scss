@@ -66,6 +66,10 @@
   display: none !important;
 }
 
+.theme--light.v-icon.v-icon--disabled.color-transparent {
+  color: transparent !important;
+}
+
 .v-text-field--outlined fieldset {
   border-color: $color-grey-light;
 }
@@ -199,7 +203,9 @@
 }
 
 .v-input__slider {
-  max-width: 600px;
+  &:not(.slider--large) {
+    max-width: 600px;
+  }
 
   .v-slider.v-slider--horizontal .v-slider__tick .v-slider__tick-label {
     width: 65px;

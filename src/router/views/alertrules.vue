@@ -1,5 +1,5 @@
 <template>
-  <Layout :title="this.$i18n.t('alertrule_pagetitle')">
+  <Layout :title="this.$i18n.tc('Alertrule', 2)">
     <div v-if="ready" class="filter-bar-wrapper">
       <v-container class="filter-container">
         <v-row class="filter-bar d-flex align-center">
@@ -169,7 +169,7 @@
                       {{ $t('Calculation_minutes_short') }}
                     </th>
                     <th class="text-left">
-                      {{ $t('Actions') }}
+                      {{ $tc('Action', 2) }}
                     </th>
                     <th></th>
                   </tr>
