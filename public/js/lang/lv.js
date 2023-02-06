@@ -961,6 +961,99 @@ const translations = {
     no_data_stored: 'No data stored',
     data_stored_for_log: 'Data stored for Log ',
     Fill_holes: 'Fill holes (connect all data points)',
+
+    Data_imported: 'Data imported',
+    undo_import: 'Undo import',
+    undo_block_import_exp:
+        'Are you sure that you want to delete the previously imported data from this block from the database?',
+    data_deleted: 'Data deleted',
+    data_not_deleted: 'Data not deleted',
+    deleted_measurements: 'Deleted measurements',
+    deleted_days: 'deleted days',
+    Memory_erased: 'BEEP base memory emptied',
+    Export: 'Export',
+    Export_as_json: 'Export as JSON data',
+    Export_as_csv: 'Export as .csv file',
+    Export_full_json: 'Export full JSON',
+    Export_full_csv: 'Export full .csv',
+    Export_file_being_saved:
+        'Export file will be saved in your Downloads folder - wait a moment please',
+    no_data_deleted_because_no_matches_found:
+        'No data deleted because no matches were found',
+
+    Now: 'Now',
+    input_only_possible_when_date_present:
+        "Please select a 'date of inspection' first (above), to enable the inspection form. Click 'Now' to fill in the current date and time.",
+    select_inspection_date: 'Select date of inspection',
+    View_inspection_confirm: 'Would you like to view the inspection of: ',
+
+    /* Translations page */
+    Translations: 'Translations',
+    translation_exp:
+        'To become a translator, please request a translator account via support@beep.nl. If you would like to update translations, please download the .js file below and email the updated file to support@beep.nl. Thank you for your effort!',
+    unpublished_exp: 'Translations that are yet unpublished:',
+    as_plain_text: 'as plain text',
+
+    /* Checklists page */
+    new_checklist: 'New checklist',
+    duplicate: 'Duplicate',
+    delete_checklist: 'Delete checklist',
+    delete_checklist_confirm:
+        'Are you sure you want to delete this checklist? This cannot be undone. Checklist: "',
+
+    /* Menu items */
+    View_measurements: 'View measurements',
+    View_inspection: 'View inspection | View inspections',
+    View_alert: 'View alert | View alerts',
+
+    Edit_alertrule: 'Edit alert rule',
+    Edit_hive: 'Edit hive',
+    Edit_queen: 'Edit queen',
+    Edit_apiary: 'Edit apiary',
+    Edit_group: 'Edit collaboration group',
+    Edit_group_short: 'Edit group',
+    Edit_checklist: 'Edit checklist',
+    Edit_devices: 'Edit devices',
+    Edit_consent: 'Edit consent',
+    Edit_hivetag: 'Edit hive tag',
+
+    Hivetag: 'Hive tag | Hive tags',
+    Hivetag_exp_1:
+        "‘Hive tags’ are QR codes you can attach to a hive, and for which you can set an action that will be performed as soon as you scan the hive tag. An 'action' refers to actions in the BEEP app, such as creating a new inspection for the relevant hive. Once the hive tag has been set up, you only need to scan the QR code with your smartphone, and a new inspection will be automatically created. You can print the hive tags yourself, by ",
+    Hivetag_download_text: 'downloading this pdf.',
+    Hivetag_exp_2:
+        ' Just scan a hive tag to get started, you will be taken to the setup page automatically if no action has been set yet.',
+    qrcode: 'QR Code | QR Codes',
+    Qrcode_exp1: "Attach the hive tag with number '",
+    Qrcode_exp2: "' to a hive.",
+    Qrcode_note:
+        'Please note: the above QR code is not the actual hive tag, it is only meant as an example.',
+    Download_hivetags: 'Download hive tag pdf',
+    Delete_hivetag: 'Delete hive tag',
+    for_hive: 'for hive "',
+    Add_hivetag: 'Add hive tag',
+    Select_hivetag_number: 'Select a hive tag number',
+    Select_hive: 'Select a hive',
+    Select_hive_for_hivetag_exp:
+        'For which hive would you like to perform the action? Select one hive.',
+    Select_hivetag_action: 'Select an action',
+    Select_hivetag_action_exp:
+        'Which action would you like to perform, after scanning the QR code?',
+    Hivetag_hive_in_overview: 'Show hive in hives overview',
+    Hivetag_new_inspection: 'Create a new inspection',
+    Hivetag_edit_hive: 'Edit hive configuration',
+    Hivetag_view_inspections: 'View inspections',
+    No_hivetags_left:
+        'All hive tags are currently in use. Remove an existing hive tag in order to add a new one, or modify it.',
+
+    View_alert_confirm: 'Would you like to view the alert "',
+
+    /* iOS device prompt for adding BEEP app to home screen */
+    pwa_title: 'Use BEEP as an app?',
+    pwa_body:
+        'Add BEEP to your home screen to use it as a web app and in full screen. You will stay signed in after signing in once.',
+    pwa_share_button_label: '1. Tap the share icon in the menu bar below.',
+    pwa_addhome_button_label: "2. Tap 'Add to home'.",
 }
 
 export default translations
