@@ -2,8 +2,51 @@
   <Layout :title="$t('Whats_new')">
     <v-container>
       <div class="overline mb-1"
-        ><span class="lowercase">v</span>3.0.106 (04-10-2022) - Current
-        version</div
+        ><span class="lowercase">v</span>3.1 (07-11-2022) - Current version</div
+      >
+      <div class="rounded-border mb-4">
+        <ul>
+          <li
+            >Inspections overview per hive<sup>*</sup> is now paginated. This
+            has several advantages:
+            <ul>
+              <li
+                >Quicker loading & better overview: max 5 inspections per
+                page</li
+              >
+              <li
+                >More compact: fewer rows of checklist items visible (only those
+                used in the max 5 inspections that are being shown)</li
+              >
+              <li
+                >Please note: for searching press enter or click the
+                <v-icon class="inline-icon">mdi-magnify</v-icon>icon (i.e. no
+                more 'searching as you type', as search is now paginated as
+                well). Search for dates in YYYY-MM-DD format (i.e. "2022-11-07"
+                instead of "7 nov 2022").</li
+              >
+            </ul>
+            <span style="margin-top: 3px;"
+              ><sup>*</sup>Table containing inspection data per hive, accessible
+              via hive menu (click on a hive in the
+              <router-link :to="{ name: 'home' }">Hives</router-link> overview →
+              'View inspections') or inspection menu (click on an inspection in
+              the
+              <router-link :to="{ name: 'diary' }">Inspections</router-link>
+              overview → 'View inspection')</span
+            >
+          </li>
+          <li
+            >For iOS devices: when app is opened via the browser a popup will be
+            displayed, explaining how to add the app to your homescreen for
+            quicker access & staying signed in</li
+          >
+          <li>Back navigation more intuitive</li>
+        </ul>
+      </div>
+
+      <div class="overline mb-1"
+        ><span class="lowercase">v</span>3.0.106 (04-10-2022)</div
       >
       <div class="rounded-border mb-4">
         <ul>
