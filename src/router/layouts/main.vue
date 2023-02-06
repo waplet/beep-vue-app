@@ -11,11 +11,9 @@
           style="width: 48%;"
         >
           <router-link :to="{ name: 'home' }">
-            <v-toolbar-title class="d-flex align-self-center"
-              ><img
-                :src="assetsUrl + '/img/beep-logo-black.svg'"
-                @click="clearHiveFilters"
-            /></v-toolbar-title>
+            <v-toolbar-title class="d-flex align-self-center black--text" @click="clearHiveFilters">
+              Pollihub
+            </v-toolbar-title>
           </router-link>
         </div>
 
