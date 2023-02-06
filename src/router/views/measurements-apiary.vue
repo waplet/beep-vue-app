@@ -214,12 +214,19 @@
                     {{ $t(sensor) + ' ' + SENSOR_UNITS[sensor] }}
                   </div>
                   <div>
-                    <chartist :class="`${interval} ${'modulo-' + moduloNr} mb-4 mb-sm-6`"
-                              :ratio="`ct-chart ct-series-${index}`"
-                              type="Line"
-                              :data="prepareChartData(formattedData.sensors[sensor], sensor)"
-                              :options="getChartOptions()"
-                    />
+                    <MeasurementsChartLine
+                        :chart-data="chartjsDataSeries([sensor])"
+                        :interval="interval"
+                        :start-time="periodStartString"
+                        :end-time="periodEndString"
+                        :chart-id="'chart-sensor-' + index"
+                        :alerts-for-charts="alertsForCharts([sensor])"
+                        :inspections-for-charts="inspectionsForCharts"
+                        @confirm-view-alert="confirmViewAlert($event)"
+                        @confirm-view-inspection="confirmViewInspection($event.id, $event.date)"
+                        @set-period-to-date="setPeriodToDate($event)"
+                    >
+                    </MeasurementsChartLine>
                   </div>
                 </v-col>
               </v-row>
@@ -228,14 +235,16 @@
         </v-card>
       </div>
     </v-container>
+
+    <Confirm ref="confirm"></Confirm>
   </Layout>
 </template>
 
 <script>
 import Api from '@api/Api';
 import Layout from '@layouts/main.vue'
+import Confirm from '@components/confirm.vue'
 import { mapGetters } from 'vuex'
-import 'chartist/dist/chartist.min.css'
 import {
   readApiariesAndGroupsIfNotPresent,
   readDevicesIfNotPresent,
@@ -243,13 +252,9 @@ import {
 } from '@mixins/methodsMixin'
 import {momentFormat, momentFullDateTime} from '@mixins/momentMixin'
 import { sensorMixin } from '@mixins/sensorMixin'
-import '@plugins/chartist-plugin-beep.js'
-import '@plugins/chartist-plugin-legend-beep.js'
-import 'chartist-plugin-pointlabels'
-import 'chartist-plugin-tooltips-updated'
-import 'chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.css'
 import Treeselect from "@riophae/vue-treeselect";
 import { SlideYUpTransition } from "vue2-transitions";
+import MeasurementsChartLine from '@components/measurements-chart-line.vue'
 
 export default {
   name: "MeasurementsApiary",
@@ -257,6 +262,8 @@ export default {
     Layout,
     Treeselect,
     SlideYUpTransition,
+    MeasurementsChartLine,
+    Confirm,
   },
   mixins: [
     readTaxonomy,
@@ -273,12 +280,23 @@ export default {
       interval: 'month',
       timeIndex: 0,
       timeFormat: 'ddd D MMM YYYY',
+      dateTimeFormat: 'YYYY-MM-DD HH:mm:ss',
       selectedDate: '',
       preselectedDate: null,
       preselectedLocationId: null,
       modal: false,
       // Chart data related
       currentSensors: [],
+      /**
+       * {
+       *   sensors: {
+       *     sensorName: {
+       *       deviceKey: [{measurement}]
+       *     }
+       *   },
+       *   labels: [{measurementDate}]
+       * }
+       */
       formattedData: {},
       // Chart related
       showMeasurements: true,
@@ -336,6 +354,12 @@ export default {
         { name: this.$i18n.t('selection'), interval: 'selection' },
       ]
     },
+    periodEndString() {
+      return this.periodEnd.format(this.dateTimeFormat)
+    },
+    periodStartString() {
+      return this.periodStart.format(this.dateTimeFormat)
+    },
     setRelativeInterval: {
       get() {
         if (localStorage.beepRelativeInterval) {
@@ -386,84 +410,15 @@ export default {
         }
       });
     },
-    resolutionNr() {
-      return this.measurementData !== null
-          ? parseInt(this.measurementData.resolution.slice(0, -1))
-          : null
-    },
-    resolutionUnit() {
-      return this.measurementData !== null
-          ? this.measurementData.resolution.slice(-1)
-          : null
-    },
     mdScreen() {
       return this.$vuetify.breakpoint.width < 960
-    },
-    screenSize() {
-      return this.$vuetify.breakpoint.width < 1300
-          ? 'md'
-          : this.$vuetify.breakpoint.width > 1900
-              ? 'xl'
-              : 'lg'
     },
     mobile() {
       return this.$vuetify.breakpoint.mobile
     },
-    moduloFactor() {
-      switch (this.screenSize) {
-        case 'md':
-          return this.chartCols === 6 ? 2 : this.chartCols === 4 ? 3 : 1
-        case 'lg':
-          return this.chartCols === 4 ? 3 : 1
-        case 'xl':
-          return 1
-      }
-      return 1
-    },
-    moduloNr() {
-      switch (this.interval) {
-        case 'hour':
-          return 1 * this.moduloFactor
-        case 'week':
-          if (this.resolutionUnit === 'm' && this.resolutionNr !== null) {
-            if (this.resolutionNr < 720) {
-              return (360 / this.resolutionNr) * this.moduloFactor
-            } else {
-              return 1 * this.moduloFactor
-            }
-          } else {
-            return 6 * this.moduloFactor
-          }
-        case 'month':
-          if (this.resolutionUnit === 'm' && this.resolutionNr !== null) {
-            return (1440 / this.resolutionNr) * this.moduloFactor
-          } else {
-            return 8 * this.moduloFactor
-          }
-
-        case 'year':
-          if (
-              this.resolutionUnit === 'd' &&
-              this.resolutionNr !== null &&
-              this.resolutionNr > 1
-          ) {
-            return (12 / this.resolutionNr) * this.moduloFactor
-          } else {
-            return 11 * this.moduloFactor
-          }
-        case 'day':
-          if (this.resolutionUnit === 'm' && this.resolutionNr !== null) {
-            if (this.resolutionNr < 60) {
-              return (60 / this.resolutionNr) * this.moduloFactor
-            } else {
-              return 1 * this.moduloFactor
-            }
-          } else {
-            return 6 * this.moduloFactor
-          }
-      }
-      return 6 * this.moduloFactor
-    },
+    inspectionsForCharts() {
+      return [];
+    }
   },
   created() {
     this.readTaxonomy();
@@ -588,6 +543,39 @@ export default {
         this.selectedDate = this.periodStart.format('YYYY-MM-DD')
       }
     },
+    setPeriodToDate(date, period = null) {
+      if (period === null) {
+        if (this.interval === 'day')
+            // switch period zoom levels
+          period = 'hour'
+        else period = 'day'
+      }
+
+      if (this.touchDevice) {
+        var format = period === 'hour' ? 'lll' : 'll'
+
+        this.$refs.confirm
+            .open(
+                this.$i18n.t('data_zoom'),
+                (this.interval !== 'hour'
+                    ? this.$i18n.t('data_zoom_ok')
+                    : this.$i18n.t('data_zoom_out_ok')) +
+                this.momentFormat(date, format) +
+                '?',
+                {
+                  color: 'primary',
+                }
+            )
+            .then((confirm) => {
+              this.zoomTo(period, date)
+            })
+            .catch((reject) => {
+              return true
+            })
+      } else {
+        this.zoomTo(period, date)
+      }
+    },
     calculateTimeIndex(period, date, zoom = false, from = null) {
       var newPeriodIndex = 0
       var todayEnd = this.$moment().endOf(period)
@@ -692,157 +680,138 @@ export default {
 
     },
 
-    prepareChartData(sensorDeviceValues, sensorKey) {
-      /**
-       * @type {{series: {color: String, name: String, data: []}[], labels: String[]}}
-       */
-      const data = {
-        labels: this.formattedData.labels,
-        series: [],
-      };
-
-      // TODO finish this
-      Object.keys(sensorDeviceValues)
-        .map((deviceKey) => {
-          const device = this.getDeviceByKey(deviceKey);
-          const series = {
-            color: this.SENSOR_COLOR[sensorKey] || 'black',
-            name: (device.name || 'Unknown device'),
-            data: []
-          };
-
-          sensorDeviceValues[deviceKey.toLowerCase()].forEach((measurement) => {
-            series.data.push({
-              meta: this.momentAll(measurement.time)
-                + '<br/>'
-                + (device.name || 'Unknown device')
-                + ': '
-                + (measurement[sensorKey] !== null
-                    ? measurement[sensorKey].toFixed(2)
-                    : measurement[sensorKey]),
-              value: measurement[sensorKey],
-            });
-          });
-
-          data.series.push(series);
-        });
-
-      return data;
+    /**
+     * @param {String} abbr f.e. t or w ... measurement abbreviation
+     * @returns {*|null} Measurement
+     */
+    getSensorMeasurement(abbr) {
+      var smFilter = this.sensorMeasurementsList.filter(
+          (measurementType) => measurementType.abbreviation === abbr
+      )
+      return smFilter.length > 0 ? smFilter[0] : null
     },
 
-    getChartOptions(unit = '', low = false) {
-      return {
-        fullWidth: true,
-        height: low ? '150px' : '220px',
-        plugins: [
-            this.$chartist.plugins.tooltip({
-              class: 'beep-tooltip',
-              metaIsHTML: true,
-            }),
-            this.$chartist.plugins.beep(),
-            this.$chartist.plugins.legendBeep({
-              dataSet: 'apiary',
-              simpleToggle: true,
-              inactiveByDefault: false
-            }),
-            this.$chartist.plugins.ctPointLabels({
-              labelOffset: {
-                x: 7,
-                y: 0,
-              },
-              textAnchor: 'start',
-              labelInterpolationFnc(value) {
-                if (
-                    typeof value !== 'undefined'
-                    && (unit === 'kg' || unit === 'mbar')
-                ) {
-                  return value.toFixed(2) + ' ' + unit;
-                } else if (typeof value !== 'undefined') {
-                  return value.toFixed(1) + ' ' + unit;
-                } else {
-                  return '-';
-                }
-              },
-            }),
-        ],
-        showPoint: true,
-        lineSmooth: this.$chartist.Interpolation.simple({
-          divisor: 10,
-          fillHoles: true,
-        }),
-        axisX: {
-          showGrid: true,
-          labelInterpolationFnc: (value, index) => {
-            if (index % this.moduloNr === 0) {
-              return this.momentFromISO8601(value)
-            } else {
-              return ''
-            }
-          },
-        }
+    chartjsDataSeries(sensors) {
+      var data = {
+        labels: [],
+        datasets: [],
       }
+      
+      var sensorKey = sensors.pop();
+      var sensorDeviceValues = this.formattedData.sensors[sensorKey];
+
+      var mT = this.getSensorMeasurement(sensorKey)
+      
+      Object.keys(sensorDeviceValues)
+        .forEach((deviceKey) => {
+          const device = this.getDeviceByKey(deviceKey);
+          
+          data.datasets.push({
+            id: deviceKey,
+            abbr: device.name,
+            fill: false,
+            borderColor: '#' + (mT.hex_color || '000000'),
+            backgroundColor: '#' + (mT.hex_color || '000000'),
+            borderRadius: 2,
+            label: device.name,
+            unit: '',
+            data: sensorDeviceValues[deviceKey.toLowerCase()]
+                .filter(m => m[sensorKey])
+                .map((measurement) => {
+                  return {
+                    x: measurement.time,
+                    y: measurement[sensorKey] ?? ''
+                  }
+                }),
+            openGaps: this.interval === 'hour' || this.interval === 'day',
+          });
+        });
+      
+      return data;
     },
 
     updateChartCols(value) {
       this.chartCols = value
       localStorage.beepChartCols = value
     },
-
-    momentAll(date) {
-      // automagically converted from utc time to users timezone because moment guesses (and then sets its) timezone in this view
-      return this.$moment(date)
-          .locale(this.locale)
-          .format('llll')
+    zoomTo(period, date) {
+      this.timeIndex = this.calculateTimeIndex(period, date, true)
+      this.interval = period
+      this.loadData()
     },
-    momentFromISO8601(date) {
-      // automagically converted from utc time to users timezone because moment guesses (and then sets its) timezone in this view
-      if (this.interval === 'hour') {
-        return this.$moment(date)
-            .locale(this.locale)
-            .format('LT')
-      } else if (this.interval === 'day' || this.interval === 'week') {
-        var unit = this.locale === 'nl' ? 'u' : 'h'
-        return (
-            this.$moment(date)
-                .locale(this.locale)
-                .format('ddd') +
-            ' ' +
-            this.$moment(date)
-                .locale(this.locale)
-                .format('H') +
-            unit
-        )
-      } else {
-        const currentYear = this.$moment(date).format('YYYY')
-        const currentYearEn = ', ' + currentYear
-        const currentYearEsPt = ' de ' + currentYear
-        const currentYearNl = '. ' + currentYear
-        return this.$moment(date)
-            .locale(this.locale)
-            .format('ll')
-            .replace(currentYearNl, '')
-            .replace(currentYearEn, '')
-            .replace(currentYearEsPt, '')
-            .replace(' ' + currentYear, '') // Remove year hardcoded per language, currently no other way to get rid of year whilst keeping localized time
-      }
-    },
-
     getDeviceByKey(deviceKey) {
       return this.devices.filter((device) => device.key.toLowerCase() === deviceKey.toLowerCase()).pop();
     },
-
     checkDateOrder(dates) {
       if (dates[1] < dates[0]) {
         this.dates = [dates[1], dates[0]]
       }
     },
-
     invalidDates(dates) {
       return (
           (dates.length === 2 && dates[0] > dates[1]) ||
           dates[0] === dates[1] ||
           dates.length === 1
       )
+    },
+    alertsForCharts(sensorArray) {
+      return [];
+    },
+    confirmViewAlert(alert) {
+      // TODO: finetune message, add date?
+      this.$refs.confirm
+          .open(
+              this.$i18n.t('view') + ' ' + this.$i18n.tc('alert', 1),
+              this.$i18n.t('View_alert_confirm') + alert.alert_rule_name + '"?',
+              {
+                color: 'red',
+              },
+              alert.alert_rule_name + ' (' + alert.alert_function + ')'
+          )
+          .then((confirm) => {
+            return this.$router.push({
+              name: 'alerts',
+              query: {
+                search: alert.date,
+              },
+            })
+          })
+          .catch((reject) => {
+            return true
+          })
+    },
+    confirmViewInspection(inspectionId, inspectionDate) {
+      this.$refs.confirm
+          .open(
+              this.$i18n.tc('View_inspection', 1),
+              this.$i18n.t('View_inspection_confirm') + inspectionDate + '?',
+              {
+                color: 'primary',
+              }
+          )
+          .then((confirm) => {
+            var query = {
+              search: 'id=' + inspectionId.toString(),
+              interval: this.interval,
+              relativeInterval: this.relativeInterval,
+              chartCols: this.chartCols,
+            }
+            if (this.interval === 'selection' && this.dates.length > 0) {
+              query.start = this.dates[0]
+              query.end = this.dates[1]
+            } else {
+              query.timeIndex = this.timeIndex
+            }
+
+            return this.$router.push({
+              name: 'hive-inspections',
+              params: { id: this.selectedDevice.hive_id },
+              query,
+            })
+          })
+          .catch((reject) => {
+            return true
+          })
     },
   },
 }
@@ -893,155 +862,6 @@ export default {
   }
 }
 
-::v-deep .charts {
-  svg.ct-chart-bar,
-  svg.ct-chart-line {
-    overflow: visible;
-  }
-  .ct-grid.ct-horizontal:first-child,
-  .ct-grid.ct-horizontal + .ct-grid.ct-vertical {
-    stroke: $color-grey;
-  }
-  .ct-label {
-    color: $color-grey-dark;
-  }
-  text.ct-label {
-    fill: $color-grey-dark;
-  }
-  .ct-label.ct-label.ct-horizontal.ct-end {
-    position: relative;
-    justify-content: flex-end;
-    text-align: right;
-    white-space: nowrap;
-    transform: translate(-100%) rotate(-45deg);
-    transform-origin: 100% 0;
-  }
-  .ct-label.ct-vertical.ct-end {
-    margin-left: -5px;
-  }
-  .ct-chart {
-    &.modulo-2 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(2n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-3 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(3n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-4 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(4n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-6 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(6n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-8 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(8n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-9 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(9n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-11 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(11n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-12 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(12n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-16 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(16n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-18 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(18n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-22 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(22n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-24 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(24n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-33 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(33n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-36 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(36n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-60 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(60n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-120 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(120n + 1)) {
-      stroke: none !important;
-    }
-    &.modulo-180 .ct-grids .ct-grid.ct-horizontal:not(:nth-child(180n + 1)) {
-      stroke: none !important;
-    }
-  }
-
-  .ct-series {
-    .ct-point {
-      stroke-width: 6px !important;
-      @include for-phone-only {
-        stroke-width: 4px !important;
-      }
-    }
-    .ct-line {
-      @include for-phone-only {
-        stroke-width: 3px !important;
-      }
-    }
-    .ct-label:not(:last-child) {
-      display: none;
-    }
-  }
-  .ct-labels {
-    .ct-label.ct-horizontal.ct-end {
-      font-size: 0.7rem !important;
-      @include for-phone-only {
-        font-size: 0.6rem !important;
-      }
-    }
-  }
-  .ct-legend {
-    position: relative !important;
-    text-align: center;
-    list-style: none;
-
-    li {
-      position: relative !important;
-      display: inline-block;
-      padding-left: 23px !important;
-      margin-right: 10px;
-      margin-bottom: 3px;
-      cursor: pointer;
-      &.ct-legend--no-pointer {
-        cursor: auto;
-      }
-    }
-
-    li .ct-legend-square {
-      position: absolute !important;
-      top: 3px !important;
-      left: 0 !important;
-      width: 15px !important;
-      height: 15px !important;
-      content: '' !important;
-      border: 3px solid transparent;
-      border-radius: 2px !important;
-    }
-
-    li.inactive .ct-legend-square {
-      background: transparent !important;
-    }
-
-    &.ct-legend-inside {
-      position: absolute !important;
-      top: 0 !important;
-      right: 0 !important;
-    }
-
-    .ct-legend-inside li {
-      display: block;
-      margin: 0;
-    }
-  }
-}
-
 .measurements-card-title {
   line-height: 1.5rem !important;
   &.measurements-card-title--border-bottom {
@@ -1054,25 +874,5 @@ export default {
   @media (max-width: 374px) {
     margin-top: 65px;
   }
-}
-</style>
-
-<style lang="scss">
-.beep-tooltip {
-  font-family: 'Roboto', sans-serif !important;
-  font-size: 0.8rem;
-  font-weight: 500 !important;
-  color: $color-grey-dark !important;
-  background-color: rgba(255, 160, 0, 0.87) !important;
-  border-radius: 4px;
-  &::before {
-    margin-left: -5px !important;
-    border: 5px solid transparent !important;
-    border-top-color: rgba(255, 160, 0, 0.87) !important;
-  }
-}
-
-.chartist-tooltip-value {
-  display: none !important;
 }
 </style>
